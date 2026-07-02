@@ -1,17 +1,17 @@
 Class {
-	#name : 'MooseCICLI',
+	#name : 'MooseCIRunner',
 	#superclass : 'Object',
 	#category : 'MooseCI-CLI',
 	#package : 'MooseCI-CLI'
 }
 
 { #category : 'as yet unclassified' }
-MooseCICLI class >> analyze: aFilename [
+MooseCIRunner class >> analyze: aFilename [
 	
 	Transcript show: aFilename; cr.
 ]
 
 { #category : 'as yet unclassified' }
-MooseCICLI class >> printOn: aStream [
+MooseCIRunner class >> printOn: aStream [
 	aStream nextPutAll: 'A MooseCI CLI instance'
 ]
