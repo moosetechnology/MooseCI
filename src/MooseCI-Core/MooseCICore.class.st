@@ -3,11 +3,19 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'model',
-		'sizeReport'
+		'sizeReport',
+		'criticModel',
+		'violations'
 	],
 	#category : 'MooseCI-Core',
 	#package : 'MooseCI-Core'
 }
+
+{ #category : 'accessing' }
+MooseCICore >> criticModel [
+
+	^ criticModel
+]
 
 { #category : 'initialization' }
 MooseCICore >> initialize [ 
@@ -23,6 +31,25 @@ MooseCICore >> loadProject: aProjectFilePath [
 { #category : 'loading' }
 MooseCICore >> runAnalysis [
 
+	self runSizeAnalysis.
+	self runCritics
+]
+
+{ #category : 'loading' }
+MooseCICore >> runCritics [
+
+	| criticBrowser |
+	criticBrowser := MiCriticBrowser on: MiCriticBrowser newModel.
+	'/Users/toky/Downloads/rules (2).ston' asFileReference readStreamDo: [ :stream | criticBrowser importRulesFromStream: stream ].
+	criticBrowser specModel setEntities: model.
+	criticBrowser specModel run.
+	criticModel := criticBrowser specModel.
+	violations := criticBrowser specModel violations
+]
+
+{ #category : 'loading' }
+MooseCICore >> runSizeAnalysis [
+
 	sizeReport files: model allModules size.
 	sizeReport loc: (model allModules collect: [ :eachModule | eachModule sourceAnchor lineCount ]) sum.
 	sizeReport packages: model allPackages size. 
@@ -33,4 +60,10 @@ MooseCICore >> runAnalysis [
 MooseCICore >> sizeReport [
 
 	^ sizeReport
+]
+
+{ #category : 'accessing' }
+MooseCICore >> violations [
+
+	^ violations
 ]

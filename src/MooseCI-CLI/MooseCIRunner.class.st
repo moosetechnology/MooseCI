@@ -51,7 +51,25 @@ MooseCIRunner >> runAnalysis [
 ]
 
 { #category : 'running' }
+MooseCIRunner >> writeCriticsOutput [
+
+	| violations |
+	violations := mooseCICore violations.
+	
+	'Quality' traceCr.
+	
+	violations keysDo: [ :condition | ('    ' , condition name , ': ' , (violations at: condition) size asString) traceCr ]
+]
+
+{ #category : 'running' }
 MooseCIRunner >> writeOutputs [
+	
+	self writeSizeOutputs.
+	self writeCriticsOutput.
+]
+
+{ #category : 'running' }
+MooseCIRunner >> writeSizeOutputs [
 	
 	| size |
 	
