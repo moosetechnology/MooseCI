@@ -4,11 +4,24 @@ Class {
 	#instVars : [
 		'files',
 		'loc',
-		'packages'
+		'packages',
+		'classes'
 	],
 	#category : 'MooseCI-Core',
 	#package : 'MooseCI-Core'
 }
+
+{ #category : 'accessing' }
+MooseCISizeReport >> classes [
+
+	^ classes
+]
+
+{ #category : 'accessing' }
+MooseCISizeReport >> classes: anObject [
+
+	classes := anObject
+]
 
 { #category : 'accessing' }
 MooseCISizeReport >> files [

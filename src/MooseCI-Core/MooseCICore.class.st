@@ -16,10 +16,21 @@ MooseCICore >> initialize [
 
 { #category : 'loading' }
 MooseCICore >> loadProject: aProjectFilePath [
-	model := FamixPythonImporter import: aProjectFilePath asFileReference
+	model := FamixPythonImporter import: aProjectFilePath asFileReference.
+	
 ]
 
 { #category : 'loading' }
 MooseCICore >> runAnalysis [
-	sizeReport files: model 
+
+	sizeReport files: model allModules size.
+	sizeReport loc: (model allModules collect: [ :eachModule | eachModule sourceAnchor lineCount ]) sum.
+	sizeReport packages: model allPackages size. 
+	sizeReport classes: model allClasses size.
+]
+
+{ #category : 'accessing' }
+MooseCICore >> sizeReport [
+
+	^ sizeReport
 ]

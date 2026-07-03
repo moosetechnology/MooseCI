@@ -25,7 +25,10 @@ MooseCIRunner class >> printOn: aStream [
 
 { #category : 'running' }
 MooseCIRunner >> loadProject [
+
+	'Importing ', projectFilePath, '...' traceCr.
 	mooseCICore loadProject: projectFilePath.
+	'Famix model created.' traceCr.
 ]
 
 { #category : 'accessing' }
@@ -49,5 +52,10 @@ MooseCIRunner >> runAnalysis [
 
 { #category : 'running' }
 MooseCIRunner >> writeOutputs [
-	mooseCICore sizeReport.
+	
+	| size |
+	
+	size := mooseCICore sizeReport. 
+	'Size' traceCr.
+	('    ', size files asString , ' files | ', size loc asString, ' LOC | ', size packages asString, ' packages | ', size classes asString, ' classes') traceCr
 ]
