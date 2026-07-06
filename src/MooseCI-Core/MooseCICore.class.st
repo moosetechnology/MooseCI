@@ -3,9 +3,9 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'model',
-		'sizeReport',
 		'criticModel',
-		'violations'
+		'violations',
+		'metricsReport'
 	],
 	#category : 'MooseCI-Core',
 	#package : 'MooseCI-Core'
@@ -19,7 +19,7 @@ MooseCICore >> criticModel [
 
 { #category : 'initialization' }
 MooseCICore >> initialize [ 
-	sizeReport := MooseCISizeReport new
+	metricsReport := MooseCISizeReport new
 ]
 
 { #category : 'loading' }
@@ -28,10 +28,16 @@ MooseCICore >> loadProject: aProjectFilePath [
 	
 ]
 
+{ #category : 'accessing' }
+MooseCICore >> metricsReport [
+
+	^ metricsReport
+]
+
 { #category : 'loading' }
 MooseCICore >> runAnalysis [
 
-	self runSizeAnalysis.
+	self runMetricsAnalysis.
 	self runCritics
 ]
 
@@ -48,18 +54,12 @@ MooseCICore >> runCritics [
 ]
 
 { #category : 'loading' }
-MooseCICore >> runSizeAnalysis [
+MooseCICore >> runMetricsAnalysis [
 
-	sizeReport files: model allModules size.
-	sizeReport loc: (model allModules collect: [ :eachModule | eachModule sourceAnchor lineCount ]) sum.
-	sizeReport packages: model allPackages size. 
-	sizeReport classes: model allClasses size.
-]
-
-{ #category : 'accessing' }
-MooseCICore >> sizeReport [
-
-	^ sizeReport
+	metricsReport files: model allModules size.
+	metricsReport loc: (model allModules collect: [ :eachModule | eachModule sourceAnchor lineCount ]) sum.
+	metricsReport packages: model allPackages size. 
+	metricsReport classes: model allClasses size.
 ]
 
 { #category : 'accessing' }

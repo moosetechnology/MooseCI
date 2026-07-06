@@ -42,7 +42,7 @@ MooseCIRunner >> run [
 	mooseCICore := MooseCICore new.
 	self loadProject.
 	self runAnalysis.
-	self writeOutputs.
+	self writeOutput.
 ]
 
 { #category : 'running' }
@@ -70,18 +70,18 @@ MooseCIRunner >> writeCriticsOutput [
 ]
 
 { #category : 'running' }
-MooseCIRunner >> writeOutputs [
+MooseCIRunner >> writeMetricsOutput [
 	
-	self writeSizeOutputs.
-	self writeCriticsOutput.
+	| metrics |
+	
+	metrics := mooseCICore metricsReport. 
+	(AnsiColor yellow: 'Metrics') traceCr.
+	('    ', metrics files asString , ' files | ', metrics loc asString, ' LOC | ', metrics packages asString, ' packages | ', metrics classes asString, ' classes') traceCr
 ]
 
 { #category : 'running' }
-MooseCIRunner >> writeSizeOutputs [
+MooseCIRunner >> writeOutput [
 	
-	| size |
-	
-	size := mooseCICore sizeReport. 
-	(AnsiColor yellow: 'Metrics') traceCr.
-	('    ', size files asString , ' files | ', size loc asString, ' LOC | ', size packages asString, ' packages | ', size classes asString, ' classes') traceCr
+	self writeMetricsOutput.
+	self writeCriticsOutput.
 ]
