@@ -53,12 +53,20 @@ MooseCIRunner >> runAnalysis [
 { #category : 'running' }
 MooseCIRunner >> writeCriticsOutput [
 
-	| violations |
+	| violations passed|
 	violations := mooseCICore violations.
-	
-	'Quality' traceCr.
-	
-	violations keysDo: [ :condition | ('    ' , condition name , ': ' , (violations at: condition) size asString) traceCr ]
+	passed := (violations select: [ :each | each isEmpty ]) size.
+
+	(AnsiColor yellow: 'Quality (',passed asString, '/', violations size asString, ' passed)') traceCr.
+
+	violations keysDo: [ :condition |
+			| violationOutput |
+			violationOutput := '    ' , condition name , ': ' , (violations at: condition) size asString.
+			violationOutput := (violations at: condition) size = 0
+				                   ifTrue: [ (AnsiColor green: violationOutput) ]
+				                   ifFalse: [ (AnsiColor red: violationOutput) ].
+
+			violationOutput traceCr ]
 ]
 
 { #category : 'running' }
@@ -74,6 +82,6 @@ MooseCIRunner >> writeSizeOutputs [
 	| size |
 	
 	size := mooseCICore sizeReport. 
-	'Size' traceCr.
+	(AnsiColor yellow: 'Metrics') traceCr.
 	('    ', size files asString , ' files | ', size loc asString, ' LOC | ', size packages asString, ' packages | ', size classes asString, ' classes') traceCr
 ]
