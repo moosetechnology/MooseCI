@@ -19,7 +19,7 @@ MooseCICore >> criticModel [
 
 { #category : 'initialization' }
 MooseCICore >> initialize [ 
-	metricsReport := MooseCISizeReport new
+	metricsReport := MooseCIMetricsReport new
 ]
 
 { #category : 'loading' }

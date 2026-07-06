@@ -1,5 +1,5 @@
 Class {
-	#name : 'MooseCISizeReport',
+	#name : 'MooseCIMetricsReport',
 	#superclass : 'Object',
 	#instVars : [
 		'files',
@@ -12,49 +12,49 @@ Class {
 }
 
 { #category : 'accessing' }
-MooseCISizeReport >> classes [
+MooseCIMetricsReport >> classes [
 
 	^ classes
 ]
 
 { #category : 'accessing' }
-MooseCISizeReport >> classes: anObject [
+MooseCIMetricsReport >> classes: anObject [
 
 	classes := anObject
 ]
 
 { #category : 'accessing' }
-MooseCISizeReport >> files [
+MooseCIMetricsReport >> files [
 
 	^ files
 ]
 
 { #category : 'accessing' }
-MooseCISizeReport >> files: anObject [
+MooseCIMetricsReport >> files: anObject [
 
 	files := anObject
 ]
 
 { #category : 'accessing' }
-MooseCISizeReport >> loc [
+MooseCIMetricsReport >> loc [
 
 	^ loc
 ]
 
 { #category : 'accessing' }
-MooseCISizeReport >> loc: anObject [
+MooseCIMetricsReport >> loc: anObject [
 
 	loc := anObject
 ]
 
 { #category : 'accessing' }
-MooseCISizeReport >> packages [
+MooseCIMetricsReport >> packages [
 
 	^ packages
 ]
 
 { #category : 'accessing' }
-MooseCISizeReport >> packages: anObject [
+MooseCIMetricsReport >> packages: anObject [
 
 	packages := anObject
 ]
