@@ -61,7 +61,7 @@ MooseCIRunner >> writeCriticsOutput [
 
 	violations keysDo: [ :condition |
 			| violationOutput |
-			violationOutput := '    ' , condition name , ': ' , (violations at: condition) size asString.
+			violationOutput := '    ', (violations at: condition) size asString , ' ', condition name.
 			violationOutput := (violations at: condition) size = 0
 				                   ifTrue: [ (AnsiColor green: violationOutput) ]
 				                   ifFalse: [ (AnsiColor red: violationOutput) ].

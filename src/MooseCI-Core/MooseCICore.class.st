@@ -40,7 +40,7 @@ MooseCICore >> runCritics [
 
 	| criticBrowser |
 	criticBrowser := MiCriticBrowser on: MiCriticBrowser newModel.
-	'/Users/toky/Downloads/rules (2).ston' asFileReference readStreamDo: [ :stream | criticBrowser importRulesFromStream: stream ].
+	'/Users/toky/Downloads/rules_1.ston' asFileReference readStreamDo: [ :stream | criticBrowser importRulesFromStream: stream ].
 	criticBrowser specModel setEntities: model.
 	criticBrowser specModel run.
 	criticModel := criticBrowser specModel.
