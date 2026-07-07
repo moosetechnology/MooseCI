@@ -17,6 +17,12 @@ MooseCICore >> criticModel [
 	^ criticModel
 ]
 
+{ #category : 'accessing' }
+MooseCICore >> criticModel: anObject [
+
+	criticModel := anObject
+]
+
 { #category : 'initialization' }
 MooseCICore >> initialize [ 
 	metricsReport := MooseCIMetricsReport new
@@ -32,6 +38,24 @@ MooseCICore >> loadProject: aProjectFilePath [
 MooseCICore >> metricsReport [
 
 	^ metricsReport
+]
+
+{ #category : 'accessing' }
+MooseCICore >> metricsReport: anObject [
+
+	metricsReport := anObject
+]
+
+{ #category : 'accessing' }
+MooseCICore >> model [
+
+	^ model
+]
+
+{ #category : 'accessing' }
+MooseCICore >> model: anObject [
+
+	model := anObject
 ]
 
 { #category : 'loading' }
@@ -58,7 +82,7 @@ MooseCICore >> runMetricsAnalysis [
 
 	metricsReport files: model allModules size.
 	metricsReport loc: (model allModules collect: [ :eachModule | eachModule sourceAnchor lineCount ]) sum.
-	metricsReport packages: model allPackages size. 
+	metricsReport packages: (model select: [ :each | each class = FamixPythonPackage ]) size.
 	metricsReport classes: model allClasses size.
 ]
 
@@ -66,4 +90,10 @@ MooseCICore >> runMetricsAnalysis [
 MooseCICore >> violations [
 
 	^ violations
+]
+
+{ #category : 'accessing' }
+MooseCICore >> violations: anObject [
+
+	violations := anObject
 ]

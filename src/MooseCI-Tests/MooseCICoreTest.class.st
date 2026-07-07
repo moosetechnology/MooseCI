@@ -1,0 +1,51 @@
+"
+A MooseCICoreTest is a test class for testing the behavior of MooseCICore
+"
+Class {
+	#name : 'MooseCICoreTest',
+	#superclass : 'TestCase',
+	#instVars : [
+		'mooseCICore'
+	],
+	#category : 'MooseCI-Tests',
+	#package : 'MooseCI-Tests'
+}
+
+{ #category : 'running' }
+MooseCICoreTest >> setUp [
+	super setUp.
+
+	mooseCICore := MooseCICore new.
+	mooseCICore loadProject: self tempFolder.
+]
+
+{ #category : 'tests' }
+MooseCICoreTest >> tempFolder [
+	|path file|
+	path := FileSystem disk workingDirectory / 'MooseCIProjectExampleTemp'.
+	path ensureCreateDirectory.
+	
+	file := path / 'temp.py'.
+	file writeStreamDo: [ :stream | stream nextPutAll: 'print("hello")' ].
+	
+	^ path
+]
+
+{ #category : 'tests' }
+MooseCICoreTest >> testLoadProject [
+
+	
+	self assert: mooseCICore model isMooseModel
+]
+
+{ #category : 'tests' }
+MooseCICoreTest >> testRunMetricsAnalysis [
+
+	mooseCICore runMetricsAnalysis.
+	
+	self assert: mooseCICore metricsReport class equals: MooseCIMetricsReport.
+	self assert: mooseCICore metricsReport loc equals: 1.
+	self assert: mooseCICore metricsReport packages equals: 1.
+	self assert: mooseCICore metricsReport classes equals: 0.
+	
+]
