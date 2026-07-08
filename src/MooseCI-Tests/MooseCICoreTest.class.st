@@ -16,19 +16,7 @@ MooseCICoreTest >> setUp [
 	super setUp.
 
 	mooseCICore := MooseCICore new.
-	mooseCICore loadProject: self tempFolder.
-]
-
-{ #category : 'tests' }
-MooseCICoreTest >> tempFolder [
-	|path file|
-	path := FileSystem disk workingDirectory / 'MooseCIProjectExampleTemp'.
-	path ensureCreateDirectory.
-	
-	file := path / 'temp.py'.
-	file writeStreamDo: [ :stream | stream nextPutAll: 'print("hello")' ].
-	
-	^ path
+	mooseCICore loadProject: MooseCIBridge mockProjectTests / 'oneLang'.
 ]
 
 { #category : 'tests' }
