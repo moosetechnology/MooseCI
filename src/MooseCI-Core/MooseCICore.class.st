@@ -12,17 +12,6 @@ Class {
 	#package : 'MooseCI-Core'
 }
 
-{ #category : 'as yet unclassified' }
-MooseCICore class >> projectLoaderMap [
-
-	| map |
-	map := Dictionary new.
-
-	map at: #python put: 'loadPythonProject:'.
-
-	^ map
-]
-
 { #category : 'accessing' }
 MooseCICore >> criticModel [
 
@@ -49,15 +38,11 @@ MooseCICore >> initialize [
 { #category : 'loading' }
 MooseCICore >> loadProject: aProjectFilePath [
 
+	| loader |
 	self detectProjectLanguage: aProjectFilePath.
 	
-	model := self perform: (self class projectLoaderMap at: projectLanguage) asSymbol with: aProjectFilePath
-]
-
-{ #category : 'as yet unclassified' }
-MooseCICore >> loadPythonProject: aProjectFilePath [
-
-	^ FamixPythonImporter import: aProjectFilePath asFileReference
+	loader := MooseCIProjectLoader forLanguage: projectLanguage.
+	model := loader load: aProjectFilePath
 ]
 
 { #category : 'accessing' }
