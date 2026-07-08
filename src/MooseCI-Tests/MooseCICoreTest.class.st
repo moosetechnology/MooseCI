@@ -16,19 +16,20 @@ MooseCICoreTest >> setUp [
 	super setUp.
 
 	mooseCICore := MooseCICore new.
-	mooseCICore loadProject: MooseCIBridge mockProjectTests / 'oneLang'.
 ]
 
 { #category : 'tests' }
 MooseCICoreTest >> testLoadProject [
 
-	
+	mooseCICore loadProject: MooseCIBridge mockProjectTests / 'one-lang'.
+
 	self assert: mooseCICore model isMooseModel
 ]
 
 { #category : 'tests' }
 MooseCICoreTest >> testRunMetricsAnalysis [
 
+	mooseCICore loadProject: MooseCIBridge mockProjectTests / 'one-file'.
 	mooseCICore runMetricsAnalysis.
 	
 	self assert: mooseCICore metricsReport class equals: MooseCIMetricsReport.

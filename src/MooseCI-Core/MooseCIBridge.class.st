@@ -13,7 +13,7 @@ MooseCIBridge class >> initialize [
 { #category : 'class initialization' }
 MooseCIBridge class >> mockProjectTests [
 
-	^ self root / 'ressources/mockProjectTests'
+	^ self root / 'ressources/mock-project-tests'
 ]
 
 { #category : 'class initialization' }

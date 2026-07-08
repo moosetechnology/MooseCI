@@ -5,11 +5,23 @@ Class {
 		'model',
 		'criticModel',
 		'violations',
-		'metricsReport'
+		'metricsReport',
+		'projectLanguage'
 	],
 	#category : 'MooseCI-Core',
 	#package : 'MooseCI-Core'
 }
+
+{ #category : 'as yet unclassified' }
+MooseCICore class >> projectLoaderMap [
+
+	| map |
+	map := Dictionary new.
+
+	map at: #python put: 'loadPythonProject:'.
+
+	^ map
+]
 
 { #category : 'accessing' }
 MooseCICore >> criticModel [
@@ -23,6 +35,12 @@ MooseCICore >> criticModel: anObject [
 	criticModel := anObject
 ]
 
+{ #category : 'as yet unclassified' }
+MooseCICore >> detectProjectLanguage: aDirectoryOrFileReference [
+
+	projectLanguage := (MooseCILanguageDetector detect: aDirectoryOrFileReference) primary
+]
+
 { #category : 'initialization' }
 MooseCICore >> initialize [ 
 	metricsReport := MooseCIMetricsReport new
@@ -30,8 +48,16 @@ MooseCICore >> initialize [
 
 { #category : 'loading' }
 MooseCICore >> loadProject: aProjectFilePath [
-	model := FamixPythonImporter import: aProjectFilePath asFileReference.
+
+	self detectProjectLanguage: aProjectFilePath.
 	
+	model := self perform: (self class projectLoaderMap at: projectLanguage) asSymbol with: aProjectFilePath
+]
+
+{ #category : 'as yet unclassified' }
+MooseCICore >> loadPythonProject: aProjectFilePath [
+
+	^ FamixPythonImporter import: aProjectFilePath asFileReference
 ]
 
 { #category : 'accessing' }

@@ -16,8 +16,8 @@ MooseCILanguageDetectionResult >> at: aSymbol [
 
 { #category : 'accessing' }
 MooseCILanguageDetectionResult >> counter [
-
-	^ counter
+	
+	^ counter 
 ]
 
 { #category : 'as yet unclassified' }
@@ -53,4 +53,10 @@ MooseCILanguageDetectionResult >> primary [
 					c := counter at: key.
 					lang := key ] ].
 	^ lang
+]
+
+{ #category : 'accessing' }
+MooseCILanguageDetectionResult >> results [
+
+	^ counter associations asSortedCollection: [ :a :b | a value > b value ]
 ]
