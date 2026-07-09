@@ -14,7 +14,15 @@ MooseCIProjectLoader class >> forLanguage: aSymbol [
 ]
 
 { #category : 'as yet unclassified' }
+MooseCIProjectLoader class >> languageNameSymbol [
+
+	self subclassResponsibility
+]
+
+{ #category : 'as yet unclassified' }
 MooseCIProjectLoader class >> load: aProjectFilePath [
+	"Depending on the language, the creation of a model from a project can be very different.
+	Put your model creation logic here, and return a mooseModel"
 
 	self subclassResponsibility
 ]
@@ -22,5 +30,5 @@ MooseCIProjectLoader class >> load: aProjectFilePath [
 { #category : 'as yet unclassified' }
 MooseCIProjectLoader class >> supportsLanguage: aSymbol [
 
-	self subclassResponsibility
+	^ self languageNameSymbol = aSymbol
 ]

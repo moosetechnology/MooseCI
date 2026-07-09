@@ -6,13 +6,13 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-MooseCIPythonProjectLoader class >> load: aProjectFilePath [
+MooseCIPythonProjectLoader class >> languageNameSymbol [
 
-	^ FamixPythonImporter import: aProjectFilePath asFileReference
+	^ #python
 ]
 
 { #category : 'as yet unclassified' }
-MooseCIPythonProjectLoader class >> supportsLanguage: aSymbol [
+MooseCIPythonProjectLoader class >> load: aProjectFilePath [
 
-	^ aSymbol = #python
+	^ FamixPythonImporter import: aProjectFilePath asFileReference
 ]
