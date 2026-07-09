@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# set -x
+#load config
+source "$(dirname "${BASH_SOURCE[0]}")/../src/config.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../src/command_parser.sh"
+
+
+parse_user_input "$@"
