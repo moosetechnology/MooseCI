@@ -24,4 +24,4 @@ In would be good to be able to output some visualizations already available in M
 - System complexity
 - Distribution map
 
-<video src="./ressources/media/demo.mp4" controls autoplay muted width="600"></video>
+<video src="ressources/media/demo.mp4" controls autoplay muted width="600"></video>
