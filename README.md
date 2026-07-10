@@ -24,4 +24,4 @@ In would be good to be able to output some visualizations already available in M
 - System complexity
 - Distribution map
 
-<img width="600" height="400" alt="mooseci" src="https://github.com/user-attachments/assets/ff7b897a-ccd9-4252-93d0-ede1f37a2987" />
+<img width="640" height="380" alt="demo" src="https://github.com/user-attachments/assets/d2d15ecc-5afb-42b4-aaf0-292d1dc2ff90" />
