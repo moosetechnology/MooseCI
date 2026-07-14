@@ -19,6 +19,12 @@ MooseCIRunner class >> analyze: aProjectPath [
 ]
 
 { #category : 'as yet unclassified' }
+MooseCIRunner class >> analyzeFromGitUrl: aGitUrl [
+	
+	
+]
+
+{ #category : 'as yet unclassified' }
 MooseCIRunner class >> printOn: aStream [
 	aStream nextPutAll: 'A MooseCI CLI instance'
 ]
