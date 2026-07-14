@@ -11,12 +11,12 @@ MooseCICLITest >> testAnalyzeGitProjectCommand [
 	| context gitUrl |
 	gitUrl := 'https://github.com/deel-ai/puncc'.
 	context := MooseCICLI mooseci activateWith: {
-			           'mooseci'.
+			           'moose-ci'.
 			           'analyze'.
 			           '--url'.
 			           gitUrl }.
 
-	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'Analyzing ' , gitUrl).
+	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'Analyzing remote project: ' , gitUrl).
 	self assert: context exitStatus equals: 0
 ]
 
@@ -26,7 +26,7 @@ MooseCICLITest >> testAnalyzeLocalProjectCommand [
 	| context projectPath |
 	projectPath := (MooseCIBridge mockProjectTests / 'one-lang') fullName.
 	context := MooseCICLI mooseci activateWith: {
-			           'mooseci'.
+			           'moose-ci'.
 			           'analyze'.
 			           projectPath }.
 
@@ -39,6 +39,6 @@ MooseCICLITest >> testAnalyzeLocalProjectCommandNoProjectPathProvided [
 
 	| context |
 	
-	self assertBlock: [ context := MooseCICLI mooseci activateWith: { 'mooseci'. 'analyze' } ] raises: NotFound.
+	self assertBlock: [ context := MooseCICLI mooseci activateWith: { 'moose-ci'. 'analyze' } ] raises: NotFound.
 	
 ]

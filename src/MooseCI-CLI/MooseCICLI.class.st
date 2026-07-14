@@ -9,7 +9,7 @@ Class {
 MooseCICLI class >> mooseci [
 
 	<commandline>
-	^ (ClapCommandSpec id: #mooseci)
+	^ (ClapCommandSpec id: #'moose-ci')
 		  description: (AnsiColor yellow: 'Moose-CI - automated software analysis reports');
 		  commandClass: self;
 		  add: MooseCIAnalyzeCommand analyze;

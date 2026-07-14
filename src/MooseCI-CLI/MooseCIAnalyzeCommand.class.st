@@ -26,7 +26,7 @@ MooseCIAnalyzeCommand >> execute [
 	self isGitRepository
 		ifTrue: [
 				self outputStreamDo: [ :out |
-						out nextPutAll: 'Analyzing ' , self url.
+						out nextPutAll: 'Analyzing remote project: ' , self url.
 						out lf ].
 				MooseCIRunner analyzeFromGitUrl: self url ]
 		ifFalse: [
