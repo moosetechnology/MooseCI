@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+
+PHARO_VM_13_DIR="$(find "$HOME" -type d -path '*/Pharo/vms/130-x64/Pharo.app/Contents/MacOS' -print -quit)"
+MOOSE_CI_IMAGE_PATH="/Users/toky/Documents/Pharo/images/MooseCI-1/MooseCI-1.image"
+
+if [[ -z "$PHARO_VM_13_DIR" ]]; then
+	echo "Could not find Pharo VM directory matching: Pharo/vms/130-x64/Pharo.app/Contents/MacOS" >&2
+	exit 1
+fi
+
+"$PHARO_VM_13_DIR"/Pharo --headless "$MOOSE_CI_IMAGE_PATH" --no-default-preferences clap moose-ci "$@"
