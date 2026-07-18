@@ -6,11 +6,24 @@ Class {
 		'criticModel',
 		'violations',
 		'metricsReport',
-		'projectLanguage'
+		'projectLanguage',
+		'config'
 	],
 	#category : 'MooseCI-Core',
 	#package : 'MooseCI-Core'
 }
+
+{ #category : 'accessing' }
+MooseCICore >> config [
+
+	^ config
+]
+
+{ #category : 'accessing' }
+MooseCICore >> config: aMooseCIConfig [
+
+	config := aMooseCIConfig
+]
 
 { #category : 'accessing' }
 MooseCICore >> criticModel [
@@ -27,7 +40,7 @@ MooseCICore >> criticModel: anObject [
 { #category : 'as yet unclassified' }
 MooseCICore >> detectProjectLanguage: aDirectoryOrFileReference [
 
-	projectLanguage := (MooseCILanguageDetector detect: aDirectoryOrFileReference) primary
+	config projectLanguage: (MooseCILanguageDetector detect: aDirectoryOrFileReference) primary
 ]
 
 { #category : 'initialization' }
@@ -36,13 +49,13 @@ MooseCICore >> initialize [
 ]
 
 { #category : 'loading' }
-MooseCICore >> loadProject: aProjectFilePath [
+MooseCICore >> loadProject [
 
 	| loader |
-	self detectProjectLanguage: aProjectFilePath.
+	self detectProjectLanguage: config projectPath.
 	
-	loader := MooseCIProjectLoader forLanguage: projectLanguage.
-	model := loader load: aProjectFilePath
+	loader := MooseCIProjectLoader forLanguage: config projectLanguage.
+	model := loader load: config projectPath
 ]
 
 { #category : 'accessing' }
@@ -78,10 +91,10 @@ MooseCICore >> runAnalysis [
 
 { #category : 'loading' }
 MooseCICore >> runCritics [
-
+	
 	| criticBrowser |
 	criticBrowser := MiCriticBrowser on: MiCriticBrowser newModel.
-	
+	self flag: #TODO. "run with rules and threshold inside the config"
 	MooseCIBridge rules readStreamDo: [ :stream | criticBrowser importRulesFromStream: stream ].
 	
 	criticBrowser specModel setEntities: model.
@@ -92,7 +105,7 @@ MooseCICore >> runCritics [
 
 { #category : 'loading' }
 MooseCICore >> runMetricsAnalysis [
-
+	self flag: #TODO. "replace with config"
 	metricsReport files: model allModules size.
 	metricsReport loc: (model allModules collect: [ :eachModule | eachModule sourceAnchor lineCount ]) sum.
 	metricsReport packages: (model select: [ :each | each class = FamixPythonPackage ]) size.
