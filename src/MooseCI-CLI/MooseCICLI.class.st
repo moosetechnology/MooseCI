@@ -13,6 +13,7 @@ MooseCICLI class >> mooseci [
 		  description: (AnsiColor yellow: 'Moose-CI - automated software analysis reports');
 		  commandClass: self;
 		  add: MooseCIAnalyzeCommand analyze;
+		  add: MooseCIInitCommand init;
 		  addHelp;
 		  yourself
 ]
