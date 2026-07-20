@@ -19,12 +19,36 @@ MooseCIInitCommand class >> init [
         yourself
 ]
 
+{ #category : 'as yet unclassified' }
+MooseCIInitCommand >> createDefaultStonConfigFile [
+
+	FileLocator workingDirectory / 'moose-ci.ston' writeStreamDo: [ :stream | stream nextPutAll: MooseCIConfig default toSton ]
+]
+
 { #category : 'execution' }
-MooseCIInitCommand >> execute [ 
+MooseCIInitCommand >> execute [
 
 	self outputStreamDo: [ :out |
-						out nextPutAll: 'Creating a moose-ci.ston file...'.
-						out lf ].
-					
-	self exitSuccess 
+			out
+				lf;
+				nextPutAll: 'Creating a moose-ci.ston file...';
+				lf;
+				lf ].
+	[
+		self createDefaultStonConfigFile.
+		self outputStreamDo: [ :out |
+				out
+					nextPutAll: (AnsiColor green: 'Config written to moose-ci.ston');
+					lf;
+					lf;
+					nextPutAll: 'Run `moose-ci analyze` to use it.';
+					lf ].
+		self exitSuccess ]
+		on: Error
+		do: [ :e |
+				self outputStreamDo: [ :out |
+						out
+							nextPutAll: (AnsiColor red: 'Error while creating the moose-ci.ston');
+							nextPutAll: e messageText.
+						out lf ] ]
 ]

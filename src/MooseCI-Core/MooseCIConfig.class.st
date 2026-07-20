@@ -152,6 +152,12 @@ MooseCIConfig >> rules: anArray [
 	rules := anArray
 ]
 
+{ #category : 'as yet unclassified' }
+MooseCIConfig >> toSton [
+
+	^ STON toStringPretty: self
+]
+
 { #category : 'accessing' }
 MooseCIConfig >> visualizations [
 
