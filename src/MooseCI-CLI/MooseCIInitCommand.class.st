@@ -1,9 +1,6 @@
 Class {
 	#name : 'MooseCIInitCommand',
 	#superclass : 'ClapApplication',
-	#instVars : [
-		'config'
-	],
 	#category : 'MooseCI-CLI',
 	#package : 'MooseCI-CLI'
 }
@@ -22,23 +19,29 @@ MooseCIInitCommand class >> init [
 { #category : 'as yet unclassified' }
 MooseCIInitCommand >> createDefaultStonConfigFile [
 
-	FileLocator workingDirectory / 'moose-ci.ston' writeStreamDo: [ :stream | stream nextPutAll: MooseCIConfig default toSton ]
+	| config |
+	
+	config := MooseCIConfig default.
+	config projectPath: FileLocator workingDirectory fullName.
+	
+	FileLocator workingDirectory / MooseCIConfig configFileName writeStreamDo: [ :stream | stream nextPutAll: config toSton ]
 ]
 
 { #category : 'execution' }
 MooseCIInitCommand >> execute [
-
+|fileName|
+fileName := MooseCIConfig configFileName.
 	self outputStreamDo: [ :out |
 			out
 				lf;
-				nextPutAll: 'Creating a moose-ci.ston file...';
+				nextPutAll: 'Creating a MooseCI config file...';
 				lf;
 				lf ].
 	[
 		self createDefaultStonConfigFile.
 		self outputStreamDo: [ :out |
 				out
-					nextPutAll: (AnsiColor green: 'Config written to moose-ci.ston');
+					nextPutAll: (AnsiColor green: 'Config written to ', fileName );
 					lf;
 					lf;
 					nextPutAll: 'Run `moose-ci analyze` to use it.';
@@ -48,7 +51,7 @@ MooseCIInitCommand >> execute [
 		do: [ :e |
 				self outputStreamDo: [ :out |
 						out
-							nextPutAll: (AnsiColor red: 'Error while creating the moose-ci.ston');
+							nextPutAll: (AnsiColor red: 'Error while creating the config file');
 							nextPutAll: e messageText.
 						out lf ] ]
 ]

@@ -19,7 +19,7 @@ MooseCIRunner class >> analyze: aProjectPath config: aMooseCIConfig [
 ]
 
 { #category : 'as yet unclassified' }
-MooseCIRunner class >> analyzeFromGitUrl: aGitUrl config: aMooseCIConfig [
+MooseCIRunner class >> analyzeFromGitUrlWith: aMooseCIConfig [
 	
 	
 ]

@@ -18,6 +18,12 @@ Class {
 }
 
 { #category : 'accessing' }
+MooseCIConfig class >> configFileName [
+
+	^ 'moose-ci.ston'
+]
+
+{ #category : 'accessing' }
 MooseCIConfig class >> default [
 
 	^ self new
@@ -156,6 +162,12 @@ MooseCIConfig >> rules: anArray [
 MooseCIConfig >> toSton [
 
 	^ STON toStringPretty: self
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> validate [
+
+	self flag: #TODO
 ]
 
 { #category : 'accessing' }
