@@ -1,6 +1,9 @@
 Class {
 	#name : 'MooseCIAnalyzeCommand',
 	#superclass : 'ClapApplication',
+	#instVars : [
+		'config'
+	],
 	#category : 'MooseCI-CLI',
 	#package : 'MooseCI-CLI'
 }
@@ -22,18 +25,25 @@ MooseCIAnalyzeCommand class >> analyze [
 MooseCIAnalyzeCommand >> execute [
 
 	'Hello' traceCr.
+	config := MooseCIConfig default.
 
 	self isGitRepository
 		ifTrue: [
 				self outputStreamDo: [ :out |
 						out nextPutAll: 'Analyzing remote project: ' , self url.
 						out lf ].
-				MooseCIRunner analyzeFromGitUrl: self url ]
+				config isRemote.
+				config gitProjectUrl: self url.
+				self flag: #todo "refactor to just runAnalysisFromConfig: config
+				
+				so we can just call the MooseCIRunner once".
+				MooseCIRunner analyzeFromGitUrl: self url config: config ]
 		ifFalse: [
 				self outputStreamDo: [ :out |
 						out nextPutAll: 'Analyzing ' , self projectPath.
 						out lf ].
-				MooseCIRunner analyze: self projectPath ].
+				config projectPath: self projectPath.
+				MooseCIRunner analyze: self projectPath config: config ].
 
 	self exitSuccess
 ]

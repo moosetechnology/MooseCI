@@ -42,3 +42,15 @@ MooseCICLITest >> testAnalyzeLocalProjectCommandNoProjectPathProvided [
 	self assertBlock: [ context := MooseCICLI mooseci activateWith: { 'moose-ci'. 'analyze' } ] raises: NotFound.
 	
 ]
+
+{ #category : 'tests' }
+MooseCICLITest >> testInitCommand [
+
+	| context |
+	context := MooseCICLI mooseci activateWith: {
+			           'moose-ci'.
+			           'init'}.
+
+	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'Creating a moose-ci.ston file...').
+	self assert: context exitStatus equals: 0
+]

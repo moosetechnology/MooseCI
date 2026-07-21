@@ -13,13 +13,13 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-MooseCIRunner class >> analyze: aProjectPath [
+MooseCIRunner class >> analyze: aProjectPath config: aMooseCIConfig [
 	
-	(self new projectFilePath: aProjectPath ) run.
+	(self new projectFilePath: aProjectPath ) runWithConfig: aMooseCIConfig .
 ]
 
 { #category : 'as yet unclassified' }
-MooseCIRunner class >> analyzeFromGitUrl: aGitUrl [
+MooseCIRunner class >> analyzeFromGitUrl: aGitUrl config: aMooseCIConfig [
 	
 	
 ]
@@ -32,8 +32,8 @@ MooseCIRunner class >> printOn: aStream [
 { #category : 'running' }
 MooseCIRunner >> loadProject [
 
-	'Importing ', projectFilePath, '...' traceCr.
-	mooseCICore loadProject: projectFilePath.
+	'Importing ', mooseCICore config projectPath, '...' traceCr.
+	mooseCICore loadProject.
 	'Famix model created.' traceCr.
 ]
 
@@ -44,16 +44,19 @@ MooseCIRunner >> projectFilePath: anObject [
 ]
 
 { #category : 'running' }
-MooseCIRunner >> run [
-	mooseCICore := MooseCICore new.
-	self loadProject.
-	self runAnalysis.
-	self writeOutput.
+MooseCIRunner >> runAnalysis [
+	mooseCICore runAnalysis.
 ]
 
 { #category : 'running' }
-MooseCIRunner >> runAnalysis [
-	mooseCICore runAnalysis.
+MooseCIRunner >> runWithConfig: aMooseCIConfig [
+
+	mooseCICore := MooseCICore new
+		               config: aMooseCIConfig;
+		               yourself.
+	self loadProject.
+	self runAnalysis.
+	self writeOutput
 ]
 
 { #category : 'running' }
