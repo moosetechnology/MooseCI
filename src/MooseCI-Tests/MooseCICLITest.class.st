@@ -6,6 +6,48 @@ Class {
 }
 
 { #category : 'tests' }
+MooseCICLITest >> testAnalyzeCommandWithConfig [
+
+	| context |
+	context := MooseCICLI mooseci activateWith: {
+			           'moose-ci'.
+			           'analyze'}.
+
+	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'moose-ci.ston found').
+	self assert: context exitStatus equals: 0
+]
+
+{ #category : 'tests' }
+MooseCICLITest >> testAnalyzeCommandWithConfigInvalid [
+
+	| context |
+	context := MooseCICLI mooseci activateWith: {
+			           'moose-ci'.
+			           'analyze'}.
+
+	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'Invalid configuration file').
+	self assert: context exitStatus equals: 1
+]
+
+{ #category : 'tests' }
+MooseCICLITest >> testAnalyzeCommandWithConfigNotFound [
+
+	self assertBlock: [ MooseCICLI mooseci activateWith: { 'moose-ci'. 'analyze' } ] raises: FileDoesNotExistException
+]
+
+{ #category : 'tests' }
+MooseCICLITest >> testAnalyzeCommandWithConfigValid [
+
+	| context |
+	context := MooseCICLI mooseci activateWith: {
+			           'moose-ci'.
+			           'analyze'}.
+
+	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'Valid configuration file').
+	self assert: context exitStatus equals: 0
+]
+
+{ #category : 'tests' }
 MooseCICLITest >> testAnalyzeGitProjectCommand [
 
 	| context gitUrl |
@@ -51,6 +93,6 @@ MooseCICLITest >> testInitCommand [
 			           'moose-ci'.
 			           'init'}.
 
-	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'Creating a moose-ci.ston file...').
+	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'Creating a MooseCI config file...').
 	self assert: context exitStatus equals: 0
 ]
