@@ -23,7 +23,7 @@ BaselineOfMooseCI >> defineDependencies: spec [
 		baseline: 'TreeSitter' with: [
 				spec
 					repository: 'github://Evref-BL/Pharo-Tree-Sitter:main/src';
-					load: #( 'python' ) ]
+					loads: #( 'python' ) ]
 ]
 
 { #category : 'baselines' }
