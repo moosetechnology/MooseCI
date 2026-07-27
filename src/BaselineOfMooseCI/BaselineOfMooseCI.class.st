@@ -37,6 +37,7 @@ BaselineOfMooseCI >> definePackages: spec [
 		package: 'MooseCI-Core'
 		with: [ spec requires: #( 'MoosePy' ) ];
 		package: 'MooseCI-CLI';
-		package: 'MooseCI-Tests'
+		package: 'MooseCI-Tests';
+		package: 'MooseCI-TreeSitter-Libs'
 
 ]
