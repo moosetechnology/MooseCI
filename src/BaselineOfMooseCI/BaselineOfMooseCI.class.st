@@ -18,7 +18,12 @@ BaselineOfMooseCI >> baseline: spec [
 { #category : 'baselines' }
 BaselineOfMooseCI >> defineDependencies: spec [
 
-	spec baseline: 'MoosePy' with: [ spec repository: 'github://moosetechnology/MoosePy:master/src' ]
+	spec
+		baseline: 'MoosePy' with: [ spec repository: 'github://moosetechnology/MoosePy:master/src' ];
+		baseline: 'TreeSitter' with: [
+				spec
+					repository: 'github://Evref-BL/Pharo-Tree-Sitter:main/src';
+					loads: #( 'python' ) ]
 ]
 
 { #category : 'baselines' }
@@ -31,13 +36,10 @@ BaselineOfMooseCI >> defineGroups: spec [
 ]
 
 { #category : 'baselines' }
-BaselineOfMooseCI >> definePackages: spec [ 
+BaselineOfMooseCI >> definePackages: spec [
 
 	spec
-		package: 'MooseCI-Core'
-		with: [ spec requires: #( 'MoosePy' ) ];
+		package: 'MooseCI-Core' with: [ spec requires: #( 'MoosePy' ) ];
 		package: 'MooseCI-CLI';
-		package: 'MooseCI-Tests';
-		package: 'MooseCI-TreeSitter-Libs'
-
+		package: 'MooseCI-Tests'.
 ]
