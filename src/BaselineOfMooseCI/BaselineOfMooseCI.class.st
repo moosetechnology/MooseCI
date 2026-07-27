@@ -31,13 +31,10 @@ BaselineOfMooseCI >> defineGroups: spec [
 ]
 
 { #category : 'baselines' }
-BaselineOfMooseCI >> definePackages: spec [ 
+BaselineOfMooseCI >> definePackages: spec [
 
 	spec
-		package: 'MooseCI-Core'
-		with: [ spec requires: #( 'MoosePy' ) ];
+		package: 'MooseCI-Core' with: [ spec requires: #( 'MoosePy' ) ];
 		package: 'MooseCI-CLI';
-		package: 'MooseCI-Tests';
-		package: 'MooseCI-TreeSitter-Libs'
-
+		package: 'MooseCI-Tests'.
 ]
