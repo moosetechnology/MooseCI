@@ -3,4 +3,4 @@
 
 
 
-./pharo --headless Moose13/Moose13.image --no-default-preferences "$@"
+./pharo --headless Moose13/Moose13.image --no-default-preferences clap moose-ci "$@"
