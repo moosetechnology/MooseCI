@@ -26,6 +26,4 @@ jobs:
           context: ./docker
           file: ./Dockerfile
           push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/moose-ci:latest
-            ghcr.io/${{ github.repository_owner }}/moose-ci:${{ github.ref_name }}
+          tags: ghcr.io/${{ github.repository_owner }}/moose-ci:latest
