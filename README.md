@@ -37,3 +37,34 @@ Metacello new
   repository: 'github://moosetechnology/MooseCI:master/src';
   load.
 ```
+
+## Usage with Docker
+ 
+The easiest way to run Moose-CI is via the prebuilt Docker image — no Pharo, or other dependencies required on your machine, just Docker.
+ 
+### Pull the image
+ 
+```bash
+docker pull ghcr.io/moosetechnology/moose-ci:latest
+```
+ 
+### Run an analysis
+ 
+Moose-CI runs inside an isolated container filesystem, so your project directory needs to be mounted into the container with `-v` before it can be analyzed. Mount your local project to `/src`, then point moose-ci at that path:
+ 
+```bash
+docker run -v /path/to/your/project:/src ghcr.io/moosetechnology/moose-ci:latest analyze /src
+```
+ 
+For example, analyzing a project at `~/code/my-project`:
+ 
+```bash
+docker run -v ~/code/my-project:/src ghcr.io/moosetechnology/moose-ci:latest analyze /src
+```
+ 
+Or, using the current directory:
+ 
+```bash
+docker run -v "$(pwd):/src" ghcr.io/moosetechnology/moose-ci:latest analyze /src
+```
+ 
