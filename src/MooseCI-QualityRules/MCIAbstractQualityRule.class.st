@@ -28,12 +28,6 @@ MCIAbstractQualityRule class >> key [
 ]
 
 { #category : 'accessing' }
-MCIAbstractQualityRule class >> queryHandler [ 
-
-	^ self subclassResponsibility
-]
-
-{ #category : 'accessing' }
 MCIAbstractQualityRule class >> ruleName [
 
 	^ self key asString
