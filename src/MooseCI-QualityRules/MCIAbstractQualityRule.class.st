@@ -1,3 +1,23 @@
+"
+I am the abstract base of the quality rules of MooseCI.
+
+A rule detects, in a Moose model, the entities that violate a quality constraint.
+
+Subclasses must implement:
+- `MCIAbstractQualityRule class >> #key` .......... unique identifier, e.g. `#longClass`
+- `MCIAbstractQualityRule class >> #defaultThreshold` .. threshold used when none is set
+- `MCIAbstractQualityRule >> #contextFilterBlock` .. block restricting the analyzed entities. 
+- `CIAbstractQualityRule >> #queryHandler` ....... block deciding what counts as a violation 
+
+and may override `MCIAbstractQualityRule class >> #ruleName` and `MCIAbstractQualityRule class >> #defaultSeverity`.
+
+I expose `MCIAbstractQualityRule>>#context` (a FamixCBContext) and `MCIAbstractQualityRule>>#condition` (a FamixCBCondition). I run headlesslythrough FamixCBRunner, e.g.:
+```
+runner := FamixCBRunner new.
+runner addRule: MiLongClassRule new.
+violations := runner runOn: myModel
+```
+"
 Class {
 	#name : 'MCIAbstractQualityRule',
 	#superclass : 'Object',
