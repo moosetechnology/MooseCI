@@ -1,3 +1,6 @@
+"
+I get all entities which don't have docstring
+"
 Class {
 	#name : 'MCINoDocstringRule',
 	#superclass : 'MCIAbstractQualityRule',

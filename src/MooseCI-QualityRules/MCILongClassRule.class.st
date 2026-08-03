@@ -1,3 +1,6 @@
+"
+I get all classes that have too many LOC
+"
 Class {
 	#name : 'MCILongClassRule',
 	#superclass : 'MCIAbstractQualityRule',
