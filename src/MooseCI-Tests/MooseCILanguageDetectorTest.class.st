@@ -12,7 +12,7 @@ MooseCILanguageDetectorTest >> testDetectOneLang [
 	
 	self assert: detectResult languages size equals: 1.
 	self assert: (detectResult languages includes: #python).
-	self assert: (detectResult at: #python ) equals: 5.
+	self assert: (detectResult at: #python ) equals: 6.
 	self assert: detectResult primary  equals: #python.
 	
 ]
@@ -22,7 +22,7 @@ MooseCILanguageDetectorTest >> testIgnoredDirectories [
 	|detectResult|
 	detectResult := MooseCILanguageDetector detect: MooseCIBridge mockProjectTests / 'one-lang'. 
 	
-	self assert: detectResult files equals: 5.
+	self assert: detectResult files equals: 6.
 	self assert: detectResult primary equals: #python.
 	
 ]

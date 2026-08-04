@@ -91,13 +91,12 @@ MooseCICore >> runAnalysis [
 
 { #category : 'loading' }
 MooseCICore >> runCritics [
+
+	| rules |
 	
-	| criticRunner rules|
-	
-	rules := (MCIQualityRules rulesAt: config rules) collect: [:ruleClass | ruleClass new].
-	criticRunner := FamixCBRunner new. 
-	criticRunner addRules: rules.
-	violations := criticRunner runOn: model.
+	rules := (MCIQualityRules rulesAt: config rules) collect: [ :ruleClass | ruleClass new ].
+
+	violations := MCIQualityRules runRules: rules on: model
 ]
 
 { #category : 'loading' }
