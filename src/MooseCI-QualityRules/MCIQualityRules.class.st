@@ -11,6 +11,14 @@ MCIQualityRules class >> allRules [
 	^ MCIAbstractQualityRule subclasses
 ]
 
+{ #category : 'helpers' }
+MCIQualityRules class >> defaultRules [
+
+	^ {
+		  MCILongClassRule key.
+		  MCINoDocstringRule key }
+]
+
 { #category : 'accessing' }
 MCIQualityRules class >> ruleAt: aSymbol [
 
