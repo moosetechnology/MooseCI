@@ -91,16 +91,12 @@ MooseCICore >> runAnalysis [
 
 { #category : 'loading' }
 MooseCICore >> runCritics [
+
+	| rules |
 	
-	| criticBrowser |
-	criticBrowser := MiCriticBrowser on: MiCriticBrowser newModel.
-	self flag: #TODO. "run with rules and threshold inside the config"
-	MooseCIBridge rules readStreamDo: [ :stream | criticBrowser importRulesFromStream: stream ].
-	
-	criticBrowser specModel setEntities: model.
-	criticBrowser specModel run.
-	criticModel := criticBrowser specModel.
-	violations := criticBrowser specModel violations
+	rules := (MCIQualityRules rulesAt: config rules) collect: [ :ruleClass | ruleClass new ].
+
+	violations := MCIQualityRules runRules: rules on: model
 ]
 
 { #category : 'loading' }

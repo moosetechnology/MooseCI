@@ -30,7 +30,7 @@ MooseCIConfig class >> default [
 		  projectPath: nil;
 		  projectLanguage: nil;
 		  metrics: #( #size #complexity );
-		  rules: #( #maxClassLoc #maxMethods #maxParams #maxCyclomatic #cyclicDependencies #clones );
+		  rules: MCIQualityRules defaultRules;
 		  ruleThresholds: self defaultThresholds;
 		  visualizations: #(  );
 		  outputFormats: #( #html );

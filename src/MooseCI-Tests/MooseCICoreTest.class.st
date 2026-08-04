@@ -33,6 +33,20 @@ MooseCICoreTest >> testLoadProject [
 ]
 
 { #category : 'tests' }
+MooseCICoreTest >> testRunCritics [
+
+	mooseCICore config projectPath: MooseCIBridge mockProjectTests / 'one-lang'.
+	mooseCICore loadProject.
+	mooseCICore runCritics.
+	
+	self assert: mooseCICore violations isNotNil.
+	self assert: mooseCICore violations isDictionary.
+	self assert: mooseCICore violations size equals: mooseCICore config rules size.
+	self assert: (mooseCICore violations keys collect: [ :condition | condition name ]) asSet
+		equals: (mooseCICore config rules collect: [ :ruleKey | (MCIQualityRules ruleAt: ruleKey) new name ]) asSet
+]
+
+{ #category : 'tests' }
 MooseCICoreTest >> testRunMetricsAnalysis [
 
 	mooseCICore config projectPath: MooseCIBridge mockProjectTests / 'one-file'.

@@ -11,6 +11,14 @@ MCIQualityRules class >> allRules [
 	^ MCIAbstractQualityRule subclasses
 ]
 
+{ #category : 'helpers' }
+MCIQualityRules class >> defaultRules [
+
+	^ {
+		  MCILongClassRule key.
+		  MCINoDocstringRule key }
+]
+
 { #category : 'accessing' }
 MCIQualityRules class >> ruleAt: aSymbol [
 
@@ -24,4 +32,25 @@ MCIQualityRules class >> ruleAt: aSymbol [
 MCIQualityRules class >> rulesAt: aCollection [
 
 	^ MCIAbstractQualityRule subclasses select: [ :rule | aCollection includes: rule key ]
+]
+
+{ #category : 'as yet unclassified' }
+MCIQualityRules class >> runRules: aCollection on: aMooseModel [
+
+	| criticModel |
+	criticModel := MiCriticBrowserModel new.
+	criticModel setEntities: aMooseModel.
+
+	aCollection do: [ :rule |
+			| context condition |
+			context := rule context.
+			condition := rule condition.
+			
+			criticModel addChildToRootContext: context.
+			context addChild: condition.
+			
+			criticModel runCondition: condition 
+			].
+		
+	^ criticModel violations
 ]
