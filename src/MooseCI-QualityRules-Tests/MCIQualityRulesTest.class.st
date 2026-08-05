@@ -35,7 +35,7 @@ MCIQualityRulesTest >> testRuleAtNotFound [
 MCIQualityRulesTest >> testRulesAt [
 
 	| rules |
-	rules := MCIQualityRules rulesAt: #(#long_class #no_docstring).
+	rules := MCIQualityRules rulesAt: #(#long_file #no_docstring).
 
 	self assert: rules size equals: 2.
 	self assert: (rules allSatisfy: [ :rule | rule superclass = MCIAbstractQualityRule  ]).
