@@ -15,8 +15,16 @@ MCIQualityRules class >> allRules [
 MCIQualityRules class >> defaultRules [
 
 	^ {
-		  MCILongClassRule key.
-		  MCINoDocstringRule key }
+		  MCILongFileRule key.
+		  MCINoDocstringRule key.
+		  MCITooManyParametersRule key.
+		  MCILargeClassRule key.
+		  MCILocalVariableNamingRule key.
+		  MCIUnusedLocalVariableRule key.
+		  MCIUnusedParameterRule key.
+		  MCIUnusedPrivateMethodRule key.
+		  MCIShadowedAttributeRule key.
+		  MCIFunctionNamingRule key }
 ]
 
 { #category : 'accessing' }
