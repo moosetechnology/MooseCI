@@ -31,7 +31,7 @@ BaselineOfMooseCI >> defineGroups: spec [
 
 	spec
 		group: 'default'
-		with: #( 'MooseCI-Core' 'MooseCI-CLI' 'MooseCI-Tests' )
+		with: #( 'MooseCI-Core' 'MooseCI-CLI' 'MooseCI-Tests' 'MooseCI-QualityRules' 'MooseCI-QualityRules-Tests')
 
 ]
 
@@ -41,5 +41,7 @@ BaselineOfMooseCI >> definePackages: spec [
 	spec
 		package: 'MooseCI-Core' with: [ spec requires: #( 'MoosePy' 'TreeSitter') ];
 		package: 'MooseCI-CLI';
-		package: 'MooseCI-Tests'.
+		package: 'MooseCI-Tests';
+		package: 'MooseCI-QualityRules';
+		package: 'MooseCI-QualityRules-Tests'.
 ]
