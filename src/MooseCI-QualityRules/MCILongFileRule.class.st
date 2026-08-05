@@ -23,7 +23,7 @@ MCILongFileRule class >> key [
 { #category : 'accessing' }
 MCILongFileRule class >> ruleName [ 
 
-	^ 'File with more too many LOC'
+	^ 'File with too many LOC'
 ]
 
 { #category : 'accessing' }

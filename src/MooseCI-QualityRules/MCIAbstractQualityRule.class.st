@@ -42,6 +42,12 @@ MCIAbstractQualityRule class >> defaultThreshold [
 ]
 
 { #category : 'accessing' }
+MCIAbstractQualityRule class >> description [
+
+	^ self ruleName 
+]
+
+{ #category : 'accessing' }
 MCIAbstractQualityRule class >> key [
 
 	^ self subclassResponsibility
