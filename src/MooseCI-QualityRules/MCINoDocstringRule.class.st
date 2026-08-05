@@ -21,6 +21,12 @@ MCINoDocstringRule class >> defaultThreshold [
 ]
 
 { #category : 'accessing' }
+MCINoDocstringRule class >> description [
+
+	^ 'Reports functions, methods and classes that are missing a docstring.'
+]
+
+{ #category : 'accessing' }
 MCINoDocstringRule class >> key [
 
 	^ #no_docstring

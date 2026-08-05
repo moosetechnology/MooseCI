@@ -15,6 +15,12 @@ MCILongFileRule class >> defaultThreshold [
 ]
 
 { #category : 'accessing' }
+MCILongFileRule class >> description [
+
+	^ 'Reports files whose number of lines of code exceeds the threshold.'
+]
+
+{ #category : 'accessing' }
 MCILongFileRule class >> key [
 
 	^ #long_file

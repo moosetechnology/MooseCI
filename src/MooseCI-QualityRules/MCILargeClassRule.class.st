@@ -21,6 +21,12 @@ MCILargeClassRule class >> defaultThreshold [
 ]
 
 { #category : 'accessing' }
+MCILargeClassRule class >> description [
+
+	^ 'Reports classes that have too many methods or attributes.'
+]
+
+{ #category : 'accessing' }
 MCILargeClassRule class >> key [
 
 	^ #large_class
@@ -29,7 +35,7 @@ MCILargeClassRule class >> key [
 { #category : 'accessing' }
 MCILargeClassRule class >> ruleName [ 
 
-	^ 'Classes have too many methods or attributes'
+	^ 'Classes with too many methods or attributes'
 ]
 
 { #category : 'accessing' }

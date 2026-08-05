@@ -21,6 +21,12 @@ MCILocalVariableNamingRule class >> defaultThreshold [
 ]
 
 { #category : 'accessing' }
+MCILocalVariableNamingRule class >> description [
+
+	^ 'Reports local variables and parameters whose names do not respect the naming convention.'
+]
+
+{ #category : 'accessing' }
 MCILocalVariableNamingRule class >> key [
 
 	^ #local_var_naming
@@ -29,7 +35,7 @@ MCILocalVariableNamingRule class >> key [
 { #category : 'accessing' }
 MCILocalVariableNamingRule class >> ruleName [ 
 
-	^ 'Local variables and parameters naming convention'
+	^ 'Local variables and parameters not respecting naming convention'
 ]
 
 { #category : 'accessing' }

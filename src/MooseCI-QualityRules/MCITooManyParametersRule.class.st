@@ -21,6 +21,12 @@ MCITooManyParametersRule class >> defaultThreshold [
 ]
 
 { #category : 'accessing' }
+MCITooManyParametersRule class >> description [
+
+	^ 'Reports methods whose number of parameters exceeds the threshold.'
+]
+
+{ #category : 'accessing' }
 MCITooManyParametersRule class >> key [
 
 	^ #too_many_parameters
@@ -29,7 +35,7 @@ MCITooManyParametersRule class >> key [
 { #category : 'accessing' }
 MCITooManyParametersRule class >> ruleName [ 
 
-	^ 'Methods have too many parameters'
+	^ 'Methods with too many parameters'
 ]
 
 { #category : 'accessing' }

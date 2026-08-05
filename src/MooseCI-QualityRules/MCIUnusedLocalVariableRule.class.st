@@ -21,6 +21,12 @@ MCIUnusedLocalVariableRule class >> defaultThreshold [
 ]
 
 { #category : 'accessing' }
+MCIUnusedLocalVariableRule class >> description [
+
+	^ 'Reports local variables that are written but never read.'
+]
+
+{ #category : 'accessing' }
 MCIUnusedLocalVariableRule class >> key [
 
 	^ #unused_local_variable

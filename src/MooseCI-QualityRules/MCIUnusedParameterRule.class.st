@@ -21,6 +21,12 @@ MCIUnusedParameterRule class >> defaultThreshold [
 ]
 
 { #category : 'accessing' }
+MCIUnusedParameterRule class >> description [
+
+	^ 'Reports function and method parameters that are never used.'
+]
+
+{ #category : 'accessing' }
 MCIUnusedParameterRule class >> key [
 
 	^ #unused_parameter

@@ -21,6 +21,12 @@ MCIFunctionNamingRule class >> defaultThreshold [
 ]
 
 { #category : 'accessing' }
+MCIFunctionNamingRule class >> description [
+
+	^ 'Reports functions whose names do not comply with the naming convention.'
+]
+
+{ #category : 'accessing' }
 MCIFunctionNamingRule class >> key [
 
 	^ #function_naming
@@ -29,7 +35,7 @@ MCIFunctionNamingRule class >> key [
 { #category : 'accessing' }
 MCIFunctionNamingRule class >> ruleName [ 
 
-	^ 'Function names naming convention'
+	^ 'Functions not respecting naming convention'
 ]
 
 { #category : 'accessing' }

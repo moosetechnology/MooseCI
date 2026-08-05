@@ -21,6 +21,12 @@ MCIShadowedAttributeRule class >> defaultThreshold [
 ]
 
 { #category : 'accessing' }
+MCIShadowedAttributeRule class >> description [
+
+	^ 'Reports attributes whose name duplicates their containing class name.'
+]
+
+{ #category : 'accessing' }
 MCIShadowedAttributeRule class >> key [
 
 	^ #shadowed_attribute
@@ -29,7 +35,7 @@ MCIShadowedAttributeRule class >> key [
 { #category : 'accessing' }
 MCIShadowedAttributeRule class >> ruleName [ 
 
-	^ 'Attributes duplicate their containing class name'
+	^ 'Attribute name same as their containing class name'
 ]
 
 { #category : 'accessing' }

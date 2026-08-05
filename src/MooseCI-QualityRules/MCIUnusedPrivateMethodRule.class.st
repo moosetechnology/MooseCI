@@ -21,6 +21,12 @@ MCIUnusedPrivateMethodRule class >> defaultThreshold [
 ]
 
 { #category : 'accessing' }
+MCIUnusedPrivateMethodRule class >> description [
+
+	^ 'Reports class-private methods that are never invoked.'
+]
+
+{ #category : 'accessing' }
 MCIUnusedPrivateMethodRule class >> key [
 
 	^ #unused_private_method
