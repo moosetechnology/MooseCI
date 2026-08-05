@@ -19,7 +19,7 @@ MCIQualityRulesTest >> testAllRules [
 MCIQualityRulesTest >> testRuleAt [
 
 	| rule |
-	rule := MCIQualityRules ruleAt: #long_class.
+	rule := MCIQualityRules ruleAt: #long_file.
 
 	self assert: rule equals: MCILongFileRule
 ]
