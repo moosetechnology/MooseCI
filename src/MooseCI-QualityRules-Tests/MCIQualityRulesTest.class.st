@@ -21,7 +21,7 @@ MCIQualityRulesTest >> testRuleAt [
 	| rule |
 	rule := MCIQualityRules ruleAt: #long_class.
 
-	self assert: rule equals: MCILongClassRule
+	self assert: rule equals: MCILongFileRule
 ]
 
 { #category : 'tests' }

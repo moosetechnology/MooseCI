@@ -15,7 +15,7 @@ MCIQualityRules class >> allRules [
 MCIQualityRules class >> defaultRules [
 
 	^ {
-		  MCILongClassRule key.
+		  MCILongFileRule key.
 		  MCINoDocstringRule key }
 ]
 
