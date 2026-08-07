@@ -53,6 +53,15 @@ MooseCIConfig >> checkProjectPathInto: errors [
 ]
 
 { #category : 'validation' }
+MooseCIConfig >> checkRuleSymbol: aSymbol into: errors [
+
+	aSymbol isSymbol ifFalse: [ errors add: 'rules entries must be rule keys (Symbols)' ].
+
+	aSymbol isSymbol ifTrue: [
+		((MCIAbstractQualityRule subclasses collect: #key) includes: aSymbol) ifFalse: [ errors add: 'Unknown rule: ' , aSymbol asString ] ]
+]
+
+{ #category : 'validation' }
 MooseCIConfig >> checkRulesInto: errors [
 
 	rules ifNil: [
@@ -72,15 +81,18 @@ MooseCIConfig >> checkRulesInto: errors [
 			key := each isAssociation
 				       ifTrue: [
 						       each key.
-						       threshold := each value ]
-				       ifFalse: [ each ].
+						       threshold := each value.
+						       self checkThresholdValue: each into: errors ]
+				       ifFalse: [ self checkRuleSymbol: each into: errors ] ]
+]
 
-			key isSymbol ifFalse: [ errors add: 'rules entries must be rule keys (Symbols)' ].
+{ #category : 'validation' }
+MooseCIConfig >> checkThresholdValue: anAssociation into: errors [
 
-			key isSymbol ifTrue: [
-				((MCIAbstractQualityRule subclasses collect: #key) includes: key) ifFalse: [ errors add: 'Unknown rule: ' , key asString ] ].
-
-			(threshold isNotNil and: [ threshold isNumber not ]) ifTrue: [ errors add: 'Threshold for ' , key asString , ' must be a number' ] ]
+	| threshold |
+	self checkRuleSymbol: anAssociation key into: errors.
+	threshold := anAssociation value.
+	threshold isNumber ifFalse: [ errors add: 'Threshold for ' , anAssociation key , ' must be a number' ].
 ]
 
 { #category : 'accessing' }

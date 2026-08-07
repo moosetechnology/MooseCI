@@ -69,26 +69,6 @@ MooseCIAnalyzeCommand >> execute [
 ]
 
 { #category : 'executing' }
-MooseCIAnalyzeCommand >> validateConfig: aMooseCIConfig [
-
-	^ [ aMooseCIConfig validate.
-	    true ]
-		  on: MooseCIConfigValidationError
-		  do: [ :error |
-			  self outputStreamDo: [ :out |
-				  out
-					  nextPutAll: (AnsiColor red: 'Invalid configuration file');
-					  lf.
-				  error messages do: [ :message |
-					  out
-						  tab;
-						  nextPutAll: message;
-						  lf ] ].
-			  self exitFailure.
-			  false ]
-]
-
-{ #category : 'executing' }
 MooseCIAnalyzeCommand >> hasNoArgumentsOrOptions [
 
 |flags options|
@@ -144,4 +124,25 @@ MooseCIAnalyzeCommand >> runAnalysisWith: aMooseCIConfig [
 MooseCIAnalyzeCommand >> url [
 
 	^ self positional: #url
+]
+
+{ #category : 'executing' }
+MooseCIAnalyzeCommand >> validateConfig: aMooseCIConfig [
+
+	[
+		aMooseCIConfig validate.
+		^ true ]
+		on: MooseCIConfigValidationError
+		do: [ :error |
+				self outputStreamDo: [ :out |
+						out
+							nextPutAll: (AnsiColor red: 'Invalid configuration file');
+							lf.
+						error messages do: [ :message |
+								out
+									tab;
+									nextPutAll: message;
+									lf ] ].
+				Exit signalFailure.
+				^ false ]
 ]
