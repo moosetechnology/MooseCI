@@ -15,10 +15,10 @@ MCIQualityRules class >> allRules [
 MCIQualityRules class >> defaultRules [
 
 	^ {
-		  MCILongFileRule key.
+		  (MCILongFileRule key -> MCILongFileRule defaultThreshold).
 		  MCINoDocstringRule key.
-		  MCITooManyParametersRule key.
-		  MCILargeClassRule key.
+		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
+		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).
 		  MCILocalVariableNamingRule key.
 		  MCIUnusedLocalVariableRule key.
 		  MCIUnusedParameterRule key.

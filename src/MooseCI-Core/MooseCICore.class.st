@@ -93,8 +93,15 @@ MooseCICore >> runAnalysis [
 MooseCICore >> runCritics [
 
 	| rules |
-	
-	rules := (MCIQualityRules rulesAt: config rules) collect: [ :ruleClass | ruleClass new ].
+	rules := config rules collect: [ :rule |
+			         | mciQualityRule |
+			         rule isAssociation
+				         ifTrue: [
+						         mciQualityRule := (MCIQualityRules ruleAt: rule key) new.
+						         mciQualityRule threshold: rule value ]
+				         ifFalse: [ mciQualityRule := (MCIQualityRules ruleAt: rule) new ].
+
+			         mciQualityRule ].
 
 	violations := MCIQualityRules runRules: rules on: model
 ]

@@ -6,7 +6,6 @@ Class {
 		'projectLanguage',
 		'metrics',
 		'rules',
-		'ruleThresholds',
 		'outputFormats',
 		'outputPath',
 		'visualizations',
@@ -31,22 +30,10 @@ MooseCIConfig class >> default [
 		  projectLanguage: nil;
 		  metrics: #( #size #complexity );
 		  rules: MCIQualityRules defaultRules;
-		  ruleThresholds: self defaultThresholds;
 		  visualizations: #(  );
 		  outputFormats: #( #html );
 		  outputPath: '.moose-ci/report';
 		  isRemote: false;
-		  yourself
-]
-
-{ #category : 'accessing' }
-MooseCIConfig class >> defaultThresholds [
-
-	^ Dictionary new
-		  at: #maxClassLoc put: 1000;
-		  at: #maxMethods put: 50;
-		  at: #maxParams put: 5;
-		  at: #maxCyclomatic put: 10;
 		  yourself
 ]
 
@@ -132,18 +119,6 @@ MooseCIConfig >> projectPath [
 MooseCIConfig >> projectPath: aString [
 
 	projectPath := aString
-]
-
-{ #category : 'accessing' }
-MooseCIConfig >> ruleThresholds [
-
-	^ ruleThresholds
-]
-
-{ #category : 'accessing' }
-MooseCIConfig >> ruleThresholds: aDictionary [
-
-	ruleThresholds := aDictionary
 ]
 
 { #category : 'accessing' }

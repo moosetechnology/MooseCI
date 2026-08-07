@@ -78,32 +78,32 @@ docker run -v "$(pwd):/src" ghcr.io/moosetechnology/moose-ci:latest analyze /src
 
 Moose-CI uses a `moose-ci.ston` config file. Run `moose-ci init` to create one.
 
-For now, you can only update the rules list:
+You can update the rules list and customize each rule's threshold:
 
 ```ston
 ...
 #rules : [
-		#long_file,
+		#long_file: 1000,
 		#no_docstring,
-		#too_many_parameters
+		#too_many_parameters: 10
 ]
 ...
 ```
 
 ### Available rules
 
-| Key | Description |
-| --- | --- |
-| `#long_file` | Reports files whose number of lines of code exceeds the threshold. |
-| `#no_docstring` | Reports functions, methods and classes that are missing a docstring. |
-| `#too_many_parameters` | Reports methods whose number of parameters exceeds the threshold. |
-| `#large_class` | Reports classes that have too many methods or attributes. |
-| `#local_var_naming` | Reports local variables and parameters whose names do not respect the naming convention. |
-| `#unused_local_variable` | Reports local variables that are written but never read. |
-| `#unused_parameter` | Reports function and method parameters that are never used. |
-| `#unused_private_method` | Reports class-private methods that are never invoked. |
-| `#shadowed_attribute` | Reports attributes whose name duplicates their containing class name. |
-| `#function_naming` | Reports functions whose names do not comply with the naming convention. |
+| Key | Threshold | Description |
+| --- | --- | --- |
+| `#long_file` | 1000 | Reports files whose number of lines of code exceeds the threshold. |
+| `#no_docstring` | N/A | Reports functions, methods and classes that are missing a docstring. |
+| `#too_many_parameters` | 10 | Reports methods whose number of parameters exceeds the threshold. |
+| `#large_class` | 20 | Reports classes that have too many methods or attributes. |
+| `#local_var_naming` | N/A | Reports local variables and parameters whose names do not respect the naming convention. |
+| `#unused_local_variable` | N/A | Reports local variables that are written but never read. |
+| `#unused_parameter` | N/A | Reports function and method parameters that are never used. |
+| `#unused_private_method` | N/A | Reports class-private methods that are never invoked. |
+| `#shadowed_attribute` | N/A | Reports attributes whose name duplicates their containing class name. |
+| `#function_naming` | N/A | Reports functions whose names do not comply with the naming convention. |
 
 ## For developers
 
