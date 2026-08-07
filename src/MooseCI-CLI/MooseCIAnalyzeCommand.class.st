@@ -48,10 +48,20 @@ MooseCIAnalyzeCommand >> execute [
 			FileDoesNotExistException signal: 'Config file not found, try running `moose-ci init` to create one'. ].
 
 	config := (configFile exists and: [ projectPathGiven not ])
-		          ifTrue: [ self loadConfigFrom: configFile ]
+		          ifTrue: [
+				          self outputStreamDo: [ :out |
+						          out
+							          nextPutAll: 'moose-ci.ston found';
+							          lf ].
+				          self loadConfigFrom: configFile ]
 		          ifFalse: [ self buildConfigFromFlags ].
 
-	config validate.
+	(self validateConfig: config) ifFalse: [ ^ self ].
+
+	self outputStreamDo: [ :out |
+		out
+			nextPutAll: 'Valid configuration file';
+			lf ].
 
 	self runAnalysisWith: config.
 
@@ -114,4 +124,25 @@ MooseCIAnalyzeCommand >> runAnalysisWith: aMooseCIConfig [
 MooseCIAnalyzeCommand >> url [
 
 	^ self positional: #url
+]
+
+{ #category : 'executing' }
+MooseCIAnalyzeCommand >> validateConfig: aMooseCIConfig [
+
+	[
+		aMooseCIConfig validate.
+		^ true ]
+		on: MooseCIConfigValidationError
+		do: [ :error |
+				self outputStreamDo: [ :out |
+						out
+							nextPutAll: (AnsiColor red: 'Invalid configuration file');
+							lf.
+						error messages do: [ :message |
+								out
+									tab;
+									nextPutAll: message;
+									lf ] ].
+				Exit signalFailure.
+				^ false ]
 ]

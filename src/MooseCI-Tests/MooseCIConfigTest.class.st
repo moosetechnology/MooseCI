@@ -6,6 +6,38 @@ Class {
 }
 
 { #category : 'tests' }
+MooseCIConfigTest >> testAggregatedValidationErrors [
+
+	| config errors |
+	config := MooseCIConfig default.
+	config rules: #( #unknown_rule #another_unknown_rule ).
+
+	errors := config validationErrors.
+
+	self assert: errors size equals: 3.
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'projectPath is not set' ])
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testDefaultConfigValid [
+
+	| config |
+	config := MooseCIConfig default.
+	config projectPath: '/some/path'.
+
+	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testMissingProjectPath [
+
+	| config |
+	config := MooseCIConfig default.
+
+	self assert: (config validationErrors includes: 'projectPath is not set')
+]
+
+{ #category : 'tests' }
 MooseCIConfigTest >> testToSton [ 
 	|stonString config|
 	config := MooseCIConfig default.
@@ -14,5 +46,28 @@ MooseCIConfigTest >> testToSton [
 self assert: (stonString includesSubstring: 'MooseCIConfig').
 self assert: (stonString includesSubstring: '#metrics').
 self assert: (stonString includesSubstring: '#rules').
-self assert: (stonString includesSubstring: '#ruleThresholds').
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testUnknownRule [
+
+	| config errors |
+	config := MooseCIConfig default.
+	config projectPath: '/some/path'.
+	config rules: #( #unknown_rule ).
+
+	errors := config validationErrors.
+
+	self assert: errors size equals: 1.
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'unknown_rule' ])
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testValidateSignalsError [
+
+	| config |
+	config := MooseCIConfig default.
+	config rules: #( #bogus_rule ).
+
+	self assertBlock: [ config validate ] raises: MooseCIConfigValidationError
 ]

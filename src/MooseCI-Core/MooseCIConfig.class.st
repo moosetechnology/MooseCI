@@ -37,6 +37,64 @@ MooseCIConfig class >> default [
 		  yourself
 ]
 
+{ #category : 'validation' }
+MooseCIConfig >> checkProjectLanguageInto: errors [
+
+	projectLanguage isNil ifTrue: [ ^ self ].
+	(MooseCILanguageDetector extensionMap values includes: projectLanguage) ifFalse: [
+		errors add: 'Unsupported project language: ' , projectLanguage asString ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkProjectPathInto: errors [
+
+	(isRemote not and: [ projectPath isNil ]) ifTrue: [ errors add: 'projectPath is not set' ].
+	(isRemote and: [ gitProjectUrl isNil ]) ifTrue: [ errors add: 'gitProjectUrl is not set' ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkRuleSymbol: aSymbol into: errors [
+
+	aSymbol isSymbol ifFalse: [ errors add: 'rules entries must be rule keys (Symbols)' ].
+
+	aSymbol isSymbol ifTrue: [
+		((MCIAbstractQualityRule subclasses collect: #key) includes: aSymbol) ifFalse: [ errors add: 'Unknown rule: ' , aSymbol asString ] ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkRulesInto: errors [
+
+	rules ifNil: [
+			errors add: 'rules must not be empty'.
+			^ errors ].
+
+	rules isCollection ifFalse: [
+			errors add: 'rules must be a collection'.
+			^ errors ].
+
+	rules isEmpty ifTrue: [
+			errors add: 'rules must not be empty'.
+			^ errors ].
+
+	rules do: [ :each |
+			| key threshold |
+			key := each isAssociation
+				       ifTrue: [
+						       each key.
+						       threshold := each value.
+						       self checkThresholdValue: each into: errors ]
+				       ifFalse: [ self checkRuleSymbol: each into: errors ] ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkThresholdValue: anAssociation into: errors [
+
+	| threshold |
+	self checkRuleSymbol: anAssociation key into: errors.
+	threshold := anAssociation value.
+	threshold isNumber ifFalse: [ errors add: 'Threshold for ' , anAssociation key , ' must be a number' ].
+]
+
 { #category : 'accessing' }
 MooseCIConfig >> gitProjectUrl [
 
@@ -142,7 +200,20 @@ MooseCIConfig >> toSton [
 { #category : 'validation' }
 MooseCIConfig >> validate [
 
-	self flag: #TODO
+	| errors |
+	errors := self validationErrors.
+	errors ifNotEmpty: [ MooseCIConfigValidationError signal: errors ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> validationErrors [
+
+	| errors |
+	errors := OrderedCollection new.
+	self checkProjectPathInto: errors.
+	self checkRulesInto: errors.
+	self checkProjectLanguageInto: errors.
+	^ errors
 ]
 
 { #category : 'accessing' }
