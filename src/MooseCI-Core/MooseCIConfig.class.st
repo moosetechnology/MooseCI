@@ -37,6 +37,52 @@ MooseCIConfig class >> default [
 		  yourself
 ]
 
+{ #category : 'validation' }
+MooseCIConfig >> checkProjectLanguageInto: errors [
+
+	projectLanguage isNil ifTrue: [ ^ self ].
+	(MooseCILanguageDetector extensionMap values includes: projectLanguage) ifFalse: [
+		errors add: 'Unsupported project language: ' , projectLanguage asString ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkProjectPathInto: errors [
+
+	(isRemote not and: [ projectPath isNil ]) ifTrue: [ errors add: 'projectPath is not set' ].
+	(isRemote and: [ gitProjectUrl isNil ]) ifTrue: [ errors add: 'gitProjectUrl is not set' ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkRulesInto: errors [
+
+	rules ifNil: [
+			errors add: 'rules must not be empty'.
+			^ errors ].
+
+	rules isCollection ifFalse: [
+			errors add: 'rules must be a collection'.
+			^ errors ].
+
+	rules isEmpty ifTrue: [
+			errors add: 'rules must not be empty'.
+			^ errors ].
+
+	rules do: [ :each |
+			| key threshold |
+			key := each isAssociation
+				       ifTrue: [
+						       each key.
+						       threshold := each value ]
+				       ifFalse: [ each ].
+
+			key isSymbol ifFalse: [ errors add: 'rules entries must be rule keys (Symbols)' ].
+
+			key isSymbol ifTrue: [
+				((MCIAbstractQualityRule subclasses collect: #key) includes: key) ifFalse: [ errors add: 'Unknown rule: ' , key asString ] ].
+
+			(threshold isNotNil and: [ threshold isNumber not ]) ifTrue: [ errors add: 'Threshold for ' , key asString , ' must be a number' ] ]
+]
+
 { #category : 'accessing' }
 MooseCIConfig >> gitProjectUrl [
 
@@ -140,46 +186,6 @@ MooseCIConfig >> toSton [
 ]
 
 { #category : 'validation' }
-MooseCIConfig >> checkProjectLanguageInto: errors [
-
-	projectLanguage isNil ifTrue: [ ^ self ].
-	(MooseCILanguageDetector extensionMap values includes: projectLanguage) ifFalse: [
-		errors add: 'Unsupported project language: ' , projectLanguage asString ]
-]
-
-{ #category : 'validation' }
-MooseCIConfig >> checkProjectPathInto: errors [
-
-	(isRemote not and: [ projectPath isNil ]) ifTrue: [ errors add: 'projectPath is not set' ].
-	(isRemote and: [ gitProjectUrl isNil ]) ifTrue: [ errors add: 'gitProjectUrl is not set' ]
-]
-
-{ #category : 'validation' }
-MooseCIConfig >> checkRuleThresholdsInto: errors [
-
-	ruleThresholds isNil ifTrue: [ ^ self ].
-	ruleThresholds keysAndValuesDo: [ :key :value |
-		value isNumber ifFalse: [
-			errors add: 'Threshold for ' , key asString , ' must be a number' ] ]
-]
-
-{ #category : 'validation' }
-MooseCIConfig >> checkRulesInto: errors [
-
-	rules isNil ifTrue: [ ^ errors add: 'rules must not be empty' ].
-	rules isCollection ifFalse: [ ^ errors add: 'rules must be a collection' ].
-	rules isEmpty ifTrue: [ ^ errors add: 'rules must not be empty' ].
-
-	rules do: [ :each |
-		| key |
-		key := each isAssociation ifTrue: [ each key ] ifFalse: [ each ].
-		key isSymbol ifFalse: [ errors add: 'rules entries must be rule keys (Symbols)' ].
-		key isSymbol ifTrue: [
-			((MCIAbstractQualityRule subclasses collect: #key) includes: key) ifFalse: [
-				errors add: 'Unknown rule: ' , key asString ] ] ]
-]
-
-{ #category : 'validation' }
 MooseCIConfig >> validate [
 
 	| errors |
@@ -194,7 +200,6 @@ MooseCIConfig >> validationErrors [
 	errors := OrderedCollection new.
 	self checkProjectPathInto: errors.
 	self checkRulesInto: errors.
-	self checkRuleThresholdsInto: errors.
 	self checkProjectLanguageInto: errors.
 	^ errors
 ]
