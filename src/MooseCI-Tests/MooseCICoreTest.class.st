@@ -38,12 +38,33 @@ MooseCICoreTest >> testRunCritics [
 	mooseCICore config projectPath: MooseCIBridge mockProjectTests / 'one-lang'.
 	mooseCICore loadProject.
 	mooseCICore runCritics.
-	
+
 	self assert: mooseCICore violations isNotNil.
 	self assert: mooseCICore violations isDictionary.
 	self assert: mooseCICore violations size equals: mooseCICore config rules size.
-	self assert: (mooseCICore violations keys collect: [ :condition | condition name ]) asSet
-		equals: (mooseCICore config rules collect: [ :ruleKey | (MCIQualityRules ruleAt: ruleKey) new name ]) asSet
+	self
+		assert: (mooseCICore violations keys collect: [ :condition | condition name ]) asSet
+		equals: (mooseCICore config rules collect: [ :configRule |
+					 configRule isAssociation
+						 ifTrue: [ (MCIQualityRules ruleAt: configRule key) new name ]
+						 ifFalse: [ (MCIQualityRules ruleAt: configRule) new name ] ]) asSet
+]
+
+{ #category : 'tests' }
+MooseCICoreTest >> testRunCriticsWithCustomConfigThreshold [
+
+	| rules |
+	rules := { (MCILongFileRule key -> 1) }.
+
+	mooseCICore config projectPath: MooseCIBridge mockProjectTests / 'one-lang'.
+	mooseCICore config rules: rules.
+	mooseCICore loadProject.
+	mooseCICore runCritics.
+	
+	self assert: mooseCICore violations isNotNil.
+	self assert: mooseCICore violations isDictionary.
+	self assert: mooseCICore violations values first size equals: 1.
+	self assert: mooseCICore violations values first allViolatingEntitiesType asArray first equals: FamixPythonModule
 ]
 
 { #category : 'tests' }
