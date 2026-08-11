@@ -12,6 +12,18 @@ Class {
 { #category : 'accessing' }
 MCIReportWriter class >> defaultFileName [
 
+	^ 'report', self fileExtension 
+]
+
+{ #category : 'as yet unclassified' }
+MCIReportWriter class >> defaultOutputFormats [
+
+	^ { MCIJSONReportWriter formatKey }
+]
+
+{ #category : 'executing' }
+MCIReportWriter class >> fileExtension [
+
 	^ self subclassResponsibility
 ]
 
@@ -26,7 +38,7 @@ MCIReportWriter class >> formatKey [
 MCIReportWriter class >> writerAt: aSymbol [
 
 	self subclasses
-		detect: [ :writerClass | writerClass key = aSymbol ]
+		detect: [ :writerClass | writerClass formatKey = aSymbol ]
 		ifFound: [ :writerClass | writerClass ]
 		ifNone: [ MCIReportWriterNotFoundError signal: 'Report Writer not found for: ' , aSymbol asString ]
 ]
@@ -41,6 +53,13 @@ MCIReportWriter >> filename [
 MCIReportWriter >> filename: anObject [
 
 	filename := anObject
+]
+
+{ #category : 'initialization' }
+MCIReportWriter >> initialize [
+
+	super initialize.
+	filename := self class defaultFileName
 ]
 
 { #category : 'accessing' }

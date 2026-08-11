@@ -11,6 +11,12 @@ MCIConsoleReportWriter class >> defaultFileName [
 	^ ''
 ]
 
+{ #category : 'executing' }
+MCIConsoleReportWriter class >> fileExtension [
+
+	^ ''
+]
+
 { #category : 'formatting' }
 MCIConsoleReportWriter class >> formatKey [
 

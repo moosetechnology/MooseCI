@@ -64,5 +64,6 @@ MooseCIRunner >> writeOutput [
 
 	| reporter |
 	reporter := mooseCICore analysisReport.
-	reporter writeConsole
+	reporter writeConsole.
+	reporter writeFiles
 ]

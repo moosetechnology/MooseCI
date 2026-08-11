@@ -53,6 +53,12 @@ MCIAnalysisReport >> metrics: anObject [
 	metrics := anObject
 ]
 
+{ #category : 'as yet unclassified' }
+MCIAnalysisReport >> outputDirectory [
+
+	^ FileLocator workingDirectory / self config outputPath
+]
+
 { #category : 'accessing' }
 MCIAnalysisReport >> violations [
 
@@ -71,4 +77,14 @@ MCIAnalysisReport >> writeConsole [
 	MCIConsoleReportWriter new
 		report: self;
 		writeOn: Stdio stdout
+]
+
+{ #category : 'writing' }
+MCIAnalysisReport >> writeFiles [
+
+	self config outputFormats do: [ :formatKey |
+			| writer outputfile |
+			writer := (MCIReportWriter writerAt: formatKey) new.
+			outputfile := self outputDirectory / writer filename.
+			writer writeReport: self toFile: outputfile ]
 ]
