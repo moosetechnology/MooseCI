@@ -90,7 +90,9 @@ MooseCIRunner >> writeMetricsOutput [
 
 { #category : 'running' }
 MooseCIRunner >> writeOutput [
-	
-	self writeMetricsOutput.
+	|reporter|
+	reporter := mooseCICore analysisReport.
+	"self writeMetricsOutput."
+	reporter writeConsole.
 	self writeCriticsOutput.
 ]

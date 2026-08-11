@@ -13,6 +13,12 @@ Class {
 	#package : 'MooseCI-Core'
 }
 
+{ #category : 'as yet unclassified' }
+MooseCICore >> analysisReport [
+
+	^ MCIAnalysisReport newFrom: config metrics: metricsReport violations: violations
+]
+
 { #category : 'accessing' }
 MooseCICore >> config [
 
