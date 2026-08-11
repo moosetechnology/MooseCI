@@ -84,6 +84,6 @@ MCIReportWriter >> writeOn: aStream [
 MCIReportWriter >> writeReport: aMCIAnalysisReport toFile: aFileReference [
 
 	self report: aMCIAnalysisReport.
-	aFileReference parent ensureDirectory.
+	aFileReference parent ensureCreateDirectory.
 	aFileReference writeStreamDo: [ :stream | self writeOn: stream ]
 ]
