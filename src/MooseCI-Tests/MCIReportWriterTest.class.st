@@ -34,6 +34,18 @@ MCIReportWriterTest >> testSubclassesImplementFormatProtocol [
 ]
 
 { #category : 'tests' }
+MCIReportWriterTest >> testWriteReportToFile [
+
+	| writer file |
+	writer := MCIJSONReportWriter new.
+	file := FileLocator workingDirectory / 'moose-ci-test-report.json'.
+	writer writeReport: report toFile: file.
+
+	self assert: file exists.
+	self assert: (file contents includesSubstring: 'main.py')
+]
+
+{ #category : 'tests' }
 MCIReportWriterTest >> testWriterAt [
 
 	self assert: (MCIReportWriter writerAt: #json) equals: MCIJSONReportWriter.
@@ -44,16 +56,4 @@ MCIReportWriterTest >> testWriterAt [
 MCIReportWriterTest >> testWriterAtNotFound [
 
 	self assertBlock: [ MCIReportWriter writerAt: #html ] raises: MCIReportWriterNotFoundError
-]
-
-{ #category : 'tests' }
-MCIReportWriterTest >> testWriteReportToFile [
-
-	| writer file |
-	writer := MCIJSONReportWriter new.
-	file := FileLocator workingDirectory / 'moose-ci-test-report.json'.
-	writer writeReport: self report toFile: file.
-
-	self assert: file exists.
-	self assert: (file contents includesSubstring: 'main.py')
 ]

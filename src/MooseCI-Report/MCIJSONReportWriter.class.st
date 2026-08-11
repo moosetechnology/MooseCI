@@ -22,14 +22,19 @@ MCIJSONReportWriter >> jsonObject [
 
 	| violations |
 	violations := self report violations.
+	
 	^ {
 		  ('metrics' -> self metricsObject).
-		  ('violations' -> (violations associations collect: [ :asso |
-				    {
-					    ('rule' -> asso key ruleName).
+		  ('violations' -> 
+			(violations associations collect: [ :asso |
+				|entities|
+				entities := (asso value collect: [ :violation | violation violatingEntity ]) asCollection collect: [:entity | entity mooseName].
+				
+				    ^ {
+					    ('rule' -> asso key name).
 					    ('severity' -> asso key severity name).
 					    ('count' -> asso value size).
-					    ('entities' -> (asso value collect: [ :entity | entity name ])) 
+					    ('entities' -> entities ) 
 					} ])) 
 		} asDictionary
 ]
@@ -56,5 +61,5 @@ MCIJSONReportWriter >> metricsObject [
 { #category : 'writing' }
 MCIJSONReportWriter >> writeOn: aStream [
 
-	aStream nextPutAll: (STONJSON toStringPretty: self jsonObject)
+	aStream nextPutAll: (STON toStringPretty: self jsonObject)
 ]

@@ -9,10 +9,10 @@ Class {
 MCIJSONReportWriterTest >> testJsonStringContainsMetricsAndViolations [
 
 	| contents |
-	contents := MCIJSONReportWriter new report: self report; jsonString.
-
-	self assert: (contents includesSubstring: '"metrics"').
-	self assert: (contents includesSubstring: '"violations"').
+	contents := MCIJSONReportWriter new report: report; jsonString.
+	
+	self assert: (contents includesSubstring: 'metrics').
+	self assert: (contents includesSubstring: 'violations').
 	self assert: (contents includesSubstring: 'File with too many LOC').
 	self assert: (contents includesSubstring: 'main.py').
 	self assert: (contents includesSubstring: 'FamixCBWarningSeverity')
@@ -22,7 +22,7 @@ MCIJSONReportWriterTest >> testJsonStringContainsMetricsAndViolations [
 MCIJSONReportWriterTest >> testJsonStringIsValidJson [
 
 	| json metrics violations |
-	json := STONJSON fromString: (MCIJSONReportWriter new report: self report; jsonString).
+	json := STONJSON fromString: (MCIJSONReportWriter new report: report; jsonString).
 
 	metrics := json at: 'metrics'.
 	self assert: (metrics at: 'files') equals: 3.

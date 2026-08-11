@@ -24,7 +24,7 @@ MCIReportWriter class >> defaultOutputFormats [
 { #category : 'executing' }
 MCIReportWriter class >> fileExtension [
 
-	^ self subclassResponsibility
+	^ ''
 ]
 
 { #category : 'formatting' }
@@ -37,10 +37,10 @@ MCIReportWriter class >> formatKey [
 { #category : 'accessing' }
 MCIReportWriter class >> writerAt: aSymbol [
 
-	self subclasses
-		detect: [ :writerClass | writerClass formatKey = aSymbol ]
-		ifFound: [ :writerClass | writerClass ]
-		ifNone: [ MCIReportWriterNotFoundError signal: 'Report Writer not found for: ' , aSymbol asString ]
+	^ self subclasses
+		  detect: [ :writerClass | writerClass formatKey = aSymbol ]
+		  ifFound: [ :writerClass | writerClass ]
+		  ifNone: [ MCIReportWriterNotFoundError signal: 'Report Writer not found for: ' , aSymbol asString ]
 ]
 
 { #category : 'accessing' }

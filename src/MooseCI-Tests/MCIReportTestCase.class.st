@@ -13,12 +13,6 @@ Class {
 	#package : 'MooseCI-Tests'
 }
 
-{ #category : 'accessing' }
-MCIReportTestCase class >> isAbstract [
-
-	^ true
-]
-
 { #category : 'helpers' }
 MCIReportTestCase >> entityNamed: aName [
 
