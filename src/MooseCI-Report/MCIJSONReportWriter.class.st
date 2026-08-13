@@ -18,25 +18,38 @@ MCIJSONReportWriter class >> formatKey [
 ]
 
 { #category : 'as yet unclassified' }
+MCIJSONReportWriter >> entityObject: anEntity [
+
+	| anchor |
+	anchor := anEntity sourceAnchor.
+
+	^ OrderedDictionary newFrom: {
+			  ('entity' -> anEntity name).
+			  ('file' -> anchor fileName).
+			  ('startLine' -> anchor startLine).
+			  ('endLine' -> anchor endLine) }
+]
+
+{ #category : 'as yet unclassified' }
 MCIJSONReportWriter >> jsonObject [
 
 	| violations|
 	violations := self report violations select: [:each | each isNotEmpty].
-	"1halt."
-	^ {
+	
+	^ OrderedDictionary newFrom: {
 		  ('metrics' -> self metricsObject).
 		  ('violations' -> 
 			(violations associations collect: [ :asso |
 				|entities|
-				entities := (asso value collect: [ :violation | violation violatingEntity ]) asCollection collect: [:entity | entity mooseName].
+				entities := (asso value collect: [ :violation | self entityObject: violation violatingEntity ]) .
 				
-				     {
+				    OrderedDictionary newFrom: {
 					    ('rule' -> asso key name).
-					    ('severity' -> asso key severity name).
+					    ('severity' -> asso key severity title).
 					    ('count' -> asso value size).
 					    ('entities' -> entities asArray ) 
-					} asDictionary ])) 
-		} asDictionary
+					} ])) 
+		}
 ]
 
 { #category : 'writing' }
@@ -50,16 +63,16 @@ MCIJSONReportWriter >> metricsObject [
 
 	| metrics |
 	metrics := self report metrics.
-	^ {
+	^ OrderedDictionary newFrom: {
 		  ('files' -> metrics files).
 		  ('loc' -> metrics loc).
 		  ('packages' -> metrics packages).
 		  ('classes' -> metrics classes) 
-		} asDictionary
+		}
 ]
 
 { #category : 'writing' }
 MCIJSONReportWriter >> writeOn: aStream [
 
-	aStream nextPutAll: (STON toStringPretty: self jsonObject)
+	aStream nextPutAll: (STONJSON toStringPretty: self jsonObject)
 ]
