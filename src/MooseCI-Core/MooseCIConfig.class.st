@@ -31,7 +31,7 @@ MooseCIConfig class >> default [
 		  metrics: #( #size #complexity );
 		  rules: MCIQualityRules defaultRules;
 		  visualizations: #(  );
-		  outputFormats: #( #html );
+		  outputFormats: MCIReportWriter defaultOutputFormats;
 		  outputPath: '.moose-ci/report';
 		  isRemote: false;
 		  yourself
