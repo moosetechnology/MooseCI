@@ -9,8 +9,21 @@ Class {
 MCIJSONReportWriterTest >> testJsonStringContainsMetricsAndViolations [
 
 	| contents |
+	contents := (MCIReportWriter writerAt: #json) new report: report; jsonString.
+	1halt.
+	self assert: (contents includesSubstring: 'metrics').
+	self assert: (contents includesSubstring: 'violations').
+	self assert: (contents includesSubstring: 'No docstring').
+	self assert: (contents includesSubstring: 'DummyClass').
+	self assert: (contents includesSubstring: 'FamixCBHintSeverity')
+]
+
+{ #category : 'tests' }
+MCIJSONReportWriterTest >> testJsonStringContainsValidViolatingEntities [
+
+	| contents |
 	contents := MCIJSONReportWriter new report: report; jsonString.
-	
+	1halt.
 	self assert: (contents includesSubstring: 'metrics').
 	self assert: (contents includesSubstring: 'violations').
 	self assert: (contents includesSubstring: 'File with too many LOC').

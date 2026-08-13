@@ -9,9 +9,9 @@ Class {
 MCIAnalysisReportTest >> testNewFrom [
 
 	| newReport |
-	newReport := MCIAnalysisReport newFrom: config metrics: metrics violations: violations.
+	newReport := MCIAnalysisReport newFrom: mooseCICore config metrics: metrics violations: violations.
 
-	self assert: newReport config equals: config.
+	self assert: newReport config equals: mooseCICore config.
 	self assert: newReport metrics equals: metrics.
 	self assert: newReport violations equals: violations
 ]
@@ -26,9 +26,11 @@ MCIAnalysisReportTest >> testOutputDirectory [
 MCIAnalysisReportTest >> testWriteFiles [
 
 	| outputFile |
+	
 	report writeFiles.
+	
 	outputFile := FileLocator workingDirectory / 'moose-ci-test-report' / 'report.json'.
 
 	self assert: outputFile exists.
-	self assert: (outputFile contents includesSubstring: 'main.py')
+	self assert: (outputFile contents includesSubstring: 'DummyClass')
 ]

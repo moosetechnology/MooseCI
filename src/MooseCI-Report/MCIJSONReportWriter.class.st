@@ -20,9 +20,9 @@ MCIJSONReportWriter class >> formatKey [
 { #category : 'as yet unclassified' }
 MCIJSONReportWriter >> jsonObject [
 
-	| violations |
-	violations := self report violations.
-	
+	| violations|
+	violations := self report violations select: [:each | each isNotEmpty].
+	"1halt."
 	^ {
 		  ('metrics' -> self metricsObject).
 		  ('violations' -> 
@@ -30,12 +30,12 @@ MCIJSONReportWriter >> jsonObject [
 				|entities|
 				entities := (asso value collect: [ :violation | violation violatingEntity ]) asCollection collect: [:entity | entity mooseName].
 				
-				    ^ {
+				     {
 					    ('rule' -> asso key name).
 					    ('severity' -> asso key severity name).
 					    ('count' -> asso value size).
-					    ('entities' -> entities ) 
-					} ])) 
+					    ('entities' -> entities asArray ) 
+					} asDictionary ])) 
 		} asDictionary
 ]
 
