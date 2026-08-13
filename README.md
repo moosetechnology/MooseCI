@@ -24,7 +24,8 @@ Some of features it should offer:
 - [x] load a project (either from command line or in a configuration file)
 - [ ] accept projects inany programming language that Moose can handle (C, Java, Pharo, Python, Typescript,...)
 - [ ] run a list of analyses (either "standard" ones, or some specified in a configuration file)
-- [ ] output the results in an appropriate format (specified on command line or configuration file: text, JSON, XML, CSV,...)
+- [x] output the results as JSON and console text
+- [ ] output the results in other formats (XML, CSV, HTML,...)
 
 Some metrics and analyses that are envisionned:
 - [x] size (LOC, \# of classes,...)
@@ -74,9 +75,57 @@ docker run -v "$(pwd):/src" ghcr.io/moosetechnology/moose-ci:latest analyze /src
 - `analyze` — analyze the current directory using the existing config file.
 - `analyze <project-path>` — analyze the project.
 
+### Report output
+
+Running `analyze` prints the report to the console and writes it to files in the output directory (`.moose-ci/report/` by default, relative to the analyzed project).
+
+By default a JSON report is written to `report.json`:
+
+```json
+{
+  "metrics" : {
+    "files" : 8,
+    "loc" : 5,
+    "packages" : 2,
+    "classes" : 3
+  },
+  "violations" : [
+    {
+      "rule" : "No docstring",
+      "severity" : "Hint",
+      "count" : 3,
+      "entities" : [
+        {
+          "entity" : "DummyClass",
+          "file" : "relative/path/to/no_docstring.py",
+          "startLine" : 1,
+          "endLine" : 2
+        }
+      ]
+    }
+  ]
+}
+```
+
+Violations are grouped by rule. Each group contains the rule name, its severity, the number of violating entities and the details of each entity (name, file and source lines).
+
+You can configure the output in `moose-ci.ston`:
+
+```ston
+#outputFormats : [
+		#json
+],
+#outputPath : '.moose-ci/report'
+```
+
+- `#outputFormats` — list of formats to write. `#json` is the only format available for now.
+- `#outputPath` — directory (relative to the project) where the report files are written.
+
 ### Configuration
 
 Moose-CI uses a `moose-ci.ston` config file. Run `moose-ci init` to create one.
+
+You can configure the report output formats and location here too (see [Report output](#report-output)).
 
 You can update the rules list and customize each rule's threshold:
 
