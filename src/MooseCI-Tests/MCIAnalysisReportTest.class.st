@@ -25,12 +25,12 @@ MCIAnalysisReportTest >> testOutputDirectory [
 { #category : 'tests' }
 MCIAnalysisReportTest >> testWriteFiles [
 
-	| outputFile |
-	
+	| outputDirectory |
 	report writeFiles.
-	
-	outputFile := FileLocator workingDirectory / 'moose-ci-test-report' / 'report.json'.
 
-	self assert: outputFile exists.
-	self assert: (outputFile contents includesSubstring: 'DummyClass')
+	outputDirectory := FileLocator workingDirectory / 'moose-ci-test-report'.
+
+	self assert: outputDirectory hasFiles.
+	self assert: outputDirectory files first extension equals: 'json'.
+	self assert: (outputDirectory files first contents includesSubstring: 'DummyClass')
 ]
