@@ -83,8 +83,11 @@ MCIAnalysisReport >> writeConsole [
 MCIAnalysisReport >> writeFiles [
 
 	self config outputFormats do: [ :formatKey |
-			| writer outputfile |
+			| writer outputfile filename |
 			writer := (MCIReportWriter writerAt: formatKey) new.
-			outputfile := self outputDirectory / writer filename.
+
+			filename := writer filename , '-' , DateAndTime now asFileNameCompatibleString , writer class fileExtension.
+			outputfile := self outputDirectory / filename.
+
 			writer writeReport: self toFile: outputfile ]
 ]

@@ -12,7 +12,7 @@ Class {
 { #category : 'accessing' }
 MCIReportWriter class >> defaultFileName [
 
-	^ 'report', self fileExtension 
+	^ 'report'
 ]
 
 { #category : 'as yet unclassified' }

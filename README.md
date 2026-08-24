@@ -79,7 +79,7 @@ docker run -v "$(pwd):/src" ghcr.io/moosetechnology/moose-ci:latest analyze /src
 
 Running `analyze` prints the report to the console and writes it to files in the output directory (`.moose-ci/report/` by default, relative to the analyzed project).
 
-By default a JSON report is written to `report.json`:
+By default a JSON report is written to `report-<TIMESTAMP>.json`:
 
 ```json
 {
