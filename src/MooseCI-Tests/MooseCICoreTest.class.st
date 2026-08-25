@@ -67,6 +67,26 @@ MooseCICoreTest >> testRunCriticsWithCustomConfigThreshold [
 	self assert: mooseCICore violations values first allViolatingEntitiesType asArray first equals: FamixPythonModule
 ]
 
+{ #category : 'helpers' }
+MooseCICoreTest >> hasVerveinejOrDocker [
+
+	^ MooseCIJavaProjectLoader hasVerveinejJar or: [ MooseCIJavaProjectLoader dockerAvailable ]
+]
+
+{ #category : 'tests' }
+MooseCICoreTest >> testLoadProjectJava [
+
+	| projectPath |
+	self hasVerveinejOrDocker ifFalse: [ self skip ].
+
+	projectPath := MooseCIBridge mockProjectTests / 'java-only'.
+	mooseCICore config projectPath: projectPath.
+	mooseCICore loadProject.
+
+	self assert: mooseCICore model isMooseModel.
+	self assert: (mooseCICore model isKindOf: FamixJavaModel)
+]
+
 { #category : 'tests' }
 MooseCICoreTest >> testRunMetricsAnalysis [
 
