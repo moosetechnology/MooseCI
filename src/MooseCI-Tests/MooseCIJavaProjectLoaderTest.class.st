@@ -15,25 +15,26 @@ MooseCIJavaProjectLoaderTest >> hasVerveinejOrDocker [
 ]
 
 { #category : 'tests' }
-MooseCIJavaProjectLoaderTest >> testLanguageNameSymbol [
-
-	self assert: MooseCIJavaProjectLoader languageNameSymbol equals: #java
-]
-
-{ #category : 'tests' }
-MooseCIJavaProjectLoaderTest >> testJavaLoaderIsSelectedForJava [
-
-	self
-		assert: (MooseCIProjectLoader forLanguage: #java)
-		equals: MooseCIJavaProjectLoader
-]
-
-{ #category : 'tests' }
 MooseCIJavaProjectLoaderTest >> testDefaultXmx [
 
 	self
 		assert: MooseCIJavaProjectLoader defaultXmx
 		equals: '-Xmx2g'
+]
+
+{ #category : 'tests' }
+MooseCIJavaProjectLoaderTest >> testDockerCommand [
+
+	| command |
+	command := MooseCIJavaProjectLoader
+		           verveinejDockerCommandFor: '/tmp/project' asFileReference
+		           version: 'v5.0.0'
+		           outputFileName: 'moose-ci-model.json'.
+
+	self
+		assert: command
+		equals:
+		'docker run -v ''/tmp/project'':/src ghcr.io/evref-bl/verveinej:v5.0.0 -format json -o moose-ci-model.json'
 ]
 
 { #category : 'tests' }
@@ -53,45 +54,17 @@ MooseCIJavaProjectLoaderTest >> testJarCommand [
 ]
 
 { #category : 'tests' }
-MooseCIJavaProjectLoaderTest >> testDockerCommand [
-
-	| command |
-	command := MooseCIJavaProjectLoader
-		           verveinejDockerCommandFor: '/tmp/project' asFileReference
-		           version: 'v5.0.0'
-		           outputFileName: 'moose-ci-model.json'.
+MooseCIJavaProjectLoaderTest >> testJavaLoaderIsSelectedForJava [
 
 	self
-		assert: command
-		equals:
-		'docker run --rm -v ''/tmp/project'':/src ghcr.io/evref-bl/verveinej:v5.0.0 -format json -alllocals -anchor assoc -o moose-ci-model.json'
+		assert: (MooseCIProjectLoader forLanguage: #java)
+		equals: MooseCIJavaProjectLoader
 ]
 
 { #category : 'tests' }
-MooseCIJavaProjectLoaderTest >> testStrategyPrefersLocalJar [
+MooseCIJavaProjectLoaderTest >> testLanguageNameSymbol [
 
-	self
-		assert:
-		(MooseCIJavaProjectLoader strategyWithJarAvailable: true dockerAvailable: false)
-		equals: #jar
-]
-
-{ #category : 'tests' }
-MooseCIJavaProjectLoaderTest >> testStrategyFallsBackToDocker [
-
-	self
-		assert:
-		(MooseCIJavaProjectLoader strategyWithJarAvailable: false dockerAvailable: true)
-		equals: #docker
-]
-
-{ #category : 'tests' }
-MooseCIJavaProjectLoaderTest >> testStrategyErrorsWhenNoToolAvailable [
-
-	self
-		should: [
-			MooseCIJavaProjectLoader strategyWithJarAvailable: false dockerAvailable: false ]
-		raise: Error
+	self assert: MooseCIJavaProjectLoader languageNameSymbol equals: #java
 ]
 
 { #category : 'tests' }
@@ -111,4 +84,31 @@ MooseCIJavaProjectLoaderTest >> testLoadJavaProjectReturnsFamixJavaModel [
 	self
 		assert: model rootFolder asFileReference fullName
 		equals: projectPath fullName
+]
+
+{ #category : 'tests' }
+MooseCIJavaProjectLoaderTest >> testStrategyErrorsWhenNoToolAvailable [
+
+	self
+		should: [
+			MooseCIJavaProjectLoader strategyWithJarAvailable: false dockerAvailable: false ]
+		raise: Error
+]
+
+{ #category : 'tests' }
+MooseCIJavaProjectLoaderTest >> testStrategyFallsBackToDocker [
+
+	self
+		assert:
+		(MooseCIJavaProjectLoader strategyWithJarAvailable: false dockerAvailable: true)
+		equals: #docker
+]
+
+{ #category : 'tests' }
+MooseCIJavaProjectLoaderTest >> testStrategyPrefersLocalJar [
+
+	self
+		assert:
+		(MooseCIJavaProjectLoader strategyWithJarAvailable: true dockerAvailable: false)
+		equals: #jar
 ]
