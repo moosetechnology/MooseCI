@@ -30,34 +30,47 @@ MooseCIJavaProjectLoader class >> languageNameSymbol [
 { #category : 'as yet unclassified' }
 MooseCIJavaProjectLoader class >> load: aProjectFilePath [
 
-	self dockerAvailable ifTrue: [
-			| command importer status model |
-			command := self verveinejDockerCommandFor: aProjectFilePath asFileReference version: 'latest' outputFileName: 'model.json'.
-			status := LibC runCommand: command.
+	| command status model modelFilename strategy|
+	
+	modelFilename := 'model.json'.
+	
+	strategy := self strategyWithJarAvailable: self hasVerveinejJar dockerAvailable: self dockerAvailable.
 
-			status = 0 ifFalse: [ Error signal: 'Failed to run command: ' , command ].
+	command := strategy = #jar
+		           ifTrue: [
+				           self
+					           verveinejJarCommandFor: aProjectFilePath asFileReference
+					           jar: '/opt/verveinej/VerveineJ.jar' asFileReference
+					           xmx: '-Xmx2g'
+					           outputFileName: modelFilename ]
+		           ifFalse: [ self verveinejDockerCommandFor: aProjectFilePath asFileReference version: 'latest' outputFileName: modelFilename ].
 
-			model := FamixJavaModel new
-				         rootFolder: aProjectFilePath;
-				         yourself.
-			importer := FamixJSONFileImporter new
-				            model: model;
-				            inputFile: aProjectFilePath asFileReference / 'model.json';
-				            yourself.
-			importer run.
-			^ model ].
 
-	self hasVerveinejJar ifTrue: [ ^ self ].
 
-	"neither docker or jar available"
+	status := LibC runCommand: command.
 
-	Error signal: 'VerveineJ not found. Install the VerveineJ jar or the docker version'
+	status = 0 ifFalse: [ Error signal: 'Failed to run command: ' , command ].
+
+	model := FamixJavaModel new
+		         rootFolder: aProjectFilePath;
+		         yourself.
+		
+	FamixJSONFileImporter new
+		model: model;
+		inputFile: aProjectFilePath asFileReference / modelFilename;
+		run.
+
+
+	^ model
 ]
 
 { #category : 'as yet unclassified' }
-MooseCIJavaProjectLoader class >> strategyWithJarAvailable: isJarAvailable dockerAvailable: isDockerAvailable [ 
+MooseCIJavaProjectLoader class >> strategyWithJarAvailable: isJarAvailable dockerAvailable: isDockerAvailable [
+
+	isJarAvailable ifTrue: [ ^ #jar ].
+	isDockerAvailable ifTrue: [ ^ #docker ].
 	
-	self flag: #TODO
+	Error signal: 'VerveineJ not found. Install the VerveineJ jar or the docker version'
 ]
 
 { #category : 'as yet unclassified' }
@@ -65,4 +78,12 @@ MooseCIJavaProjectLoader class >> verveinejDockerCommandFor: aFileReference vers
 
 	^ String streamContents: [ :s |
 		  s << 'docker run -v ''' << aFileReference fullName << ''':/src ghcr.io/evref-bl/verveinej:' << version << ' -format json -o ' << fileName ]
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIJavaProjectLoader class >> verveinejJarCommandFor: projectPath jar: jarPath xmx: xmx outputFileName: fileName [ 
+	
+	^ String streamContents: [ :s | 
+		s << 'java ' << xmx << ' -jar ' << jarPath fullName << ' -format json -alllocals -anchor assoc -o ' << fileName << ' ' << projectPath fullName 
+		 ].
 ]

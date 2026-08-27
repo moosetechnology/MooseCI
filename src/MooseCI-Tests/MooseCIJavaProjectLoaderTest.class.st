@@ -15,14 +15,6 @@ MooseCIJavaProjectLoaderTest >> hasVerveinejOrDocker [
 ]
 
 { #category : 'tests' }
-MooseCIJavaProjectLoaderTest >> testDefaultXmx [
-
-	self
-		assert: MooseCIJavaProjectLoader defaultXmx
-		equals: '-Xmx2g'
-]
-
-{ #category : 'tests' }
 MooseCIJavaProjectLoaderTest >> testDockerCommand [
 
 	| command |
@@ -45,12 +37,12 @@ MooseCIJavaProjectLoaderTest >> testJarCommand [
 		           verveinejJarCommandFor: '/tmp/project' asFileReference
 		           jar: '/opt/verveinej/VerveineJ.jar' asFileReference
 		           xmx: '-Xmx2g'
-		           output: '/tmp/out/model.json' asFileReference.
+		           outputFileName: 'model.json'.
 
 	self
 		assert: command
 		equals:
-		'cd ''/tmp/project'' && java -Xmx2g -jar ''/opt/verveinej/VerveineJ.jar'' -format json -alllocals -anchor assoc -o ''/tmp/out/model.json'' .'
+		'java -Xmx2g -jar /opt/verveinej/VerveineJ.jar -format json -alllocals -anchor assoc -o model.json /tmp/project'
 ]
 
 { #category : 'tests' }
