@@ -30,7 +30,22 @@ MooseCIJavaProjectLoader class >> languageNameSymbol [
 { #category : 'as yet unclassified' }
 MooseCIJavaProjectLoader class >> load: aProjectFilePath [
 
-	self dockerAvailable ifTrue: [ ^ self ].
+	self dockerAvailable ifTrue: [
+			| command importer status model |
+			command := self verveinejDockerCommandFor: aProjectFilePath asFileReference version: 'latest' outputFileName: 'model.json'.
+			status := LibC runCommand: command.
+
+			status = 0 ifFalse: [ Error signal: 'Failed to run command: ' , command ].
+
+			model := FamixJavaModel new
+				         rootFolder: aProjectFilePath;
+				         yourself.
+			importer := FamixJSONFileImporter new
+				            model: model;
+				            inputFile: aProjectFilePath asFileReference / 'model.json';
+				            yourself.
+			importer run.
+			^ model ].
 
 	self hasVerveinejJar ifTrue: [ ^ self ].
 
