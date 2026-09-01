@@ -27,6 +27,37 @@ MCIQualityRules class >> defaultRules [
 		  MCIFunctionNamingRule key }
 ]
 
+{ #category : 'helpers' }
+MCIQualityRules class >> javaRules [
+
+	^ {
+		  (MCILongFileRule key -> MCILongFileRule defaultThreshold).
+		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
+		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).
+		  MCILocalVariableNamingRule key.
+		  MCIUnusedLocalVariableRule key.
+		  MCIUnusedParameterRule key.
+		  MCIUnusedPrivateMethodRule key.
+		  MCIShadowedAttributeRule key.
+		  MCIFunctionNamingRule key }
+]
+
+{ #category : 'helpers' }
+MCIQualityRules class >> pythonRules [
+
+	^ {
+		  (MCILongFileRule key -> MCILongFileRule defaultThreshold).
+		  MCINoDocstringRule key.
+		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
+		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).
+		  MCILocalVariableNamingRule key.
+		  MCIUnusedLocalVariableRule key.
+		  MCIUnusedParameterRule key.
+		  MCIUnusedPrivateMethodRule key.
+		  MCIShadowedAttributeRule key.
+		  MCIFunctionNamingRule key }
+]
+
 { #category : 'accessing' }
 MCIQualityRules class >> ruleAt: aSymbol [
 

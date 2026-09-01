@@ -96,3 +96,15 @@ MooseCICLITest >> testInitCommand [
 	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'Creating a MooseCI config file...').
 	self assert: context exitStatus equals: 0
 ]
+
+{ #category : 'tests' }
+MooseCICLITest >> testInitCommandDetectsLanguage [
+
+	| context |
+	context := MooseCICLI mooseci activateWith: {
+			           'moose-ci'.
+			           'init'}.
+
+	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'Language detected:').
+	self assert: context exitStatus equals: 0
+]

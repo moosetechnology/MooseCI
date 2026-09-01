@@ -29,12 +29,64 @@ MooseCIConfigTest >> testDefaultConfigValid [
 ]
 
 { #category : 'tests' }
+MooseCIConfigTest >> testForReturnsJavaConfig [
+
+	| config |
+	config := MooseCIConfig for: #java.
+
+	self assert: config projectLanguage equals: #java.
+	self assert: config rules equals: MCIQualityRules javaRules
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testForReturnsPythonConfig [
+
+	| config |
+	config := MooseCIConfig for: #python.
+
+	self assert: config projectLanguage equals: #python.
+	self assert: config rules equals: MCIQualityRules pythonRules
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testForUnknownLanguageSignalsError [
+
+	self assertBlock: [ MooseCIConfig for: #ruby ] raises: Error
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testJavaDefaultConfig [
+
+	| config |
+	config := MooseCIConfig java.
+
+	self assert: config projectLanguage equals: #java.
+	self assert: config metrics equals: #( #size #complexity ).
+	self assert: config outputPath equals: '.moose-ci/report'.
+	self deny: config isRemote.
+	self assert: config projectPath isNil
+]
+
+{ #category : 'tests' }
 MooseCIConfigTest >> testMissingProjectPath [
 
 	| config |
 	config := MooseCIConfig default.
 
 	self assert: (config validationErrors includes: 'projectPath is not set')
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testPythonDefaultConfig [
+
+	| config |
+	config := MooseCIConfig python.
+
+	self assert: config projectLanguage equals: #python.
+	self assert: config metrics equals: #( #size #complexity ).
+	self assert: config outputPath equals: '.moose-ci/report'.
+	self deny: config isRemote.
+	self assert: config projectPath isNil
 ]
 
 { #category : 'tests' }
