@@ -45,7 +45,7 @@ MooseCIJavaProjectLoader class >> load: aProjectFilePath [
 					           outputFileName: modelFilename ]
 		           ifFalse: [ self verveinejDockerCommandFor: aProjectFilePath asFileReference version: 'latest' outputFileName: modelFilename ].
 
-
+ 
 
 	status := LibC runCommand: command.
 
@@ -84,6 +84,7 @@ MooseCIJavaProjectLoader class >> verveinejDockerCommandFor: aFileReference vers
 MooseCIJavaProjectLoader class >> verveinejJarCommandFor: projectPath jar: jarPath xmx: xmx outputFileName: fileName [ 
 	
 	^ String streamContents: [ :s | 
-		s << 'java ' << xmx << ' -jar ' << jarPath fullName << ' -format json -alllocals -anchor assoc -o ' << fileName << ' ' << projectPath fullName 
+		
+		s << 'cd ''' << projectPath fullName << ''' && ' << 'java ' << xmx << ' -jar ' << jarPath fullName << ' -format json -alllocals -anchor assoc -o ' << fileName << ' ' << projectPath fullName 
 		 ].
 ]

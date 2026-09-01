@@ -63,7 +63,7 @@ MooseCIConfigTest >> testJavaDefaultConfig [
 	self assert: config projectLanguage equals: #java.
 	self assert: config metrics equals: #( #size #complexity ).
 	self assert: config outputPath equals: '.moose-ci/report'.
-	self assert: config isRemote equals: false.
+	self deny: config isRemote.
 	self assert: config projectPath isNil
 ]
 
@@ -77,17 +77,6 @@ MooseCIConfigTest >> testMissingProjectPath [
 ]
 
 { #category : 'tests' }
-MooseCIConfigTest >> testToSton [ 
-	|stonString config|
-	config := MooseCIConfig default.
-	stonString := config toSton.
-	
-self assert: (stonString includesSubstring: 'MooseCIConfig').
-self assert: (stonString includesSubstring: '#metrics').
-self assert: (stonString includesSubstring: '#rules').
-]
-
-{ #category : 'tests' }
 MooseCIConfigTest >> testPythonDefaultConfig [
 
 	| config |
@@ -96,8 +85,19 @@ MooseCIConfigTest >> testPythonDefaultConfig [
 	self assert: config projectLanguage equals: #python.
 	self assert: config metrics equals: #( #size #complexity ).
 	self assert: config outputPath equals: '.moose-ci/report'.
-	self assert: config isRemote equals: false.
+	self deny: config isRemote.
 	self assert: config projectPath isNil
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testToSton [ 
+	|stonString config|
+	config := MooseCIConfig default.
+	stonString := config toSton.
+	
+self assert: (stonString includesSubstring: 'MooseCIConfig').
+self assert: (stonString includesSubstring: '#metrics').
+self assert: (stonString includesSubstring: '#rules').
 ]
 
 { #category : 'tests' }
