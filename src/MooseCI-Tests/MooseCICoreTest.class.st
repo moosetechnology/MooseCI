@@ -11,6 +11,12 @@ Class {
 	#package : 'MooseCI-Tests'
 }
 
+{ #category : 'helpers' }
+MooseCICoreTest >> hasVerveinejOrDocker [
+
+	^ MooseCIJavaProjectLoader hasVerveinejJar or: [ MooseCIJavaProjectLoader dockerAvailable ]
+]
+
 { #category : 'running' }
 MooseCICoreTest >> setUp [
 	super setUp.
@@ -30,6 +36,20 @@ MooseCICoreTest >> testLoadProject [
 	mooseCICore loadProject.
 
 	self assert: mooseCICore model isMooseModel
+]
+
+{ #category : 'tests' }
+MooseCICoreTest >> testLoadProjectJava [
+
+	| projectPath |
+	self hasVerveinejOrDocker ifFalse: [ self skip ].
+
+	projectPath := MooseCIBridge mockProjectTests / 'java-only'.
+	mooseCICore config projectPath: projectPath.
+	mooseCICore loadProject.
+
+	self assert: mooseCICore model isMooseModel.
+	self assert: (mooseCICore model isKindOf: FamixJavaModel)
 ]
 
 { #category : 'tests' }
