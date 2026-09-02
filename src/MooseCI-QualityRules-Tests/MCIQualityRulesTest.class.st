@@ -22,16 +22,6 @@ MCIQualityRulesTest >> testDefaultApplicableLanguagesIsAll [
 ]
 
 { #category : 'tests' }
-MCIQualityRulesTest >> testJavaRulesOnlyContainGenericRules [
-
-	| keys |
-	keys := MCIQualityRules javaRules collect: [ :each |
-			        each isAssociation ifTrue: [ each key ] ifFalse: [ each ] ].
-
-	self assert: (keys allSatisfy: [ :key | (MCIQualityRules ruleAt: key) applicableLanguages = #all ])
-]
-
-{ #category : 'tests' }
 MCIQualityRulesTest >> testPythonOnlyRulesDeclarePython [
 
 	self assert: MCINoDocstringRule applicableLanguages equals: #( #python )

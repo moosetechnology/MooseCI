@@ -8,6 +8,12 @@ Class {
 	#package : 'MooseCI-QualityRules'
 }
 
+{ #category : 'as yet unclassified' }
+MCINoDocstringRule class >> applicableLanguages [
+
+	^ #( #python )
+]
+
 { #category : 'accessing' }
 MCINoDocstringRule class >> defaultSeverity [
 

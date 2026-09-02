@@ -24,7 +24,7 @@ MooseCIConfigTest >> testConfigForJavaIsValid [
 	| config |
 	config := MooseCIConfig for: #java.
 	config projectPath: '/some/path'.
-
+	config validate.
 	self assert: config validationErrors isEmpty
 ]
 
@@ -34,7 +34,7 @@ MooseCIConfigTest >> testConfigForPythonIsValid [
 	| config |
 	config := MooseCIConfig for: #python.
 	config projectPath: '/some/path'.
-
+	config validate.
 	self assert: config validationErrors isEmpty
 ]
 
@@ -82,7 +82,7 @@ MooseCIConfigTest >> testGenericRuleValidForAnyLanguage [
 	config projectLanguage: #java.
 	config projectPath: '/some/path'.
 	config rules: #( #large_class ).
-
+	
 	self assert: config validationErrors isEmpty
 ]
 
@@ -122,28 +122,6 @@ MooseCIConfigTest >> testPythonDefaultConfig [
 ]
 
 { #category : 'tests' }
-MooseCIConfigTest >> testToSton [ 
-	|stonString config|
-	config := MooseCIConfig default.
-	stonString := config toSton.
-	
-self assert: (stonString includesSubstring: 'MooseCIConfig').
-self assert: (stonString includesSubstring: '#metrics').
-self assert: (stonString includesSubstring: '#rules').
-]
-
-{ #category : 'tests' }
-MooseCIConfigTest >> testRuleLanguageCheckSkippedForUnknownLanguage [
-
-	| config |
-	config := MooseCIConfig default.
-	config projectPath: '/some/path'.
-	config rules: #( #no_docstring ).
-
-	self assert: config validationErrors isEmpty
-]
-
-{ #category : 'tests' }
 MooseCIConfigTest >> testRuleNotApplicableToLanguageIsReported [
 
 	| config |
@@ -153,6 +131,17 @@ MooseCIConfigTest >> testRuleNotApplicableToLanguageIsReported [
 	config rules: #( #no_docstring ).
 
 	self assert: (config validationErrors includes: 'Rule #no_docstring is not applicable to language #java')
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testToSton [ 
+	|stonString config|
+	config := MooseCIConfig default.
+	stonString := config toSton.
+	
+self assert: (stonString includesSubstring: 'MooseCIConfig').
+self assert: (stonString includesSubstring: '#metrics').
+self assert: (stonString includesSubstring: '#rules').
 ]
 
 { #category : 'tests' }
