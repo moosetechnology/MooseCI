@@ -31,15 +31,11 @@ MCIQualityRules class >> defaultRules [
 MCIQualityRules class >> javaRules [
 
 	^ {
-		  (MCILongFileRule key -> MCILongFileRule defaultThreshold).
 		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
 		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).
-		  MCILocalVariableNamingRule key.
 		  MCIUnusedLocalVariableRule key.
 		  MCIUnusedParameterRule key.
-		  MCIUnusedPrivateMethodRule key.
-		  MCIShadowedAttributeRule key.
-		  MCIFunctionNamingRule key }
+		  MCIShadowedAttributeRule key }
 ]
 
 { #category : 'helpers' }
