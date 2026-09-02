@@ -42,7 +42,7 @@ MooseCIJavaProjectLoaderTest >> testJarCommand [
 	self
 		assert: command
 		equals:
-		'cd ''/tmp/project'' && java -Xmx2g -jar /opt/verveinej/VerveineJ.jar -format json -alllocals -anchor assoc -o model.json /tmp/project'
+		'cd ''/tmp/project'' && java -Xmx2g -jar /opt/verveinej/VerveineJ.jar -format json -o model.json /tmp/project'
 ]
 
 { #category : 'tests' }
