@@ -96,10 +96,21 @@ MooseCIConfig >> checkProjectPathInto: errors [
 { #category : 'validation' }
 MooseCIConfig >> checkRuleSymbol: aSymbol into: errors [
 
-	aSymbol isSymbol ifFalse: [ errors add: 'rules entries must be rule keys (Symbols)' ].
+	| ruleSymbols |
+	aSymbol isSymbol ifFalse: [
+			errors add: 'rules entries must be rule keys (Symbols)'.
+			^ self ].
 
-	aSymbol isSymbol ifTrue: [
-		((MCIAbstractQualityRule subclasses collect: #key) includes: aSymbol) ifFalse: [ errors add: 'Unknown rule: ' , aSymbol asString ] ]
+	ruleSymbols := MCIAbstractQualityRule subclasses collect: #key.
+
+	(ruleSymbols includes: aSymbol) ifFalse: [
+			errors add: 'Unknown rule: ' , aSymbol asString.
+			^ self ].
+		
+	projectLanguage ifNil: [ ^ self ].
+	
+	((MCIQualityRules ruleAt: aSymbol) applicableFor: projectLanguage) ifFalse: [
+		errors add: 'Rule #' , aSymbol , ' is not applicable to language #' , projectLanguage ]
 ]
 
 { #category : 'validation' }

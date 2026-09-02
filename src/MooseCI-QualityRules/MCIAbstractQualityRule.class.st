@@ -29,6 +29,22 @@ Class {
 	#package : 'MooseCI-QualityRules'
 }
 
+{ #category : 'as yet unclassified' }
+MCIAbstractQualityRule class >> applicableFor: aSymbol [
+
+	| langs |
+	langs := self applicableLanguages.
+	(langs isSymbol and: [ langs = #all ]) ifTrue: [ ^ true ].
+
+	^ langs includes: aSymbol
+]
+
+{ #category : 'as yet unclassified' }
+MCIAbstractQualityRule class >> applicableLanguages [
+
+	^ #all
+]
+
 { #category : 'accessing' }
 MCIAbstractQualityRule class >> defaultSeverity [
 

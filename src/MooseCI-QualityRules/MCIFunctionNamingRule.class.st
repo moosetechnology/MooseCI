@@ -8,6 +8,12 @@ Class {
 	#package : 'MooseCI-QualityRules'
 }
 
+{ #category : 'as yet unclassified' }
+MCIFunctionNamingRule class >> applicableLanguages [
+
+	^ #( #python )
+]
+
 { #category : 'accessing' }
 MCIFunctionNamingRule class >> defaultSeverity [
 

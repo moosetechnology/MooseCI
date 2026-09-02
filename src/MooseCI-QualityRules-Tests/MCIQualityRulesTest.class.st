@@ -16,6 +16,18 @@ MCIQualityRulesTest >> testAllRules [
 ]
 
 { #category : 'tests' }
+MCIQualityRulesTest >> testDefaultApplicableLanguagesIsAll [
+
+	self assert: MCIAbstractQualityRule applicableLanguages equals: #all
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testPythonOnlyRulesDeclarePython [
+
+	self assert: MCINoDocstringRule applicableLanguages equals: #( #python )
+]
+
+{ #category : 'tests' }
 MCIQualityRulesTest >> testRuleAt [
 
 	| rule |

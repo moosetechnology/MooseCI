@@ -8,6 +8,12 @@ Class {
 	#package : 'MooseCI-QualityRules'
 }
 
+{ #category : 'as yet unclassified' }
+MCILongFileRule class >> applicableLanguages [
+
+	^ #( #python )
+]
+
 { #category : 'accessing' }
 MCILongFileRule class >> defaultThreshold [ 
 

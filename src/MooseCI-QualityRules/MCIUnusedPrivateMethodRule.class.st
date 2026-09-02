@@ -8,6 +8,12 @@ Class {
 	#package : 'MooseCI-QualityRules'
 }
 
+{ #category : 'as yet unclassified' }
+MCIUnusedPrivateMethodRule class >> applicableLanguages [
+
+	^ #( #python )
+]
+
 { #category : 'accessing' }
 MCIUnusedPrivateMethodRule class >> defaultSeverity [
 
