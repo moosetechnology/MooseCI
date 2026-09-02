@@ -19,6 +19,26 @@ MooseCIConfigTest >> testAggregatedValidationErrors [
 ]
 
 { #category : 'tests' }
+MooseCIConfigTest >> testConfigForJavaIsValid [
+
+	| config |
+	config := MooseCIConfig for: #java.
+	config projectPath: '/some/path'.
+
+	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testConfigForPythonIsValid [
+
+	| config |
+	config := MooseCIConfig for: #python.
+	config projectPath: '/some/path'.
+
+	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'tests' }
 MooseCIConfigTest >> testDefaultConfigValid [
 
 	| config |
@@ -52,6 +72,18 @@ MooseCIConfigTest >> testForReturnsPythonConfig [
 MooseCIConfigTest >> testForUnknownLanguageSignalsError [
 
 	self assertBlock: [ MooseCIConfig for: #ruby ] raises: Error
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testGenericRuleValidForAnyLanguage [
+
+	| config |
+	config := MooseCIConfig default.
+	config projectLanguage: #java.
+	config projectPath: '/some/path'.
+	config rules: #( #large_class ).
+
+	self assert: config validationErrors isEmpty
 ]
 
 { #category : 'tests' }
@@ -98,6 +130,29 @@ MooseCIConfigTest >> testToSton [
 self assert: (stonString includesSubstring: 'MooseCIConfig').
 self assert: (stonString includesSubstring: '#metrics').
 self assert: (stonString includesSubstring: '#rules').
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testRuleLanguageCheckSkippedForUnknownLanguage [
+
+	| config |
+	config := MooseCIConfig default.
+	config projectPath: '/some/path'.
+	config rules: #( #no_docstring ).
+
+	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testRuleNotApplicableToLanguageIsReported [
+
+	| config |
+	config := MooseCIConfig default.
+	config projectLanguage: #java.
+	config projectPath: '/some/path'.
+	config rules: #( #no_docstring ).
+
+	self assert: (config validationErrors includes: 'Rule #no_docstring is not applicable to language #java')
 ]
 
 { #category : 'tests' }
