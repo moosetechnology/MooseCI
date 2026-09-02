@@ -85,6 +85,6 @@ MooseCIJavaProjectLoader class >> verveinejJarCommandFor: projectPath jar: jarPa
 	
 	^ String streamContents: [ :s | 
 		
-		s << 'cd ''' << projectPath fullName << ''' && ' << 'java ' << xmx << ' -jar ' << jarPath fullName << ' -format json -alllocals -anchor assoc -o ' << fileName << ' ' << projectPath fullName 
+		s << 'cd ''' << projectPath fullName << ''' && ' << 'java ' << xmx << ' -jar ' << jarPath fullName << ' -format json -o ' << fileName << ' ' << projectPath fullName 
 		 ].
 ]
