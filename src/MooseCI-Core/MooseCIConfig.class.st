@@ -2,7 +2,6 @@ Class {
 	#name : 'MooseCIConfig',
 	#superclass : 'Object',
 	#instVars : [
-		'projectPath',
 		'projectLanguage',
 		'metrics',
 		'rules',
@@ -26,7 +25,6 @@ MooseCIConfig class >> configFileName [
 MooseCIConfig class >> default [
 
 	^ self new
-		  projectPath: nil;
 		  projectLanguage: nil;
 		  metrics: #( #size #complexity );
 		  rules: MCIQualityRules defaultRules;
@@ -52,7 +50,6 @@ MooseCIConfig class >> for: aSymbol [
 MooseCIConfig class >> java [
 
 	^ self new
-		  projectPath: nil;
 		  projectLanguage: #java;
 		  metrics: #( #size #complexity );
 		  rules: MCIQualityRules javaRules;
@@ -67,7 +64,6 @@ MooseCIConfig class >> java [
 MooseCIConfig class >> python [
 
 	^ self new
-		  projectPath: nil;
 		  projectLanguage: #python;
 		  metrics: #( #size #complexity );
 		  rules: MCIQualityRules pythonRules;
@@ -87,9 +83,8 @@ MooseCIConfig >> checkProjectLanguageInto: errors [
 ]
 
 { #category : 'validation' }
-MooseCIConfig >> checkProjectPathInto: errors [
+MooseCIConfig >> checkGitProjectUrlInto: errors [
 
-	(isRemote not and: [ projectPath isNil ]) ifTrue: [ errors add: 'projectPath is not set' ].
 	(isRemote and: [ gitProjectUrl isNil ]) ifTrue: [ errors add: 'gitProjectUrl is not set' ]
 ]
 
@@ -220,18 +215,6 @@ MooseCIConfig >> projectLanguage: aSymbol [
 ]
 
 { #category : 'accessing' }
-MooseCIConfig >> projectPath [
-
-	^ projectPath
-]
-
-{ #category : 'accessing' }
-MooseCIConfig >> projectPath: aString [
-
-	projectPath := aString
-]
-
-{ #category : 'accessing' }
 MooseCIConfig >> rules [
 
 	^ rules
@@ -262,7 +245,7 @@ MooseCIConfig >> validationErrors [
 
 	| errors |
 	errors := OrderedCollection new.
-	self checkProjectPathInto: errors.
+	self checkGitProjectUrlInto: errors.
 	self checkRulesInto: errors.
 	self checkProjectLanguageInto: errors.
 	^ errors

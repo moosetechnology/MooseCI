@@ -32,7 +32,7 @@ MooseCIRunner class >> printOn: aStream [
 { #category : 'running' }
 MooseCIRunner >> loadProject [
 
-	'Importing ', mooseCICore config projectPath, '...' traceCr.
+	'Importing ', projectFilePath, '...' traceCr.
 	mooseCICore loadProject.
 	'Famix model created.' traceCr.
 ]
@@ -53,6 +53,7 @@ MooseCIRunner >> runWithConfig: aMooseCIConfig [
 
 	mooseCICore := MooseCICore new
 		               config: aMooseCIConfig;
+		               projectPath: projectFilePath;
 		               yourself.
 	self loadProject.
 	self runAnalysis.

@@ -31,7 +31,7 @@ MooseCICoreTest >> setUp [
 MooseCICoreTest >> testLoadProject [
 
 	
-	mooseCICore config projectPath: MooseCIBridge mockProjectTests / 'one-lang'.
+	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'one-lang'.
 	
 	mooseCICore loadProject.
 
@@ -45,7 +45,7 @@ MooseCICoreTest >> testLoadProjectJava [
 	self hasVerveinejOrDocker ifFalse: [ self skip ].
 
 	projectPath := MooseCIBridge mockProjectTests / 'java-only'.
-	mooseCICore config projectPath: projectPath.
+	mooseCICore projectPath: projectPath.
 	mooseCICore loadProject.
 
 	self assert: mooseCICore model isMooseModel.
@@ -55,7 +55,7 @@ MooseCICoreTest >> testLoadProjectJava [
 { #category : 'tests' }
 MooseCICoreTest >> testRunCritics [
 
-	mooseCICore config projectPath: MooseCIBridge mockProjectTests / 'one-lang'.
+	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'one-lang'.
 	mooseCICore loadProject.
 	mooseCICore runCritics.
 
@@ -76,7 +76,7 @@ MooseCICoreTest >> testRunCriticsWithCustomConfigThreshold [
 	| rules |
 	rules := { (MCILongFileRule key -> 1) }.
 
-	mooseCICore config projectPath: MooseCIBridge mockProjectTests / 'one-lang'.
+	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'one-lang'.
 	mooseCICore config rules: rules.
 	mooseCICore loadProject.
 	mooseCICore runCritics.
@@ -90,7 +90,7 @@ MooseCICoreTest >> testRunCriticsWithCustomConfigThreshold [
 { #category : 'tests' }
 MooseCICoreTest >> testRunMetricsAnalysis [
 
-	mooseCICore config projectPath: MooseCIBridge mockProjectTests / 'one-file'.
+	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'one-file'.
 	mooseCICore loadProject.
 	mooseCICore runMetricsAnalysis.
 	

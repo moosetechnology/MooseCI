@@ -7,6 +7,7 @@ Class {
 		'violations',
 		'metricsReport',
 		'projectLanguage',
+		'projectPath',
 		'config'
 	],
 	#category : 'MooseCI-Core',
@@ -58,10 +59,10 @@ MooseCICore >> initialize [
 MooseCICore >> loadProject [
 
 	| loader |
-	self detectProjectLanguage: config projectPath.
+	self detectProjectLanguage: self projectPath.
 	
 	loader := MooseCIProjectLoader forLanguage: config projectLanguage.
-	model := loader load: config projectPath
+	model := loader load: self projectPath
 ]
 
 { #category : 'accessing' }
@@ -86,6 +87,18 @@ MooseCICore >> model [
 MooseCICore >> model: anObject [
 
 	model := anObject
+]
+
+{ #category : 'accessing' }
+MooseCICore >> projectPath [
+
+	^ projectPath
+]
+
+{ #category : 'accessing' }
+MooseCICore >> projectPath: anObject [
+
+	projectPath := anObject
 ]
 
 { #category : 'loading' }
