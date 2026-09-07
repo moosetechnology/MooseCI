@@ -30,8 +30,7 @@ MooseCIAnalyzeCommand >> buildConfigFromFlags [
 	self isGitRepository
 		ifTrue: [
 				config isRemote: true.
-				config gitProjectUrl: self url ]
-		ifFalse: [ config projectPath: self projectPath ].
+				config gitProjectUrl: self url ].
 
 	^ config
 ]
@@ -100,6 +99,12 @@ MooseCIAnalyzeCommand >> projectPath [
 	^ self positional: #projectPath
 ]
 
+{ #category : 'executing' }
+MooseCIAnalyzeCommand >> projectPathForAnalysis [
+
+	^ self projectPath ifNil: [ FileLocator workingDirectory fullName ]
+]
+
 { #category : 'as yet unclassified' }
 MooseCIAnalyzeCommand >> runAnalysisWith: aMooseCIConfig [
 
@@ -112,12 +117,14 @@ MooseCIAnalyzeCommand >> runAnalysisWith: aMooseCIConfig [
 							lf ].
 				MooseCIRunner analyzeFromGitUrlWith: aMooseCIConfig ]
 		ifFalse: [
+				| projectPath |
+				projectPath := self projectPathForAnalysis.
 				self outputStreamDo: [ :out |
 						out
 							nextPutAll: 'Analyzing ';
-							nextPutAll: aMooseCIConfig projectPath;
+							nextPutAll: projectPath;
 							lf ].
-				MooseCIRunner analyze: aMooseCIConfig projectPath config: aMooseCIConfig ]
+				MooseCIRunner analyze: projectPath config: aMooseCIConfig ]
 ]
 
 { #category : 'executing' }

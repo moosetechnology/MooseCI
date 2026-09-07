@@ -22,7 +22,6 @@ MooseCIInitCommand >> createConfigFileFor: aSymbol [
 	| config |
 	
 	config := MooseCIConfig for: aSymbol.
-	config projectPath: FileLocator workingDirectory fullName.
 	
 	FileLocator workingDirectory / MooseCIConfig configFileName writeStreamDo: [ :stream | stream nextPutAll: config toSton ]
 ]
@@ -33,7 +32,6 @@ MooseCIInitCommand >> createDefaultStonConfigFile [
 	| config |
 	
 	config := MooseCIConfig default.
-	config projectPath: FileLocator workingDirectory fullName.
 	
 	FileLocator workingDirectory / MooseCIConfig configFileName writeStreamDo: [ :stream | stream nextPutAll: config toSton ]
 ]

@@ -28,8 +28,8 @@ MCIReportTestCase >> setUp [
 	mooseCICore := MooseCICore new.
 	mooseCICore config: (MooseCIConfig default
 			 outputPath: 'moose-ci-test-report';
-			 projectPath: MooseCIBridge mockProjectTests / 'one-lang';
 			 yourself).
+	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'one-lang'.
 			
 	mooseCICore loadProject.
 	mooseCICore runAnalysis.

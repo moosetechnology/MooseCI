@@ -14,8 +14,8 @@ MooseCIConfigTest >> testAggregatedValidationErrors [
 
 	errors := config validationErrors.
 
-	self assert: errors size equals: 3.
-	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'projectPath is not set' ])
+	self assert: errors size equals: 2.
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'unknown_rule' ])
 ]
 
 { #category : 'tests' }
@@ -23,7 +23,6 @@ MooseCIConfigTest >> testConfigForJavaIsValid [
 
 	| config |
 	config := MooseCIConfig for: #java.
-	config projectPath: '/some/path'.
 	config validate.
 	self assert: config validationErrors isEmpty
 ]
@@ -33,7 +32,6 @@ MooseCIConfigTest >> testConfigForPythonIsValid [
 
 	| config |
 	config := MooseCIConfig for: #python.
-	config projectPath: '/some/path'.
 	config validate.
 	self assert: config validationErrors isEmpty
 ]
@@ -43,7 +41,6 @@ MooseCIConfigTest >> testDefaultConfigValid [
 
 	| config |
 	config := MooseCIConfig default.
-	config projectPath: '/some/path'.
 
 	self assert: config validationErrors isEmpty
 ]
@@ -80,7 +77,6 @@ MooseCIConfigTest >> testGenericRuleValidForAnyLanguage [
 	| config |
 	config := MooseCIConfig default.
 	config projectLanguage: #java.
-	config projectPath: '/some/path'.
 	config rules: #( #large_class ).
 	
 	self assert: config validationErrors isEmpty
@@ -96,16 +92,6 @@ MooseCIConfigTest >> testJavaDefaultConfig [
 	self assert: config metrics equals: #( #size #complexity ).
 	self assert: config outputPath equals: '.moose-ci/report'.
 	self deny: config isRemote.
-	self assert: config projectPath isNil
-]
-
-{ #category : 'tests' }
-MooseCIConfigTest >> testMissingProjectPath [
-
-	| config |
-	config := MooseCIConfig default.
-
-	self assert: (config validationErrors includes: 'projectPath is not set')
 ]
 
 { #category : 'tests' }
@@ -118,7 +104,6 @@ MooseCIConfigTest >> testPythonDefaultConfig [
 	self assert: config metrics equals: #( #size #complexity ).
 	self assert: config outputPath equals: '.moose-ci/report'.
 	self deny: config isRemote.
-	self assert: config projectPath isNil
 ]
 
 { #category : 'tests' }
@@ -127,7 +112,6 @@ MooseCIConfigTest >> testRuleNotApplicableToLanguageIsReported [
 	| config |
 	config := MooseCIConfig default.
 	config projectLanguage: #java.
-	config projectPath: '/some/path'.
 	config rules: #( #no_docstring ).
 
 	self assert: (config validationErrors includes: 'Rule #no_docstring is not applicable to language #java')
@@ -149,7 +133,6 @@ MooseCIConfigTest >> testUnknownRule [
 
 	| config errors |
 	config := MooseCIConfig default.
-	config projectPath: '/some/path'.
 	config rules: #( #unknown_rule ).
 
 	errors := config validationErrors.
