@@ -14,6 +14,7 @@ You can request features in the [issues tab](https://github.com/moosetechnology/
   - [Available commands](#available-commands)
   - [Configuration](#configuration)
   - [Available rules](#available-rules)
+  - [Usage with GitHub Actions](#usage-with-github-actions)
 - [For developers](#for-developers)
   - [Installation](#installation)
 
@@ -57,23 +58,31 @@ First, pull the image:
 docker pull ghcr.io/moosetechnology/moose-ci:latest
 ```
 
-Moose-CI runs in an isolated container. Mount your project to `/src`:
+From the project directory, initialize it as a Moose-CI project. This creates a `moose-ci.ston` config file that you can customize:
+
+```bash
+docker run -v "$(pwd):/src" ghcr.io/moosetechnology/moose-ci:latest init
+```
+
+Then run the analysis with the `analyze` command:
+
+```bash
+docker run -v "$(pwd):/src" ghcr.io/moosetechnology/moose-ci:latest analyze
+```
+
+You can also run Moose-CI on a project without initializing a config file by passing the project path:
 
 ```bash
 docker run -v /path/to/your/project:/src ghcr.io/moosetechnology/moose-ci:latest analyze /src
 ```
+The project is mounted in the container at `/src`, so you need to pass that path to the `analyze` command.
 
-For the current directory:
-
-```bash
-docker run -v "$(pwd):/src" ghcr.io/moosetechnology/moose-ci:latest analyze /src
-```
-
-### Available commands
+#### Available commands
 
 - `init` — create a new moose-ci config file.
 - `analyze` — analyze the current directory using the existing config file.
 - `analyze <project-path>` — analyze the project.
+
 
 ### Report output
 
@@ -153,6 +162,33 @@ You can update the rules list and customize each rule's threshold:
 | `#unused_private_method` | N/A | Reports class-private methods that are never invoked. |
 | `#shadowed_attribute` | N/A | Reports attributes whose name duplicates their containing class name. |
 | `#function_naming` | N/A | Reports functions whose names do not comply with the naming convention. |
+
+### Usage with GitHub Actions
+
+You can run MooseCI in CI with the [Setup MooseCI GitHub Action](https://github.com/moosetechnology/setup-MooseCI). Add the action to a workflow:
+
+```yaml
+name: MooseCI
+on: [push, pull_request]
+permissions:
+  contents: read
+  actions: write
+  pull-requests: write
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: moosetechnology/setup-MooseCI@main
+        with:
+          project-path: .
+```
+
+- `project-path`: the folder to analyze, relative to the workspace. Default: `.`
+- `actions: write` is needed to upload the report artifact.
+- `pull-requests: write` is needed to comment the report link on pull requests.
+- The `moose-ci.ston` config file must be placed inside the analyzed project folder (see [Configuration](#configuration)).
+- On pull requests, the action comments the report download URL and the analysis summary on the PR.
 
 ## For developers
 
