@@ -216,9 +216,8 @@ A rule is a subclass of `MCIAbstractQualityRule`. It must implement:
 Example of a simple rule that reports files with too many lines of code:
 
 ```smalltalk
-MCIAbstractQualityRule subclass: #MCITooManyLinesRule
-	instanceVariableNames: ''
-	classVariableNames: ''
+MCIAbstractQualityRule <<  #MCITooManyLinesRule
+	slots: {};
 	package: 'MooseCI-QualityRules'
 
 MCITooManyLinesRule class >> key [
