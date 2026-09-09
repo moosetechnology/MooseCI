@@ -17,6 +17,7 @@ You can request features in the [issues tab](https://github.com/moosetechnology/
   - [Usage with GitHub Actions](#usage-with-github-actions)
 - [For developers](#for-developers)
   - [Installation](#installation)
+  - [Create a new rule](#create-a-new-rule)
 
 ## Features
 
@@ -79,9 +80,9 @@ The project is mounted in the container at `/src`, so you need to pass that path
 
 #### Available commands
 
-- `init` — create a new moose-ci config file.
-- `analyze` — analyze the current directory using the existing config file.
-- `analyze <project-path>` — analyze the project.
+- `init`: create a new moose-ci config file.
+- `analyze`: analyze the current directory using the existing config file.
+- `analyze <project-path>`: analyze the project.
 
 
 ### Report output
@@ -127,8 +128,8 @@ You can configure the output in `moose-ci.ston`:
 #outputPath : '.moose-ci/report'
 ```
 
-- `#outputFormats` — list of formats to write. `#json` is the only format available for now.
-- `#outputPath` — directory (relative to the project) where the report files are written.
+- `#outputFormats`: list of formats to write. `#json` is the only format available for now.
+- `#outputPath`: directory (relative to the project) where the report files are written.
 
 ### Configuration
 
@@ -202,3 +203,53 @@ Metacello new
   repository: 'github://moosetechnology/MooseCI:master/src';
   load.
 ```
+
+### Create a new rule
+
+A rule is a subclass of `MCIAbstractQualityRule`. It must implement:
+
+- `class >> key`: a unique identifier, e.g. `#too_many_lines`
+- `class >> defaultThreshold`: the threshold used when none is set in the config
+- `contextFilterBlock`: a block that selects the entities to analyze
+- `queryHandler`: a block that decides what counts as a violation
+
+Example of a simple rule that reports files with too many lines of code:
+
+```smalltalk
+MCIAbstractQualityRule <<  #MCITooManyLinesRule
+	slots: {};
+	package: 'MooseCI-QualityRules'
+
+MCITooManyLinesRule class >> key [
+	^ #too_many_lines
+]
+
+MCITooManyLinesRule class >> defaultThreshold [
+	^ 500
+]
+
+MCITooManyLinesRule >> contextFilterBlock [
+	^ [ :collection | collection select: [ :each | each isModule ] ]
+]
+
+MCITooManyLinesRule >> queryHandler [
+	^ FamixCBQueryHandler on: (FQSelectScriptQuery script: [ :entity |
+		entity numberOfLinesOfCode > self threshold ])
+]
+```
+
+You can also override `ruleName`, `defaultSeverity`, `applicableLanguages` and `description`. `applicableLanguages` is `#all` by default. You can specify it by passing a list of languages, e.g. `#( #python )`. Rules that do not use a threshold return `-1` as their `defaultThreshold` (e.g. `#no_docstring`).
+
+New rules are discovered automatically from their `key`, so no registration is needed. To use a rule, add its key to the `#rules` list in `moose-ci.ston`:
+
+```ston
+#rules : [
+	#too_many_lines: 300,
+	#no_docstring
+]
+```
+
+- `#too_many_lines: 300`: enables the rule with a custom threshold.
+- `#no_docstring`: enables a rule that has no threshold.
+
+To make a rule part of the default config created by `moose-ci init`, add its key to `MCIQualityRules class >> pythonRules` (or `javaRules` / `defaultRules`).
