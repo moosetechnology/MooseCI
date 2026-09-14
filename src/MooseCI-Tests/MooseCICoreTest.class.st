@@ -11,12 +11,6 @@ Class {
 	#package : 'MooseCI-Tests'
 }
 
-{ #category : 'helpers' }
-MooseCICoreTest >> hasVerveinejOrDocker [
-
-	^ MooseCIJavaProjectLoader hasVerveinejJar or: [ MooseCIJavaProjectLoader dockerAvailable ]
-]
-
 { #category : 'running' }
 MooseCICoreTest >> setUp [
 	super setUp.
@@ -42,8 +36,6 @@ MooseCICoreTest >> testLoadProject [
 MooseCICoreTest >> testLoadProjectJava [
 
 	| projectPath |
-	self hasVerveinejOrDocker ifFalse: [ self skip ].
-
 	projectPath := MooseCIBridge mockProjectTests / 'java-only'.
 	mooseCICore projectPath: projectPath.
 	mooseCICore loadProject.

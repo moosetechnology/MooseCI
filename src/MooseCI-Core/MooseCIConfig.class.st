@@ -75,17 +75,17 @@ MooseCIConfig class >> python [
 ]
 
 { #category : 'validation' }
+MooseCIConfig >> checkGitProjectUrlInto: errors [
+
+	(isRemote and: [ gitProjectUrl isNil ]) ifTrue: [ errors add: 'gitProjectUrl is not set' ]
+]
+
+{ #category : 'validation' }
 MooseCIConfig >> checkProjectLanguageInto: errors [
 
 	projectLanguage isNil ifTrue: [ ^ self ].
 	(MooseCILanguageDetector extensionMap values includes: projectLanguage) ifFalse: [
 		errors add: 'Unsupported project language: ' , projectLanguage asString ]
-]
-
-{ #category : 'validation' }
-MooseCIConfig >> checkGitProjectUrlInto: errors [
-
-	(isRemote and: [ gitProjectUrl isNil ]) ifTrue: [ errors add: 'gitProjectUrl is not set' ]
 ]
 
 { #category : 'validation' }
