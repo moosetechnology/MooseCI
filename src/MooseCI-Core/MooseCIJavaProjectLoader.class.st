@@ -14,5 +14,10 @@ MooseCIJavaProjectLoader class >> languageNameSymbol [
 { #category : 'as yet unclassified' }
 MooseCIJavaProjectLoader class >> load: aProjectFilePath [
 
-	^ FamixJavaFoldersImporter importFolder: aProjectFilePath asFileReference
+	| model |
+	
+	model := FamixJavaFoldersImporter importFolder: aProjectFilePath asFileReference.
+	model rootFolder: aProjectFilePath.
+	
+	^ model
 ]
