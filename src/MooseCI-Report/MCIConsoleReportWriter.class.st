@@ -51,14 +51,15 @@ MCIConsoleReportWriter >> writeMetricsOn: aStream [
 
 	| metrics |
 	metrics := self report metrics.
+	(metrics isNil or: metrics isEmpty) ifTrue: [ ^ self ].
 	aStream
 		nextPutAll: (AnsiColor yellow: 'Metrics');
 		lf.
 
 	metrics keysAndValuesDo: [ :key :value |
-		aStream
-			nextPutAll: ('    ' , value asString , ' ' , (MCIMetrics metricAt: key) metricName);
-			lf ]
+			aStream
+				nextPutAll: '    ' , value asString , ' ' , (MCIMetrics metricAt: key) metricName;
+				lf ]
 ]
 
 { #category : 'writing' }
