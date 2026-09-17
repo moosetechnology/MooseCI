@@ -83,12 +83,13 @@ MooseCICoreTest >> testRunCriticsWithCustomConfigThreshold [
 MooseCICoreTest >> testRunMetricsAnalysis [
 
 	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'one-file'.
+	mooseCICore config: MooseCIConfig python.
 	mooseCICore loadProject.
 	mooseCICore runMetricsAnalysis.
 	
 	self assert: mooseCICore metrics class equals: OrderedDictionary.
 	self assert: (mooseCICore metrics at: #loc) equals: 1.
-	self assert: (mooseCICore metrics at: #packages) equals: 1.
 	self assert: (mooseCICore metrics at: #classes) equals: 0.
+	self assert: (mooseCICore metrics at: #files) equals: 1.
 	
 ]

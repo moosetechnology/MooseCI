@@ -129,19 +129,6 @@ self assert: (stonString includesSubstring: '#rules').
 ]
 
 { #category : 'tests' }
-MooseCIConfigTest >> testUnknownRule [
-
-	| config errors |
-	config := MooseCIConfig default.
-	config rules: #( #unknown_rule ).
-
-	errors := config validationErrors.
-
-	self assert: errors size equals: 1.
-	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'unknown_rule' ])
-]
-
-{ #category : 'tests' }
 MooseCIConfigTest >> testUnknownMetric [
 
 	| config errors |
@@ -152,6 +139,19 @@ MooseCIConfigTest >> testUnknownMetric [
 
 	self assert: errors size equals: 1.
 	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'unknown_metric' ])
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testUnknownRule [
+
+	| config errors |
+	config := MooseCIConfig default.
+	config rules: #( #unknown_rule ).
+
+	errors := config validationErrors.
+
+	self assert: errors size equals: 1.
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'unknown_rule' ])
 ]
 
 { #category : 'tests' }
