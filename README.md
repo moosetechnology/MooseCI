@@ -14,6 +14,7 @@ You can request features in the [issues tab](https://github.com/moosetechnology/
   - [Available commands](#available-commands)
   - [Configuration](#configuration)
   - [Available rules](#available-rules)
+  - [Available metrics](#available-metrics)
   - [Usage with GitHub Actions](#usage-with-github-actions)
 - [For developers](#for-developers)
   - [Installation](#installation)
@@ -150,6 +151,21 @@ You can update the rules list and customize each rule's threshold:
 ...
 ```
 
+You can also choose which metrics to compute:
+
+```ston
+...
+#metrics : [
+		#files,
+		#loc,
+		#packages,
+		#classes
+]
+...
+```
+
+Metrics can be omitted (or set to an empty list) if you do not want to compute any metric.
+
 ### Available rules
 
 | Key | Threshold | Description |
@@ -164,6 +180,15 @@ You can update the rules list and customize each rule's threshold:
 | `#unused_private_method` | N/A | Reports class-private methods that are never invoked. |
 | `#shadowed_attribute` | N/A | Reports attributes whose name duplicates their containing class name. |
 | `#function_naming` | N/A | Reports functions whose names do not comply with the naming convention. |
+
+### Available metrics
+
+| Key | Description | Applicable languages |
+| --- | --- | --- |
+| `#files` | Number of source files. | all |
+| `#loc` | Total lines of code. | all |
+| `#packages` | Number of packages. | all |
+| `#classes` | Number of classes. | all |
 
 ### Usage with GitHub Actions
 
