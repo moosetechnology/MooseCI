@@ -14,10 +14,12 @@ You can request features in the [issues tab](https://github.com/moosetechnology/
   - [Available commands](#available-commands)
   - [Configuration](#configuration)
   - [Available rules](#available-rules)
+  - [Available metrics](#available-metrics)
   - [Usage with GitHub Actions](#usage-with-github-actions)
 - [For developers](#for-developers)
   - [Installation](#installation)
   - [Create a new rule](#create-a-new-rule)
+  - [Create a new metric](#create-a-new-metric)
 
 ## Features
 
@@ -149,6 +151,21 @@ You can update the rules list and customize each rule's threshold:
 ...
 ```
 
+You can also choose which metrics to compute:
+
+```ston
+...
+#metrics : [
+		#files,
+		#loc,
+		#packages,
+		#classes
+]
+...
+```
+
+Metrics can be omitted (or set to an empty list) if you do not want to compute any metric.
+
 ### Available rules
 
 | Key | Threshold | Description |
@@ -163,6 +180,15 @@ You can update the rules list and customize each rule's threshold:
 | `#unused_private_method` | N/A | Reports class-private methods that are never invoked. |
 | `#shadowed_attribute` | N/A | Reports attributes whose name duplicates their containing class name. |
 | `#function_naming` | N/A | Reports functions whose names do not comply with the naming convention. |
+
+### Available metrics
+
+| Key | Description | Applicable languages |
+| --- | --- | --- |
+| `#files` | Number of source files. | all |
+| `#loc` | Total lines of code. | all |
+| `#packages` | Number of packages. | all |
+| `#classes` | Number of classes. | all |
 
 ### Usage with GitHub Actions
 
@@ -253,3 +279,41 @@ New rules are discovered automatically from their `key`, so no registration is n
 - `#no_docstring`: enables a rule that has no threshold.
 
 To make a rule part of the default config created by `moose-ci init`, add its key to `MCIQualityRules class >> pythonRules` (or `javaRules` / `defaultRules`).
+
+### Create a new metric
+
+A metric is a subclass of `MCIAbstractMetric`. It must implement:
+
+- `class >> key`: a unique identifier, e.g. `#methods`
+- `compute:`: a method that computes the value from a Moose model
+
+Example of a simple metric that counts the number of methods:
+
+```smalltalk
+MCIAbstractMetric << #MCINumberOfMethodsMetric
+	slots: {};
+	package: 'MooseCI-Metrics'
+
+MCINumberOfMethodsMetric class >> key [
+	^ #methods
+]
+
+MCINumberOfMethodsMetric >> compute: aModel [
+	^ aModel allMethods size
+]
+```
+
+You can also override `metricName`, `description` and `applicableLanguages`. `metricName` defaults to the key as a string. `applicableLanguages` is `#all` by default. You can specify it by passing a list of languages, e.g. `#( #python )`.
+
+New metrics are discovered automatically from their `key`, so no registration is needed. To use a metric, add its key to the `#metrics` list in `moose-ci.ston`:
+
+```ston
+#metrics : [
+	#methods,
+	#loc
+]
+```
+
+Metrics can be empty (`#metrics : [ ]`) or omitted entirely when you do not want to compute any metric.
+
+To make a metric part of the default config created by `moose-ci init`, add its key to `MCIMetrics class >> pythonMetrics` (or `javaMetrics` / `defaultMetrics`).

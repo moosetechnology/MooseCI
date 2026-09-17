@@ -89,7 +89,7 @@ MooseCIConfigTest >> testJavaDefaultConfig [
 	config := MooseCIConfig java.
 
 	self assert: config projectLanguage equals: #java.
-	self assert: config metrics equals: #( #size #complexity ).
+	self assert: config metrics equals: MCIMetrics javaMetrics.
 	self assert: config outputPath equals: '.moose-ci/report'.
 	self deny: config isRemote.
 ]
@@ -101,7 +101,7 @@ MooseCIConfigTest >> testPythonDefaultConfig [
 	config := MooseCIConfig python.
 
 	self assert: config projectLanguage equals: #python.
-	self assert: config metrics equals: #( #size #complexity ).
+	self assert: config metrics equals: MCIMetrics pythonMetrics.
 	self assert: config outputPath equals: '.moose-ci/report'.
 	self deny: config isRemote.
 ]
@@ -126,6 +126,47 @@ MooseCIConfigTest >> testToSton [
 self assert: (stonString includesSubstring: 'MooseCIConfig').
 self assert: (stonString includesSubstring: '#metrics').
 self assert: (stonString includesSubstring: '#rules').
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testEmptyMetricsIsValid [
+
+	| config |
+	config := MooseCIConfig default.
+	config metrics: #(  ).
+
+	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testConfigFileWithoutMetricsAttributeIsValid [
+
+	| stonString config |
+	stonString := 'MooseCIConfig {
+	#projectLanguage : #python,
+	#rules : [ #no_docstring ],
+	#outputFormats : [ #json ],
+	#outputPath : ''.moose-ci/report'',
+	#visualizations : [ ],
+	#isRemote : false
+}'.
+	config := STON fromString: stonString.
+
+	self assert: config metrics isNil.
+	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testUnknownMetric [
+
+	| config errors |
+	config := MooseCIConfig default.
+	config metrics: #( #unknown_metric ).
+
+	errors := config validationErrors.
+
+	self assert: errors size equals: 1.
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'unknown_metric' ])
 ]
 
 { #category : 'tests' }

@@ -63,12 +63,8 @@ MCIJSONReportWriter >> metricsObject [
 
 	| metrics |
 	metrics := self report metrics.
-	^ OrderedDictionary newFrom: {
-		  ('files' -> metrics files).
-		  ('loc' -> metrics loc).
-		  ('packages' -> metrics packages).
-		  ('classes' -> metrics classes) 
-		}
+	^ (metrics associations collect: [ :association |
+			   association key asString -> association value ]) asOrderedDictionary
 ]
 
 { #category : 'writing' }

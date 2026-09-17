@@ -31,7 +31,7 @@ BaselineOfMooseCI >> defineGroups: spec [
 
 	spec
 		group: 'default'
-		with: #( 'MooseCI-Core' 'MooseCI-CLI' 'MooseCI-Tests' 'MooseCI-QualityRules' 'MooseCI-QualityRules-Tests' 'MooseCI-Report')
+		with: #( 'MooseCI-Core' 'MooseCI-CLI' 'MooseCI-Tests' 'MooseCI-QualityRules' 'MooseCI-QualityRules-Tests' 'MooseCI-Report' 'MooseCI-Metrics' 'MooseCI-Metrics-Tests')
 
 ]
 
@@ -44,5 +44,7 @@ BaselineOfMooseCI >> definePackages: spec [
 		package: 'MooseCI-Tests';
 		package: 'MooseCI-QualityRules';
 		package: 'MooseCI-QualityRules-Tests';
+		package: 'MooseCI-Metrics';
+		package: 'MooseCI-Metrics-Tests';
 		package: 'MooseCI-Report'.
 ]
