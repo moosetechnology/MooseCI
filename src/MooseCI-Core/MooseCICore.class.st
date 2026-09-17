@@ -5,7 +5,7 @@ Class {
 		'model',
 		'criticModel',
 		'violations',
-		'metricsReport',
+		'metrics',
 		'projectLanguage',
 		'projectPath',
 		'config'
@@ -17,7 +17,7 @@ Class {
 { #category : 'as yet unclassified' }
 MooseCICore >> analysisReport [
 
-	^ MCIAnalysisReport newFrom: config metrics: metricsReport violations: violations
+	^ MCIAnalysisReport newFrom: config metrics: metrics violations: violations
 ]
 
 { #category : 'accessing' }
@@ -52,7 +52,7 @@ MooseCICore >> detectProjectLanguage: aDirectoryOrFileReference [
 
 { #category : 'initialization' }
 MooseCICore >> initialize [ 
-	metricsReport := MooseCIMetricsReport new
+	metrics := OrderedDictionary new
 ]
 
 { #category : 'loading' }
@@ -66,15 +66,15 @@ MooseCICore >> loadProject [
 ]
 
 { #category : 'accessing' }
-MooseCICore >> metricsReport [
+MooseCICore >> metrics [
 
-	^ metricsReport
+	^ metrics
 ]
 
 { #category : 'accessing' }
-MooseCICore >> metricsReport: anObject [
+MooseCICore >> metrics: anObject [
 
-	metricsReport := anObject
+	metrics := anObject
 ]
 
 { #category : 'accessing' }
@@ -127,11 +127,8 @@ MooseCICore >> runCritics [
 
 { #category : 'loading' }
 MooseCICore >> runMetricsAnalysis [
-	self flag: #TODO. "replace with config"
-	metricsReport files: model allModules size.
-	metricsReport loc: (model allModules collect: [ :eachModule | eachModule sourceAnchor lineCount ]) sum.
-	metricsReport packages: (model select: [ :each | each class = FamixPythonPackage ]) size.
-	metricsReport classes: model allClasses size.
+
+	metrics := MCIMetrics computeMetrics: config metrics on: model
 ]
 
 { #category : 'accessing' }

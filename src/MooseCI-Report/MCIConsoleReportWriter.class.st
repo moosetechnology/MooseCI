@@ -54,10 +54,11 @@ MCIConsoleReportWriter >> writeMetricsOn: aStream [
 	aStream
 		nextPutAll: (AnsiColor yellow: 'Metrics');
 		lf.
-		
-	aStream
-		nextPutAll: ('    ' , metrics files asString , ' files | ' , metrics loc asString , ' LOC | ' , metrics packages asString , ' packages | '
-	 , metrics classes asString , ' classes'); lf.
+
+	metrics keysAndValuesDo: [ :key :value |
+		aStream
+			nextPutAll: ('    ' , value asString , ' ' , (MCIMetrics metricAt: key) metricName);
+			lf ]
 ]
 
 { #category : 'writing' }

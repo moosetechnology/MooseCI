@@ -26,7 +26,7 @@ MooseCIConfig class >> default [
 
 	^ self new
 		  projectLanguage: nil;
-		  metrics: #( #size #complexity );
+		  metrics: MCIMetrics defaultMetrics;
 		  rules: MCIQualityRules defaultRules;
 		  visualizations: #(  );
 		  outputFormats: MCIReportWriter defaultOutputFormats;
@@ -51,7 +51,7 @@ MooseCIConfig class >> java [
 
 	^ self new
 		  projectLanguage: #java;
-		  metrics: #( #size #complexity );
+		  metrics: MCIMetrics javaMetrics;
 		  rules: MCIQualityRules javaRules;
 		  visualizations: #(  );
 		  outputFormats: MCIReportWriter defaultOutputFormats;
@@ -65,7 +65,7 @@ MooseCIConfig class >> python [
 
 	^ self new
 		  projectLanguage: #python;
-		  metrics: #( #size #complexity );
+		  metrics: MCIMetrics pythonMetrics;
 		  rules: MCIQualityRules pythonRules;
 		  visualizations: #(  );
 		  outputFormats: MCIReportWriter defaultOutputFormats;
@@ -78,6 +78,44 @@ MooseCIConfig class >> python [
 MooseCIConfig >> checkGitProjectUrlInto: errors [
 
 	(isRemote and: [ gitProjectUrl isNil ]) ifTrue: [ errors add: 'gitProjectUrl is not set' ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkMetricSymbol: aSymbol into: errors [
+
+	| metricSymbols |
+	aSymbol isSymbol ifFalse: [
+			errors add: 'metrics entries must be metric keys (Symbols)'.
+			^ self ].
+
+	metricSymbols := MCIAbstractMetric subclasses collect: #key.
+
+	(metricSymbols includes: aSymbol) ifFalse: [
+			errors add: 'Unknown metric: ' , aSymbol asString.
+			^ self ].
+
+	projectLanguage ifNil: [ ^ self ].
+
+	((MCIMetrics metricAt: aSymbol) applicableFor: projectLanguage) ifFalse: [
+		errors add: 'Metric #' , aSymbol , ' is not applicable to language #' , projectLanguage ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkMetricsInto: errors [
+
+	metrics ifNil: [
+			errors add: 'metrics must not be empty'.
+			^ errors ].
+
+	metrics isCollection ifFalse: [
+			errors add: 'metrics must be a collection'.
+			^ errors ].
+
+	metrics isEmpty ifTrue: [
+			errors add: 'metrics must not be empty'.
+			^ errors ].
+
+	metrics do: [ :each | self checkMetricSymbol: each into: errors ]
 ]
 
 { #category : 'validation' }
@@ -247,6 +285,7 @@ MooseCIConfig >> validationErrors [
 	errors := OrderedCollection new.
 	self checkGitProjectUrlInto: errors.
 	self checkRulesInto: errors.
+	self checkMetricsInto: errors.
 	self checkProjectLanguageInto: errors.
 	^ errors
 ]
