@@ -20,6 +20,12 @@ MCINumberOfPackagesMetric class >> key [
 	^ #packages
 ]
 
+{ #category : 'accessing' }
+MCINumberOfPackagesMetric class >> metricName [ 
+
+	^ 'Packages'
+]
+
 { #category : 'computing' }
 MCINumberOfPackagesMetric >> compute: aMooseModel [
 

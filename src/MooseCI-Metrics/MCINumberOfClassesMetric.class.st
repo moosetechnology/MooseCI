@@ -20,6 +20,12 @@ MCINumberOfClassesMetric class >> key [
 	^ #classes
 ]
 
+{ #category : 'accessing' }
+MCINumberOfClassesMetric class >> metricName [
+
+	^ 'Classes'
+]
+
 { #category : 'computing' }
 MCINumberOfClassesMetric >> compute: aMooseModel [
 

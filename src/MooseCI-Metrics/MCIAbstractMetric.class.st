@@ -16,12 +16,6 @@ Class {
 	#package : 'MooseCI-Metrics'
 }
 
-{ #category : 'accessing' }
-MCIAbstractMetric class >> applicableLanguages [
-
-	^ #all
-]
-
 { #category : 'testing' }
 MCIAbstractMetric class >> applicableFor: aSymbol [
 
@@ -30,6 +24,12 @@ MCIAbstractMetric class >> applicableFor: aSymbol [
 	(langs isSymbol and: [ langs = #all ]) ifTrue: [ ^ true ].
 
 	^ langs includes: aSymbol
+]
+
+{ #category : 'accessing' }
+MCIAbstractMetric class >> applicableLanguages [
+
+	^ #all
 ]
 
 { #category : 'accessing' }

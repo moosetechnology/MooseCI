@@ -46,7 +46,7 @@ MCIMetricsTest >> testDefaultApplicableLanguagesIsAll [
 { #category : 'tests' }
 MCIMetricsTest >> testDefaultMetrics [
 
-	self assert: MCIMetrics defaultMetrics equals: #( #files #loc #packages #classes )
+	self assert: MCIMetrics defaultMetrics equals: #( #files #loc )
 ]
 
 { #category : 'tests' }
@@ -73,5 +73,5 @@ MCIMetricsTest >> testMetricAtNotFound [
 { #category : 'tests' }
 MCIMetricsTest >> testPythonMetrics [
 
-	self assert: MCIMetrics pythonMetrics equals: #( #files #loc #packages #classes )
+	self assert: MCIMetrics pythonMetrics equals: #( #files #loc #classes )
 ]

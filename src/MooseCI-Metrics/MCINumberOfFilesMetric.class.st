@@ -20,6 +20,12 @@ MCINumberOfFilesMetric class >> key [
 	^ #files
 ]
 
+{ #category : 'accessing' }
+MCINumberOfFilesMetric class >> metricName [ 
+
+	^ 'Files'
+]
+
 { #category : 'computing' }
 MCINumberOfFilesMetric >> compute: aMooseModel [
 

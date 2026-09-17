@@ -24,7 +24,7 @@ MCIMetrics class >> computeMetrics: aCollectionOfMetricKeys on: aMooseModel [
 { #category : 'helpers' }
 MCIMetrics class >> defaultMetrics [
 
-	^ #( #files #loc #packages #classes )
+	^ #( #files #loc )
 ]
 
 { #category : 'helpers' }
@@ -45,5 +45,5 @@ MCIMetrics class >> metricAt: aSymbol [
 { #category : 'helpers' }
 MCIMetrics class >> pythonMetrics [
 
-	^ #( #files #loc #packages #classes )
+	^ #( #files #loc #classes )
 ]
