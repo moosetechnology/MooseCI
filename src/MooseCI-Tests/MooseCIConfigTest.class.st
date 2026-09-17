@@ -129,6 +129,34 @@ self assert: (stonString includesSubstring: '#rules').
 ]
 
 { #category : 'tests' }
+MooseCIConfigTest >> testEmptyMetricsIsValid [
+
+	| config |
+	config := MooseCIConfig default.
+	config metrics: #(  ).
+
+	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testConfigFileWithoutMetricsAttributeIsValid [
+
+	| stonString config |
+	stonString := 'MooseCIConfig {
+	#projectLanguage : #python,
+	#rules : [ #no_docstring ],
+	#outputFormats : [ #json ],
+	#outputPath : ''.moose-ci/report'',
+	#visualizations : [ ],
+	#isRemote : false
+}'.
+	config := STON fromString: stonString.
+
+	self assert: config metrics isNil.
+	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'tests' }
 MooseCIConfigTest >> testUnknownMetric [
 
 	| config errors |

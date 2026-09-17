@@ -103,17 +103,11 @@ MooseCIConfig >> checkMetricSymbol: aSymbol into: errors [
 { #category : 'validation' }
 MooseCIConfig >> checkMetricsInto: errors [
 
-	metrics ifNil: [
-			errors add: 'metrics must not be empty'.
-			^ errors ].
+	metrics ifNil: [ ^ self ].
 
 	metrics isCollection ifFalse: [
 			errors add: 'metrics must be a collection'.
-			^ errors ].
-
-	metrics isEmpty ifTrue: [
-			errors add: 'metrics must not be empty'.
-			^ errors ].
+			^ self ].
 
 	metrics do: [ :each | self checkMetricSymbol: each into: errors ]
 ]

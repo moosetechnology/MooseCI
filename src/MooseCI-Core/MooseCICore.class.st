@@ -128,7 +128,7 @@ MooseCICore >> runCritics [
 { #category : 'loading' }
 MooseCICore >> runMetricsAnalysis [
 
-	metrics := MCIMetrics computeMetrics: config metrics on: model
+	metrics := MCIMetrics computeMetrics: (config metrics ifNil: [ #(  ) ]) on: model
 ]
 
 { #category : 'accessing' }
