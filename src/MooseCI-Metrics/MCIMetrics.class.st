@@ -17,7 +17,7 @@ MCIMetrics class >> computeMetrics: aCollectionOfMetricKeys on: aMooseModel [
 	| result |
 	result := OrderedDictionary new.
 	aCollectionOfMetricKeys do: [ :key |
-		result at: key put: ((self metricAt: key) new compute: aMooseModel) ].
+		result at: key put: ((self metricAt: key) new compute: aMooseModel withoutStubs) ].
 	^ result
 ]
 
@@ -30,7 +30,7 @@ MCIMetrics class >> defaultMetrics [
 { #category : 'helpers' }
 MCIMetrics class >> javaMetrics [
 
-	^ #( #files #loc #packages #classes )
+	^ #( #packages #classes )
 ]
 
 { #category : 'accessing' }

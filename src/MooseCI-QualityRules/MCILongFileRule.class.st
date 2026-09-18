@@ -42,7 +42,7 @@ MCILongFileRule class >> ruleName [
 MCILongFileRule >> contextFilterBlock [
 
 	self flag: #TODO. "update to a standard file, not specifically for python"
-	^ [ :collection | collection select: [ :each | each isModule ] ]
+	^ [ :collection | collection select: [ :each | each isKindOf: FamixTFileAnchor ] ]
 ]
 
 { #category : 'accessing' }

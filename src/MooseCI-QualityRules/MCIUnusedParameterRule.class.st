@@ -43,7 +43,7 @@ MCIUnusedParameterRule >> contextFilterBlock [
 
 	^ [ :collection |
 	  | functions params |
-	  functions := collection select: [ :each | each isFunction or: [ each isMethod ] ].
+	  functions := collection select: [ :each | (each isKindOf: FamixTFunction) or: [ each isMethod ] ].
 	  params := ((functions select: [ :each | each parameters size > 0 ]) collect: [ :each | each parameters ]) flatCollect: [ :each | each ].
 	  params ]
 ]

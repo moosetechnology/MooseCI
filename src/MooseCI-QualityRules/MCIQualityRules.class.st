@@ -34,8 +34,7 @@ MCIQualityRules class >> javaRules [
 		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
 		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).
 		  MCIUnusedLocalVariableRule key.
-		  MCIUnusedParameterRule key.
-		  MCIShadowedAttributeRule key }
+		  MCIUnusedParameterRule key}
 ]
 
 { #category : 'helpers' }
@@ -74,7 +73,7 @@ MCIQualityRules class >> runRules: aCollection on: aMooseModel [
 
 	| criticModel |
 	criticModel := MiCriticBrowserModel new.
-	criticModel setEntities: aMooseModel.
+	criticModel setEntities: aMooseModel withoutStubs.
 
 	aCollection do: [ :rule |
 			| context condition |
