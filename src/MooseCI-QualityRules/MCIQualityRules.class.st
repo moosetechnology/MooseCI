@@ -73,7 +73,7 @@ MCIQualityRules class >> runRules: aCollection on: aMooseModel [
 
 	| criticModel |
 	criticModel := MiCriticBrowserModel new.
-	criticModel setEntities: aMooseModel.
+	criticModel setEntities: aMooseModel withoutStubs.
 
 	aCollection do: [ :rule |
 			| context condition |
