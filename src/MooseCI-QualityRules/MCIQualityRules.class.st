@@ -34,8 +34,7 @@ MCIQualityRules class >> javaRules [
 		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
 		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).
 		  MCIUnusedLocalVariableRule key.
-		  MCIUnusedParameterRule key.
-		  MCIShadowedAttributeRule key }
+		  MCIUnusedParameterRule key}
 ]
 
 { #category : 'helpers' }

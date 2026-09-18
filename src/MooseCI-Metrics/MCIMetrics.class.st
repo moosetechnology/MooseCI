@@ -30,7 +30,7 @@ MCIMetrics class >> defaultMetrics [
 { #category : 'helpers' }
 MCIMetrics class >> javaMetrics [
 
-	^ #( #files #loc #packages #classes )
+	^ #( #packages #classes )
 ]
 
 { #category : 'accessing' }
