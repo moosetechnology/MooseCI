@@ -31,7 +31,7 @@ BaselineOfMooseCI >> defineGroups: spec [
 
 	spec
 		group: 'default'
-		with: #( 'MooseCI-Core' 'MooseCI-CLI' 'MooseCI-Tests' 'MooseCI-QualityRules' 'MooseCI-QualityRules-Tests' 'MooseCI-Report' 'MooseCI-Metrics' 'MooseCI-Metrics-Tests')
+		with: #( 'MooseCI-Core' 'MooseCI-CLI' 'MooseCI-Tests' 'MooseCI-QualityRules' 'MooseCI-QualityRules-Tests' 'MooseCI-Report' 'MooseCI-Metrics' 'MooseCI-Metrics-Tests' 'MooseCI-QualityRules-Java' 'MooseCI-QualityRules-Python')
 
 ]
 
@@ -43,6 +43,8 @@ BaselineOfMooseCI >> definePackages: spec [
 		package: 'MooseCI-CLI';
 		package: 'MooseCI-Tests';
 		package: 'MooseCI-QualityRules';
+		package: 'MooseCI-QualityRules-Java';
+		package: 'MooseCI-QualityRules-Python';
 		package: 'MooseCI-QualityRules-Tests';
 		package: 'MooseCI-Metrics';
 		package: 'MooseCI-Metrics-Tests';

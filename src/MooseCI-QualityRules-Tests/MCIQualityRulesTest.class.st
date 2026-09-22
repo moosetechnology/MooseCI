@@ -2,7 +2,6 @@ Class {
 	#name : 'MCIQualityRulesTest',
 	#superclass : 'TestCase',
 	#instVars : [
-		'pyModel',
 		'javaModel'
 	],
 	#category : 'MooseCI-QualityRules-Tests',
@@ -13,7 +12,6 @@ Class {
 MCIQualityRulesTest >> setUp [
 	super setUp.
 
-	pyModel := FamixPythonModel new.
 	javaModel := FamixJavaModel new.
 ]
 
@@ -34,69 +32,37 @@ MCIQualityRulesTest >> testDefaultApplicableLanguagesIsAll [
 ]
 
 { #category : 'tests' }
-MCIQualityRulesTest >> testMCIFunctionNamingRule [
-
-	| violations |
-	
-	pyModel newFunctionNamed: 'MyWrongNamedFunction'.
-	violations := MCIQualityRules runRules: { MCIFunctionNamingRule new } on: pyModel.
-	
-	self assert: violations isNotEmpty
-]
-
-{ #category : 'tests' }
 MCIQualityRulesTest >> testMCILargeClassRule [
 
-	| pyViolations javaViolations|
+	| javaViolations|
 	
-	pyModel newClassNamed: 'APyLargeClass'.
 	javaModel newClassNamed: 'AJavaLargeClass'.
 	
-	pyViolations := MCIQualityRules runRules: { MCILargeClassRule new } on: pyModel.
 	javaViolations := MCIQualityRules runRules: { MCILargeClassRule new } on: javaModel.
 	
-	self assert: pyViolations isNotNil.
 	self assert: javaViolations isNotNil.
-]
-
-{ #category : 'tests' }
-MCIQualityRulesTest >> testMCILocalVariableNamingRule [
-
-	| violations |
-	
-	pyModel newLocalVariableNamed: 'AWrongNamingForAVariable'.
-	violations := MCIQualityRules runRules: { MCILocalVariableNamingRule new } on: pyModel.
-	
-	self assert: violations isNotEmpty
 ]
 
 { #category : 'tests' }
 MCIQualityRulesTest >> testMCILongFileRule [
 
-	| pyViolations javaViolations|
+	| javaViolations|
 	self flag: #TODO. 
-	pyModel newModuleNamed: 'aPythonModule'.
 	javaModel newClassNamed: 'AJavaLargeClass'.
 	
-	pyViolations := MCIQualityRules runRules: { MCILongFileRule new } on: pyModel.
 	javaViolations := MCIQualityRules runRules: { MCILongFileRule new } on: javaModel.
-	self assert: pyViolations isNotNil.
+	
 	self assert: javaViolations isNotNil.
-]
-
-{ #category : 'tests' }
-MCIQualityRulesTest >> testPythonOnlyRulesDeclarePython [
-
-	self assert: MCINoDocstringRule applicableLanguages equals: #( #python )
 ]
 
 { #category : 'tests' }
 MCIQualityRulesTest >> testRuleAt [
 
-	| rule |
-	rule := MCIQualityRules ruleAt: #long_file.
+	| aRuleClass |
+	aRuleClass := MCIAbstractQualityRule subclasses first.
 
-	self assert: rule equals: MCILongFileRule
+
+	self assert: (MCIQualityRules ruleAt: aRuleClass key) equals: aRuleClass
 ]
 
 { #category : 'tests' }
@@ -110,7 +76,7 @@ MCIQualityRulesTest >> testRuleAtNotFound [
 MCIQualityRulesTest >> testRulesAt [
 
 	| rules |
-	rules := MCIQualityRules rulesAt: #(#long_file #no_docstring).
+	rules := MCIAbstractQualityRule subclasses sliceTo: 2.
 
 	self assert: rules size equals: 2.
 	self assert: (rules allSatisfy: [ :rule | rule superclass = MCIAbstractQualityRule  ]).

@@ -2,50 +2,50 @@
 I get all local variables and function parameters that don't respect the naming convention
 "
 Class {
-	#name : 'MCILocalVariableNamingRule',
+	#name : 'MCIPyLocalVariableNamingRule',
 	#superclass : 'MCIAbstractQualityRule',
-	#category : 'MooseCI-QualityRules',
-	#package : 'MooseCI-QualityRules'
+	#category : 'MooseCI-QualityRules-Python',
+	#package : 'MooseCI-QualityRules-Python'
 }
 
 { #category : 'as yet unclassified' }
-MCILocalVariableNamingRule class >> applicableLanguages [
+MCIPyLocalVariableNamingRule class >> applicableLanguages [
 
 	^ #( #python )
 ]
 
 { #category : 'accessing' }
-MCILocalVariableNamingRule class >> defaultSeverity [
+MCIPyLocalVariableNamingRule class >> defaultSeverity [
 
 	^ FamixCBWarningSeverity
 ]
 
 { #category : 'accessing' }
-MCILocalVariableNamingRule class >> defaultThreshold [ 
+MCIPyLocalVariableNamingRule class >> defaultThreshold [ 
 
 	^ -1
 ]
 
 { #category : 'accessing' }
-MCILocalVariableNamingRule class >> description [
+MCIPyLocalVariableNamingRule class >> description [
 
 	^ 'Reports local variables and parameters whose names do not respect the naming convention.'
 ]
 
 { #category : 'accessing' }
-MCILocalVariableNamingRule class >> key [
+MCIPyLocalVariableNamingRule class >> key [
 
 	^ #local_var_naming
 ]
 
 { #category : 'accessing' }
-MCILocalVariableNamingRule class >> ruleName [ 
+MCIPyLocalVariableNamingRule class >> ruleName [ 
 
 	^ 'Local variables and parameters not respecting naming convention'
 ]
 
 { #category : 'accessing' }
-MCILocalVariableNamingRule >> contextFilterBlock [
+MCIPyLocalVariableNamingRule >> contextFilterBlock [
 
 	^ [ :collection |
 	  collection select: [ :each |
@@ -55,7 +55,7 @@ MCILocalVariableNamingRule >> contextFilterBlock [
 ]
 
 { #category : 'accessing' }
-MCILocalVariableNamingRule >> queryHandler [
+MCIPyLocalVariableNamingRule >> queryHandler [
 
 	^ FamixCBQueryHandler on: (FQSelectScriptQuery script: [ :entity |
 			   (entity name matchesRegex: '^[_a-z][a-z0-9_]*$') not ])

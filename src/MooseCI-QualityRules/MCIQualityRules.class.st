@@ -16,41 +16,15 @@ MCIQualityRules class >> defaultRules [
 
 	^ {
 		  (MCILongFileRule key -> MCILongFileRule defaultThreshold).
-		  MCINoDocstringRule key.
+		  MCIPyNoDocstringRule key.
 		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
 		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).
-		  MCILocalVariableNamingRule key.
+		  MCIPyLocalVariableNamingRule key.
 		  MCIUnusedLocalVariableRule key.
 		  MCIUnusedParameterRule key.
-		  MCIUnusedPrivateMethodRule key.
+		  MCIPyUnusedPrivateMethodRule key.
 		  MCIShadowedAttributeRule key.
-		  MCIFunctionNamingRule key }
-]
-
-{ #category : 'helpers' }
-MCIQualityRules class >> javaRules [
-
-	^ {
-		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
-		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).
-		  MCIUnusedLocalVariableRule key.
-		  MCIUnusedParameterRule key}
-]
-
-{ #category : 'helpers' }
-MCIQualityRules class >> pythonRules [
-
-	^ {
-		  (MCILongFileRule key -> MCILongFileRule defaultThreshold).
-		  MCINoDocstringRule key.
-		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
-		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).
-		  MCILocalVariableNamingRule key.
-		  MCIUnusedLocalVariableRule key.
-		  MCIUnusedParameterRule key.
-		  MCIUnusedPrivateMethodRule key.
-		  MCIShadowedAttributeRule key.
-		  MCIFunctionNamingRule key }
+		  MCIPyFunctionNamingRule key }
 ]
 
 { #category : 'accessing' }
