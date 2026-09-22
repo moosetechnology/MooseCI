@@ -4,7 +4,7 @@ Extension { #name : 'MCIQualityRules' }
 MCIQualityRules class >> pythonRules [
 
 	^ {
-		  (MCILongFileRule key -> MCILongFileRule defaultThreshold).
+		  (MCIPyLongFileRule key -> MCIPyLongFileRule defaultThreshold).
 		  MCIPyNoDocstringRule key.
 		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
 		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).

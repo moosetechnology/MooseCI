@@ -15,7 +15,7 @@ MCIQualityRules class >> allRules [
 MCIQualityRules class >> defaultRules [
 
 	^ {
-		  (MCILongFileRule key -> MCILongFileRule defaultThreshold).
+		  (MCIPyLongFileRule key -> MCIPyLongFileRule defaultThreshold).
 		  MCIPyNoDocstringRule key.
 		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
 		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).

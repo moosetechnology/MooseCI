@@ -38,6 +38,17 @@ MCIPyQualityRulesTest >> testMCILocalVariableNamingRule [
 ]
 
 { #category : 'tests' }
+MCIPyQualityRulesTest >> testMCIPyLongFileRule [
+
+	| violations |
+	
+	model newModuleNamed: 'myModule'.
+	violations := MCIQualityRules runRules: { MCIPyLongFileRule new } on: model.
+	
+	self assert: violations isNotEmpty
+]
+
+{ #category : 'tests' }
 MCIPyQualityRulesTest >> testMCIPyNoDocstringRule [
 
 	| violations |

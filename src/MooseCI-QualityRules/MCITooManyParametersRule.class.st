@@ -41,7 +41,7 @@ MCITooManyParametersRule class >> ruleName [
 { #category : 'accessing' }
 MCITooManyParametersRule >> contextFilterBlock [
 
-	^ [ :collection | collection select: [ :each | each isMethod ] ]
+	^ [ :collection | collection select: [ :each | (each class usesTrait: FamixTFunction) or: [ each class usesTrait: FamixTMethod ] ] ]
 ]
 
 { #category : 'accessing' }

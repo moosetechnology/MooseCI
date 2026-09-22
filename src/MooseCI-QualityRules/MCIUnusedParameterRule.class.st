@@ -43,9 +43,9 @@ MCIUnusedParameterRule >> contextFilterBlock [
 
 	^ [ :collection |
 		  | functions params |
-		  functions := collection select: [ :each | each isKindOf: FamixTWithParameters ].
-		  params := ((functions select: [ :each | each parameters size > 0 ]) collect: [ :each | each parameters ]) flatCollect: [ :each | each ].
-		  params ]
+		  functions := collection select: [ :each | (each class usesTrait: FamixTFunction) or: [ each class usesTrait: FamixTMethod ] ].
+		  params := ((functions select: [ :each | each parameters isNotEmpty ]) collect: [ :each | each parameters ]) flatCollect: [ :each | each ].
+		  params]
 ]
 
 { #category : 'accessing' }

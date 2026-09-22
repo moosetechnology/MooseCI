@@ -41,7 +41,7 @@ MCILargeClassRule class >> ruleName [
 { #category : 'accessing' }
 MCILargeClassRule >> contextFilterBlock [
 
-	^ [ :collection | collection select: [ :each | each isClass ] ]
+	^ [ :collection | collection select: [ :each | each class usesTrait: FamixTClass ] ]
 ]
 
 { #category : 'accessing' }

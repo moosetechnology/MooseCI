@@ -34,25 +34,80 @@ MCIQualityRulesTest >> testDefaultApplicableLanguagesIsAll [
 { #category : 'tests' }
 MCIQualityRulesTest >> testMCILargeClassRule [
 
-	| javaViolations|
-	
-	javaModel newClassNamed: 'AJavaLargeClass'.
-	
-	javaViolations := MCIQualityRules runRules: { MCILargeClassRule new } on: javaModel.
-	
-	self assert: javaViolations isNotNil.
+	| javaViolations class method rule |
+	class := FamixJavaClass new
+		         name: 'AJavaLargeClass';
+		         yourself.
+	method := FamixJavaMethod new
+		          name: 'aMethod';
+		          yourself.
+	class addMethod: method.
+
+	javaModel
+		add: method;
+		add: class.
+	rule := MCILargeClassRule new.
+	rule threshold: 0.
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations isNotNil
 ]
 
 { #category : 'tests' }
-MCIQualityRulesTest >> testMCILongFileRule [
+MCIQualityRulesTest >> testMCITooManyParametersRule [
 
-	| javaViolations|
-	self flag: #TODO. 
-	javaModel newClassNamed: 'AJavaLargeClass'.
-	
-	javaViolations := MCIQualityRules runRules: { MCILongFileRule new } on: javaModel.
-	
+	| javaViolations method rule param |
+	method := FamixJavaMethod new
+		          name: 'aMethod';
+		          yourself.
+	param := FamixJavaParameter new
+		         name: 'aParam';
+		         yourself.
+	method addParameter: param.
+
+	javaModel
+		add: method;
+		add: param.
+	rule := MCITooManyParametersRule new.
+	rule threshold: 0.
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
 	self assert: javaViolations isNotNil.
+	self assert: javaViolations values first size equals: 1.
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testMCIUnusedLocalVariableRule [
+
+	| javaViolations rule |
+	
+	javaModel add: (FamixJavaLocalVariable new
+			 name: 'aVar';
+			 yourself).
+			
+	rule := MCIUnusedLocalVariableRule new.
+	
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations isNotNil.
+	self assert: javaViolations values first size equals: 1
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testMCIUnusedParameterRule [
+
+	| javaViolations rule |
+	
+	(javaModel newMethodNamed: 'aMethod') addParameter: (FamixJavaParameter new
+			 name: 'aParam';
+			 yourself).
+
+	rule := MCIUnusedParameterRule new.
+
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations isNotNil.
+	self assert: javaViolations values first size equals: 1
 ]
 
 { #category : 'tests' }
