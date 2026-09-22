@@ -38,6 +38,31 @@ MCIPyQualityRulesTest >> testMCILocalVariableNamingRule [
 ]
 
 { #category : 'tests' }
+MCIPyQualityRulesTest >> testMCIPyNoDocstringRule [
+
+	| violations |
+	model
+		newFunctionNamed: 'aFunction';
+		newMethodNamed: 'aMethod';
+		newClassNamed: 'AClass'.
+	violations := MCIQualityRules runRules: { MCIPyNoDocstringRule new } on: model.
+
+	self assert: violations isNotEmpty.
+	self assert: violations values first size equals: 3.
+]
+
+{ #category : 'tests' }
+MCIPyQualityRulesTest >> testMCIPyUnusedPrivateMethodRule [
+
+	| violations |
+	model newMethodNamed: '__a_private_method'.
+	violations := MCIQualityRules runRules: { MCIPyUnusedPrivateMethodRule new } on: model.
+
+	self assert: violations isNotEmpty.
+	self assert: violations values first size equals: 1
+]
+
+{ #category : 'tests' }
 MCIPyQualityRulesTest >> testPythonOnlyRulesDeclarePython [
 
 	self assert: MCIPyNoDocstringRule applicableLanguages equals: #( #python )

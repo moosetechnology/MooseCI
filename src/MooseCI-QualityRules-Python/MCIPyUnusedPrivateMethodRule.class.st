@@ -49,7 +49,7 @@ MCIPyUnusedPrivateMethodRule >> contextFilterBlock [
 
 	^ [ :collection |
 	  collection select: [ :each |
-		  each isMethod
+		  (each class usesTrait: FamixTMethod)
 			  and: [ each name matchesRegex: '^__[A-Za-z0-9]([A-Za-z0-9_]*[A-Za-z0-9])?_?$' ] ] ]
 ]
 

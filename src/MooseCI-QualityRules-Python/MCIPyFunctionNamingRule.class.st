@@ -49,7 +49,7 @@ MCIPyFunctionNamingRule >> contextFilterBlock [
 
 	^ [ :collection |
 	  collection select: [ :each |
-		  each isFunction and: [ each isStub not and: [ each name isNotNil ] ] ] ]
+		  (each class usesTrait: FamixTFunction) and: [ each isStub not and: [ each name isNotNil ] ] ] ]
 ]
 
 { #category : 'accessing' }

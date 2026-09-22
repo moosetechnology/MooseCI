@@ -46,9 +46,20 @@ MCIPyNoDocstringRule class >> ruleName [
 
 { #category : 'accessing' }
 MCIPyNoDocstringRule >> contextFilterBlock [
+	"select functions, methods and classes"
 
 	^ [ :collection |
-	  (collection select: [ :each | each isStub not and: [ each isFunction or: [ each isMethod or: [ each isClass ] ] ] ]) asSet ]
+	  (collection select: [ :each | 
+		
+		each isStub not and: [ 
+			((each class usesTrait: FamixTFunction ) 
+			or: [ each class usesTrait: FamixTMethod  ] )
+			or: [ each isClass ] 
+			
+			] 
+		
+		
+		]) asSet ]
 ]
 
 { #category : 'accessing' }

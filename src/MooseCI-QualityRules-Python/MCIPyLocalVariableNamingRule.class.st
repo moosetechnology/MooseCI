@@ -48,10 +48,9 @@ MCIPyLocalVariableNamingRule class >> ruleName [
 MCIPyLocalVariableNamingRule >> contextFilterBlock [
 
 	^ [ :collection |
-	  collection select: [ :each |
-		  each isStub not
-			  and: [ each name isNotNil
-					  and: [ each isLocalVariable or: [ each class = FamixPythonParameter ] ] ] ] ]
+		  collection select: [ :each |
+				  each isStub not and: [
+					  each name isNotNil and: [ (each class usesTrait: FamixTLocalVariable) or: [ each class usesTrait: FamixTParameter ] ] ] ] ]
 ]
 
 { #category : 'accessing' }
