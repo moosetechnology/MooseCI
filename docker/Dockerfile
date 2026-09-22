@@ -31,7 +31,10 @@ RUN apt-get update && apt-get install -y \
     bash \
     wget \
     unzip \
-    git
+    git \
+    default-jre-headless
+
+RUN java -version
 
 
 
