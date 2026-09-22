@@ -27,12 +27,6 @@ MCIMetrics class >> defaultMetrics [
 	^ #( #files #loc )
 ]
 
-{ #category : 'helpers' }
-MCIMetrics class >> javaMetrics [
-
-	^ #( #packages #classes )
-]
-
 { #category : 'accessing' }
 MCIMetrics class >> metricAt: aSymbol [
 
@@ -40,10 +34,4 @@ MCIMetrics class >> metricAt: aSymbol [
 		detect: [ :metricClass | metricClass key = aSymbol ]
 		ifFound: [ :metricClass | ^ metricClass ]
 		ifNone: [ MCIMetricNotFoundError signal: 'Metric not found: ' , aSymbol asString ]
-]
-
-{ #category : 'helpers' }
-MCIMetrics class >> pythonMetrics [
-
-	^ #( #files #loc #classes )
 ]

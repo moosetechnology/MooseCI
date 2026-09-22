@@ -2,32 +2,32 @@
 I count the total lines of code of a model.
 "
 Class {
-	#name : 'MCILinesOfCodeMetric',
+	#name : 'MCIPyLinesOfCodeMetric',
 	#superclass : 'MCIAbstractMetric',
-	#category : 'MooseCI-Metrics',
-	#package : 'MooseCI-Metrics'
+	#category : 'MooseCI-Metrics-Python',
+	#package : 'MooseCI-Metrics-Python'
 }
 
 { #category : 'accessing' }
-MCILinesOfCodeMetric class >> description [
+MCIPyLinesOfCodeMetric class >> description [
 
 	^ 'Total lines of code.'
 ]
 
 { #category : 'accessing' }
-MCILinesOfCodeMetric class >> key [
+MCIPyLinesOfCodeMetric class >> key [
 
 	^ #loc
 ]
 
 { #category : 'accessing' }
-MCILinesOfCodeMetric class >> metricName [
+MCIPyLinesOfCodeMetric class >> metricName [
 
 	^ 'LOC'
 ]
 
 { #category : 'computing' }
-MCILinesOfCodeMetric >> compute: aMooseModel [
+MCIPyLinesOfCodeMetric >> compute: aMooseModel [
 
 	^ (aMooseModel allModules collect: [ :module | module sourceAnchor lineCount ]) sum
 ]

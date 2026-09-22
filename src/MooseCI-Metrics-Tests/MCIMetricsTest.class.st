@@ -19,20 +19,13 @@ MCIMetricsTest >> testAllMetrics [
 MCIMetricsTest >> testComputeMetricsOn [
 
 	| model metrics |
-	model := FamixPythonModel new.
-	FamixPythonModule new
-		name: 'main';
-		mooseModel: model.
-	FamixPythonPackage new
-		name: 'pkg';
-		mooseModel: model.
-	FamixPythonClass new
-		name: 'Foo';
-		mooseModel: model.
+	
+	model := FamixJavaModel new.
+	model newPackageNamed: 'aPackage'.
+	model newClassNamed: 'AClass'.
 
-	metrics := MCIMetrics computeMetrics: #( #files #packages #classes ) on: model.
+	metrics := MCIMetrics computeMetrics: #( #packages #classes ) on: model.
 
-	self assert: (metrics at: #files) equals: 1.
 	self assert: (metrics at: #packages) equals: 1.
 	self assert: (metrics at: #classes) equals: 1
 ]
@@ -50,28 +43,16 @@ MCIMetricsTest >> testDefaultMetrics [
 ]
 
 { #category : 'tests' }
-MCIMetricsTest >> testJavaMetrics [
-
-	self assert: MCIMetrics javaMetrics equals: #( #files #loc #packages #classes )
-]
-
-{ #category : 'tests' }
 MCIMetricsTest >> testMetricAt [
 
 	| metric |
-	metric := MCIMetrics metricAt: #loc.
+	metric := MCIMetrics metricAt: #classes.
 
-	self assert: metric equals: MCILinesOfCodeMetric
+	self assert: metric equals: MCINumberOfClassesMetric 
 ]
 
 { #category : 'tests' }
 MCIMetricsTest >> testMetricAtNotFound [
 
 	self assertBlock: [ MCIMetrics metricAt: #a_non_existing_metric_key ] raises: MCIMetricNotFoundError
-]
-
-{ #category : 'tests' }
-MCIMetricsTest >> testPythonMetrics [
-
-	self assert: MCIMetrics pythonMetrics equals: #( #files #loc #classes )
 ]

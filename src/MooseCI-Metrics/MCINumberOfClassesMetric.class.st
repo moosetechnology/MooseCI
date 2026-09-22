@@ -29,5 +29,5 @@ MCINumberOfClassesMetric class >> metricName [
 { #category : 'computing' }
 MCINumberOfClassesMetric >> compute: aMooseModel [
 
-	^ aMooseModel allClasses size
+	^ aMooseModel allModelClasses size
 ]

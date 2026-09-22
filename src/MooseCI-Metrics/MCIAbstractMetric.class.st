@@ -50,6 +50,12 @@ MCIAbstractMetric class >> metricName [
 	^ self key asString
 ]
 
+{ #category : 'accessing' }
+MCIAbstractMetric >> applicableLanguages [
+
+	^ #all
+]
+
 { #category : 'computing' }
 MCIAbstractMetric >> compute: aMooseModel [
 
