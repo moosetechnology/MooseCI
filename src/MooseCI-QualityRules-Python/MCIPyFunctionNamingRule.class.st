@@ -2,58 +2,58 @@
 I get all functions whose names don't comply with the naming convention
 "
 Class {
-	#name : 'MCIFunctionNamingRule',
+	#name : 'MCIPyFunctionNamingRule',
 	#superclass : 'MCIAbstractQualityRule',
-	#category : 'MooseCI-QualityRules',
-	#package : 'MooseCI-QualityRules'
+	#category : 'MooseCI-QualityRules-Python',
+	#package : 'MooseCI-QualityRules-Python'
 }
 
 { #category : 'as yet unclassified' }
-MCIFunctionNamingRule class >> applicableLanguages [
+MCIPyFunctionNamingRule class >> applicableLanguages [
 
 	^ #( #python )
 ]
 
 { #category : 'accessing' }
-MCIFunctionNamingRule class >> defaultSeverity [
+MCIPyFunctionNamingRule class >> defaultSeverity [
 
 	^ FamixCBHintSeverity
 ]
 
 { #category : 'accessing' }
-MCIFunctionNamingRule class >> defaultThreshold [ 
+MCIPyFunctionNamingRule class >> defaultThreshold [ 
 
 	^ -1
 ]
 
 { #category : 'accessing' }
-MCIFunctionNamingRule class >> description [
+MCIPyFunctionNamingRule class >> description [
 
 	^ 'Reports functions whose names do not comply with the naming convention.'
 ]
 
 { #category : 'accessing' }
-MCIFunctionNamingRule class >> key [
+MCIPyFunctionNamingRule class >> key [
 
 	^ #function_naming
 ]
 
 { #category : 'accessing' }
-MCIFunctionNamingRule class >> ruleName [ 
+MCIPyFunctionNamingRule class >> ruleName [ 
 
 	^ 'Functions not respecting naming convention'
 ]
 
 { #category : 'accessing' }
-MCIFunctionNamingRule >> contextFilterBlock [
+MCIPyFunctionNamingRule >> contextFilterBlock [
 
 	^ [ :collection |
 	  collection select: [ :each |
-		  each isFunction and: [ each isStub not and: [ each name isNotNil ] ] ] ]
+		  (each class usesTrait: FamixTFunction) and: [ each isStub not and: [ each name isNotNil ] ] ] ]
 ]
 
 { #category : 'accessing' }
-MCIFunctionNamingRule >> queryHandler [
+MCIPyFunctionNamingRule >> queryHandler [
 
 	^ FamixCBQueryHandler on: (FQSelectScriptQuery script: [ :entity |
 			   (entity name matchesRegex: '^[a-z_][a-z0-9_]*$') not ])

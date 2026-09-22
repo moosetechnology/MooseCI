@@ -2,51 +2,51 @@
 I get all classes that have too many LOC
 "
 Class {
-	#name : 'MCILongFileRule',
+	#name : 'MCIPyLongFileRule',
 	#superclass : 'MCIAbstractQualityRule',
-	#category : 'MooseCI-QualityRules',
-	#package : 'MooseCI-QualityRules'
+	#category : 'MooseCI-QualityRules-Python',
+	#package : 'MooseCI-QualityRules-Python'
 }
 
 { #category : 'as yet unclassified' }
-MCILongFileRule class >> applicableLanguages [
+MCIPyLongFileRule class >> applicableLanguages [
 
 	^ #( #python )
 ]
 
 { #category : 'accessing' }
-MCILongFileRule class >> defaultThreshold [ 
+MCIPyLongFileRule class >> defaultThreshold [ 
 
 	^ 1000
 ]
 
 { #category : 'accessing' }
-MCILongFileRule class >> description [
+MCIPyLongFileRule class >> description [
 
 	^ 'Reports files whose number of lines of code exceeds the threshold.'
 ]
 
 { #category : 'accessing' }
-MCILongFileRule class >> key [
+MCIPyLongFileRule class >> key [
 
 	^ #long_file
 ]
 
 { #category : 'accessing' }
-MCILongFileRule class >> ruleName [ 
+MCIPyLongFileRule class >> ruleName [ 
 
 	^ 'File with too many LOC'
 ]
 
 { #category : 'accessing' }
-MCILongFileRule >> contextFilterBlock [
+MCIPyLongFileRule >> contextFilterBlock [
 
-	self flag: #TODO. "update to a standard file, not specifically for python"
-	^ [ :collection | collection select: [ :each | each isKindOf: FamixTFileAnchor ] ]
+	
+	^ [ :collection | collection select: [ :each | each class usesTrait: FamixTModule ] ]
 ]
 
 { #category : 'accessing' }
-MCILongFileRule >> queryHandler [
+MCIPyLongFileRule >> queryHandler [
 
 	^ FamixCBQueryHandler on: (FQSelectScriptQuery script: [ :entity | entity numberOfLinesOfCode > self threshold ])
 ]

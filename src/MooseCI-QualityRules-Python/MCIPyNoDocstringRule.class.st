@@ -2,57 +2,68 @@
 I get all entities which don't have docstring
 "
 Class {
-	#name : 'MCINoDocstringRule',
+	#name : 'MCIPyNoDocstringRule',
 	#superclass : 'MCIAbstractQualityRule',
-	#category : 'MooseCI-QualityRules',
-	#package : 'MooseCI-QualityRules'
+	#category : 'MooseCI-QualityRules-Python',
+	#package : 'MooseCI-QualityRules-Python'
 }
 
 { #category : 'as yet unclassified' }
-MCINoDocstringRule class >> applicableLanguages [
+MCIPyNoDocstringRule class >> applicableLanguages [
 
 	^ #( #python )
 ]
 
 { #category : 'accessing' }
-MCINoDocstringRule class >> defaultSeverity [
+MCIPyNoDocstringRule class >> defaultSeverity [
 
 	^ FamixCBHintSeverity
 ]
 
 { #category : 'accessing' }
-MCINoDocstringRule class >> defaultThreshold [ 
+MCIPyNoDocstringRule class >> defaultThreshold [ 
 
 	^ -1
 ]
 
 { #category : 'accessing' }
-MCINoDocstringRule class >> description [
+MCIPyNoDocstringRule class >> description [
 
 	^ 'Reports functions, methods and classes that are missing a docstring.'
 ]
 
 { #category : 'accessing' }
-MCINoDocstringRule class >> key [
+MCIPyNoDocstringRule class >> key [
 
 	^ #no_docstring
 ]
 
 { #category : 'accessing' }
-MCINoDocstringRule class >> ruleName [ 
+MCIPyNoDocstringRule class >> ruleName [ 
 
 	^ 'No docstring'
 ]
 
 { #category : 'accessing' }
-MCINoDocstringRule >> contextFilterBlock [
+MCIPyNoDocstringRule >> contextFilterBlock [
+	"select functions, methods and classes"
 
 	^ [ :collection |
-	  (collection select: [ :each | each isStub not and: [ each isFunction or: [ each isMethod or: [ each isClass ] ] ] ]) asSet ]
+	  (collection select: [ :each | 
+		
+		each isStub not and: [ 
+			((each class usesTrait: FamixTFunction ) 
+			or: [ each class usesTrait: FamixTMethod  ] )
+			or: [ each isClass ] 
+			
+			] 
+		
+		
+		]) asSet ]
 ]
 
 { #category : 'accessing' }
-MCINoDocstringRule >> queryHandler [
+MCIPyNoDocstringRule >> queryHandler [
 
 	^ FamixCBQueryHandler on: (FQSelectScriptQuery script: [ :entity |
 			   entity comments isEmpty or: [ (entity comments anySatisfy: [ :each | each sourceText includesSubstring: '"""' ]) not ] ])

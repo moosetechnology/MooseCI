@@ -41,8 +41,7 @@ MCIUnusedLocalVariableRule class >> ruleName [
 { #category : 'accessing' }
 MCIUnusedLocalVariableRule >> contextFilterBlock [
 
-	^ [ :collection |
-	  collection select: [ :each | each isLocalVariable and: [ each isStub not ] ] ]
+	^ [ :collection | collection select: [ :each | (each class usesTrait: FamixTLocalVariable) and: [ each isStub not ] ] ]
 ]
 
 { #category : 'accessing' }

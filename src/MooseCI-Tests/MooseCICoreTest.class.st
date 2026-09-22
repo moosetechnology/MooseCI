@@ -66,17 +66,17 @@ MooseCICoreTest >> testRunCritics [
 MooseCICoreTest >> testRunCriticsWithCustomConfigThreshold [
 
 	| rules |
-	rules := { (MCILongFileRule key -> 1) }.
+	rules := { (MCILargeClassRule key -> 1) }.
 
-	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'one-lang'.
+	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'java-only'.
 	mooseCICore config rules: rules.
 	mooseCICore loadProject.
 	mooseCICore runCritics.
 	
 	self assert: mooseCICore violations isNotNil.
 	self assert: mooseCICore violations isDictionary.
-	self assert: mooseCICore violations values first size equals: 1.
-	self assert: mooseCICore violations values first allViolatingEntitiesType asArray first equals: FamixPythonModule
+	self assert: mooseCICore violations values first size equals: 2.
+	self assert: mooseCICore violations values first allViolatingEntitiesType asArray first equals: FamixJavaClass 
 ]
 
 { #category : 'tests' }

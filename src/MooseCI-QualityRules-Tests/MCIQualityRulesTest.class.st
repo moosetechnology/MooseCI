@@ -2,7 +2,6 @@ Class {
 	#name : 'MCIQualityRulesTest',
 	#superclass : 'TestCase',
 	#instVars : [
-		'pyModel',
 		'javaModel'
 	],
 	#category : 'MooseCI-QualityRules-Tests',
@@ -13,7 +12,6 @@ Class {
 MCIQualityRulesTest >> setUp [
 	super setUp.
 
-	pyModel := FamixPythonModel new.
 	javaModel := FamixJavaModel new.
 ]
 
@@ -34,69 +32,92 @@ MCIQualityRulesTest >> testDefaultApplicableLanguagesIsAll [
 ]
 
 { #category : 'tests' }
-MCIQualityRulesTest >> testMCIFunctionNamingRule [
-
-	| violations |
-	
-	pyModel newFunctionNamed: 'MyWrongNamedFunction'.
-	violations := MCIQualityRules runRules: { MCIFunctionNamingRule new } on: pyModel.
-	
-	self assert: violations isNotEmpty
-]
-
-{ #category : 'tests' }
 MCIQualityRulesTest >> testMCILargeClassRule [
 
-	| pyViolations javaViolations|
-	
-	pyModel newClassNamed: 'APyLargeClass'.
-	javaModel newClassNamed: 'AJavaLargeClass'.
-	
-	pyViolations := MCIQualityRules runRules: { MCILargeClassRule new } on: pyModel.
-	javaViolations := MCIQualityRules runRules: { MCILargeClassRule new } on: javaModel.
-	
-	self assert: pyViolations isNotNil.
+	| javaViolations class method rule |
+	class := FamixJavaClass new
+		         name: 'AJavaLargeClass';
+		         yourself.
+	method := FamixJavaMethod new
+		          name: 'aMethod';
+		          yourself.
+	class addMethod: method.
+
+	javaModel
+		add: method;
+		add: class.
+	rule := MCILargeClassRule new.
+	rule threshold: 0.
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations isNotNil
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testMCITooManyParametersRule [
+
+	| javaViolations method rule param |
+	method := FamixJavaMethod new
+		          name: 'aMethod';
+		          yourself.
+	param := FamixJavaParameter new
+		         name: 'aParam';
+		         yourself.
+	method addParameter: param.
+
+	javaModel
+		add: method;
+		add: param.
+	rule := MCITooManyParametersRule new.
+	rule threshold: 0.
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
 	self assert: javaViolations isNotNil.
+	self assert: javaViolations values first size equals: 1.
 ]
 
 { #category : 'tests' }
-MCIQualityRulesTest >> testMCILocalVariableNamingRule [
+MCIQualityRulesTest >> testMCIUnusedLocalVariableRule [
 
-	| violations |
+	| javaViolations rule |
 	
-	pyModel newLocalVariableNamed: 'AWrongNamingForAVariable'.
-	violations := MCIQualityRules runRules: { MCILocalVariableNamingRule new } on: pyModel.
+	javaModel add: (FamixJavaLocalVariable new
+			 name: 'aVar';
+			 yourself).
+			
+	rule := MCIUnusedLocalVariableRule new.
 	
-	self assert: violations isNotEmpty
-]
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
 
-{ #category : 'tests' }
-MCIQualityRulesTest >> testMCILongFileRule [
-
-	| pyViolations javaViolations|
-	self flag: #TODO. 
-	pyModel newModuleNamed: 'aPythonModule'.
-	javaModel newClassNamed: 'AJavaLargeClass'.
-	
-	pyViolations := MCIQualityRules runRules: { MCILongFileRule new } on: pyModel.
-	javaViolations := MCIQualityRules runRules: { MCILongFileRule new } on: javaModel.
-	self assert: pyViolations isNotNil.
 	self assert: javaViolations isNotNil.
+	self assert: javaViolations values first size equals: 1
 ]
 
 { #category : 'tests' }
-MCIQualityRulesTest >> testPythonOnlyRulesDeclarePython [
+MCIQualityRulesTest >> testMCIUnusedParameterRule [
 
-	self assert: MCINoDocstringRule applicableLanguages equals: #( #python )
+	| javaViolations rule |
+	
+	(javaModel newMethodNamed: 'aMethod') addParameter: (FamixJavaParameter new
+			 name: 'aParam';
+			 yourself).
+
+	rule := MCIUnusedParameterRule new.
+
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations isNotNil.
+	self assert: javaViolations values first size equals: 1
 ]
 
 { #category : 'tests' }
 MCIQualityRulesTest >> testRuleAt [
 
-	| rule |
-	rule := MCIQualityRules ruleAt: #long_file.
+	| aRuleClass |
+	aRuleClass := MCIAbstractQualityRule subclasses first.
 
-	self assert: rule equals: MCILongFileRule
+
+	self assert: (MCIQualityRules ruleAt: aRuleClass key) equals: aRuleClass
 ]
 
 { #category : 'tests' }
@@ -110,7 +131,7 @@ MCIQualityRulesTest >> testRuleAtNotFound [
 MCIQualityRulesTest >> testRulesAt [
 
 	| rules |
-	rules := MCIQualityRules rulesAt: #(#long_file #no_docstring).
+	rules := MCIAbstractQualityRule subclasses sliceTo: 2.
 
 	self assert: rules size equals: 2.
 	self assert: (rules allSatisfy: [ :rule | rule superclass = MCIAbstractQualityRule  ]).
