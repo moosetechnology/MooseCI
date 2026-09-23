@@ -1,8 +1,8 @@
 Class {
 	#name : 'MooseCIPythonProjectLoader',
 	#superclass : 'MooseCIProjectLoader',
-	#category : 'MooseCI-Core',
-	#package : 'MooseCI-Core'
+	#category : 'MooseCI-Core-Python',
+	#package : 'MooseCI-Core-Python'
 }
 
 { #category : 'as yet unclassified' }
