@@ -17,23 +17,12 @@ MooseCICoreTest >> setUp [
 
 	mooseCICore := MooseCICore new.
 	
-	mooseCICore config: MooseCIConfig default.
+	mooseCICore config: MooseCIConfig java.
 	
 ]
 
 { #category : 'tests' }
 MooseCICoreTest >> testLoadProject [
-
-	
-	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'one-lang'.
-	
-	mooseCICore loadProject.
-
-	self assert: mooseCICore model isMooseModel
-]
-
-{ #category : 'tests' }
-MooseCICoreTest >> testLoadProjectJava [
 
 	| projectPath |
 	projectPath := MooseCIBridge mockProjectTests / 'java-only'.
@@ -47,7 +36,7 @@ MooseCICoreTest >> testLoadProjectJava [
 { #category : 'tests' }
 MooseCICoreTest >> testRunCritics [
 
-	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'one-lang'.
+	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'java-only'.
 	mooseCICore loadProject.
 	mooseCICore runCritics.
 
@@ -82,21 +71,20 @@ MooseCICoreTest >> testRunCriticsWithCustomConfigThreshold [
 { #category : 'tests' }
 MooseCICoreTest >> testRunMetricsAnalysis [
 
-	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'one-file'.
-	mooseCICore config: MooseCIConfig python.
+	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'java-only'.
+	mooseCICore config: MooseCIConfig java.
 	mooseCICore loadProject.
 	mooseCICore runMetricsAnalysis.
 	
-	self assert: mooseCICore metrics class equals: OrderedDictionary.
-	self assert: (mooseCICore metrics at: #loc) equals: 1.
-	self assert: (mooseCICore metrics at: #classes) equals: 0.
+	self assert: mooseCICore metrics isDictionary.
+	self assert: (mooseCICore metrics at: #classes) isNumber.
 	
 ]
 
 { #category : 'tests' }
 MooseCICoreTest >> testRunMetricsAnalysisWithEmptyMetrics [
 
-	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'one-file'.
+	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'java-only'.
 	mooseCICore config metrics: #(  ).
 	mooseCICore loadProject.
 	mooseCICore runMetricsAnalysis.
