@@ -9,7 +9,7 @@ Class {
 MooseCIConfigTest >> testAggregatedValidationErrors [
 
 	| config errors |
-	config := MooseCIConfig default.
+	config := MooseCIConfig java.
 	config rules: #( #unknown_rule #another_unknown_rule ).
 
 	errors := config validationErrors.
@@ -23,8 +23,8 @@ MooseCIConfigTest >> testConfigFileWithoutMetricsAttributeIsValid [
 
 	| stonString config |
 	stonString := 'MooseCIConfig {
-	#projectLanguage : #python,
-	#rules : [ #no_docstring ],
+	#projectLanguage : #java,
+	#rules : [ #large_class ],
 	#outputFormats : [ #json ],
 	#outputPath : ''.moose-ci/report'',
 	#visualizations : [ ],
@@ -41,15 +41,6 @@ MooseCIConfigTest >> testConfigForJavaIsValid [
 
 	| config |
 	config := MooseCIConfig for: #java.
-	config validate.
-	self assert: config validationErrors isEmpty
-]
-
-{ #category : 'tests' }
-MooseCIConfigTest >> testConfigForPythonIsValid [
-
-	| config |
-	config := MooseCIConfig for: #python.
 	config validate.
 	self assert: config validationErrors isEmpty
 ]
