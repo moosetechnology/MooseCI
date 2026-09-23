@@ -23,7 +23,11 @@ BaselineOfMooseCI >> defineDependencies: spec [
 		baseline: 'TreeSitter' with: [
 				spec
 					repository: 'github://Evref-BL/Pharo-Tree-Sitter:main/src';
-					loads: #( 'python' ) ]
+					loads: #( 'python' ) ];
+		baseline: 'GitBridge' with: [
+				spec
+					repository: 'github://jecisc/GitBridge:master/src';
+					loads: #( 'Minimal' ) ]
 ]
 
 { #category : 'baselines' }
@@ -43,7 +47,7 @@ BaselineOfMooseCI >> defineGroups: spec [
 BaselineOfMooseCI >> definePackages: spec [
 
 	spec
-		package: 'MooseCI-Core';
+		package: 'MooseCI-Core' with: [ spec requires: #( 'GitBridge' ) ];
 		package: 'MooseCI-CLI';
 		package: 'MooseCI-Tests';
 		package: 'MooseCI-QualityRules';
