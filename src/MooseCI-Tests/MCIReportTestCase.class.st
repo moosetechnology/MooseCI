@@ -13,14 +13,6 @@ Class {
 	#package : 'MooseCI-Tests'
 }
 
-{ #category : 'helpers' }
-MCIReportTestCase >> entityNamed: aName [
-
-	^ FamixPythonModule new
-		  name: aName;
-		  yourself
-]
-
 { #category : 'running' }
 MCIReportTestCase >> setUp [
 
@@ -47,7 +39,5 @@ MCIReportTestCase >> setUp [
 MCIReportTestCase >> tearDown [
 	(FileLocator workingDirectory / 'moose-ci-test-report') exists
 		ifTrue: [ (FileLocator workingDirectory / 'moose-ci-test-report') ensureDeleteAll ].
-	(FileLocator workingDirectory / 'moose-ci-test-report.json') exists
-		ifTrue: [ (FileLocator workingDirectory / 'moose-ci-test-report.json') ensureDelete ].
 	super tearDown
 ]
