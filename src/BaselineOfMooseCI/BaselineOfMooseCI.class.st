@@ -43,12 +43,12 @@ BaselineOfMooseCI >> definePackages: spec [
 		package: 'MooseCI-CLI';
 		package: 'MooseCI-Tests';
 		package: 'MooseCI-QualityRules';
-		package: 'MooseCI-QualityRules-Java';
-		package: 'MooseCI-Metrics-Java';
-		package: 'MooseCI-QualityRules-Python';
-		package: 'MooseCI-Metrics-Python';
 		package: 'MooseCI-QualityRules-Tests';
 		package: 'MooseCI-Metrics';
 		package: 'MooseCI-Metrics-Tests';
-		package: 'MooseCI-Report'.
+		package: 'MooseCI-Report';
+		package: 'MooseCI-QualityRules-Java';
+		package: 'MooseCI-Metrics-Java';
+		package: 'MooseCI-QualityRules-Python';
+		package: 'MooseCI-Metrics-Python'.
 ]
