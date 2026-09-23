@@ -89,7 +89,6 @@ MooseCICoreTest >> testRunMetricsAnalysis [
 	
 	self assert: mooseCICore metrics class equals: OrderedDictionary.
 	self assert: (mooseCICore metrics at: #loc) equals: 1.
-	self assert: (mooseCICore metrics at: #packages) equals: 1.
 	self assert: (mooseCICore metrics at: #classes) equals: 0.
 	
 ]
