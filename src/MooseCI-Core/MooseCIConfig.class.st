@@ -38,12 +38,9 @@ MooseCIConfig class >> default [
 { #category : 'instance creation' }
 MooseCIConfig class >> for: aSymbol [
 
-	| configs |
-	configs := {
-		           (#java -> self java).
-		           (#python -> self python) } asOrderedDictionary.
-
-	^ configs at: aSymbol ifAbsent: [ Error signal: 'Default config not found for: ' , aSymbol asString ]
+	^ [ self perform: aSymbol ]
+		  on: MessageNotUnderstood
+		  do: [ Error signal: 'Default config not found for: ' , aSymbol asString ]
 ]
 
 { #category : 'accessing' }

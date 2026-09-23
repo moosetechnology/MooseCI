@@ -74,6 +74,12 @@ MooseCIConfigTest >> testEmptyMetricsIsValid [
 ]
 
 { #category : 'tests' }
+MooseCIConfigTest >> testForOnlyEvaluatesRequestedLanguage [
+
+	self assert: (MooseCIConfigForTest for: #java) equals: #javaConfig
+]
+
+{ #category : 'tests' }
 MooseCIConfigTest >> testForReturnsJavaConfig [
 
 	| config |
