@@ -49,7 +49,7 @@ MooseCIConfigTest >> testConfigForJavaIsValid [
 MooseCIConfigTest >> testDefaultConfigValid [
 
 	| config |
-	config := MooseCIConfig default.
+	config := MooseCIConfig java.
 
 	self assert: config validationErrors isEmpty
 ]
@@ -78,16 +78,6 @@ MooseCIConfigTest >> testForReturnsJavaConfig [
 
 	self assert: config projectLanguage equals: #java.
 	self assert: config rules equals: MCIQualityRules javaRules
-]
-
-{ #category : 'tests' }
-MooseCIConfigTest >> testForReturnsPythonConfig [
-
-	| config |
-	config := MooseCIConfig for: #python.
-
-	self assert: config projectLanguage equals: #python.
-	self assert: config rules equals: MCIQualityRules pythonRules
 ]
 
 { #category : 'tests' }
@@ -120,18 +110,6 @@ MooseCIConfigTest >> testJavaDefaultConfig [
 ]
 
 { #category : 'tests' }
-MooseCIConfigTest >> testPythonDefaultConfig [
-
-	| config |
-	config := MooseCIConfig python.
-
-	self assert: config projectLanguage equals: #python.
-	self assert: config metrics equals: MCIMetrics pythonMetrics.
-	self assert: config outputPath equals: '.moose-ci/report'.
-	self deny: config isRemote.
-]
-
-{ #category : 'tests' }
 MooseCIConfigTest >> testRuleNotApplicableToLanguageIsReported [
 
 	| config |
@@ -145,7 +123,7 @@ MooseCIConfigTest >> testRuleNotApplicableToLanguageIsReported [
 { #category : 'tests' }
 MooseCIConfigTest >> testToSton [ 
 	|stonString config|
-	config := MooseCIConfig default.
+	config := MooseCIConfig java.
 	stonString := config toSton.
 	
 self assert: (stonString includesSubstring: 'MooseCIConfig').
@@ -157,7 +135,7 @@ self assert: (stonString includesSubstring: '#rules').
 MooseCIConfigTest >> testUnknownMetric [
 
 	| config errors |
-	config := MooseCIConfig default.
+	config := MooseCIConfig java.
 	config metrics: #( #unknown_metric ).
 
 	errors := config validationErrors.
@@ -170,7 +148,7 @@ MooseCIConfigTest >> testUnknownMetric [
 MooseCIConfigTest >> testUnknownRule [
 
 	| config errors |
-	config := MooseCIConfig default.
+	config := MooseCIConfig java.
 	config rules: #( #unknown_rule ).
 
 	errors := config validationErrors.
@@ -183,7 +161,7 @@ MooseCIConfigTest >> testUnknownRule [
 MooseCIConfigTest >> testValidateSignalsError [
 
 	| config |
-	config := MooseCIConfig default.
+	config := MooseCIConfig java.
 	config rules: #( #bogus_rule ).
 
 	self assertBlock: [ config validate ] raises: MooseCIConfigValidationError
