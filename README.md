@@ -221,7 +221,7 @@ jobs:
 
 ### Installation
 
-Load MooseCI in a Moose image with Metacello:
+Load MooseCI in a Moose image with Metacello. The `default` group installs the core of MooseCI with Java support:
 
 ```smalltalk
 Metacello new
@@ -229,6 +229,30 @@ Metacello new
   repository: 'github://moosetechnology/MooseCI:master/src';
   load.
 ```
+
+To also install Python support, load the `python` group:
+
+```smalltalk
+Metacello new
+  baseline: 'MooseCI';
+  repository: 'github://moosetechnology/MooseCI:master/src';
+  load: #( 'default' 'python' ).
+```
+
+To install everything, load the `all` group:
+
+```smalltalk
+Metacello new
+  baseline: 'MooseCI';
+  repository: 'github://moosetechnology/MooseCI:master/src';
+  load: #( 'all' ).
+```
+
+Available groups:
+
+- `default`: core MooseCI and Java support (installed by default).
+- `python`: Python support (depends on `MoosePy` and `TreeSitter`).
+- `all`: everything.
 
 ### Create a new rule
 
