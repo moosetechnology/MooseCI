@@ -2,13 +2,13 @@ Class {
 	#name : 'MooseCICore',
 	#superclass : 'Object',
 	#instVars : [
-		'model',
 		'criticModel',
 		'violations',
 		'metrics',
 		'projectLanguage',
 		'projectPath',
-		'config'
+		'config',
+		'mciProjectModel'
 	],
 	#category : 'MooseCI-Core',
 	#package : 'MooseCI-Core'
@@ -62,7 +62,7 @@ MooseCICore >> loadProject [
 	self detectProjectLanguage: self projectPath.
 	
 	loader := MooseCIProjectLoader forLanguage: config projectLanguage.
-	model := loader load: self projectPath
+	mciProjectModel := loader load: self projectPath
 ]
 
 { #category : 'accessing' }
@@ -80,13 +80,13 @@ MooseCICore >> metrics: anObject [
 { #category : 'accessing' }
 MooseCICore >> model [
 
-	^ model
+	^ mciProjectModel
 ]
 
 { #category : 'accessing' }
 MooseCICore >> model: anObject [
 
-	model := anObject
+	mciProjectModel := anObject
 ]
 
 { #category : 'accessing' }
@@ -122,13 +122,13 @@ MooseCICore >> runCritics [
 
 			         mciQualityRule ].
 
-	violations := MCIQualityRules runRules: rules on: model
+	violations := MCIQualityRules runRules: rules on: mciProjectModel
 ]
 
 { #category : 'loading' }
 MooseCICore >> runMetricsAnalysis [
 
-	metrics := MCIMetrics computeMetrics: (config metrics ifNil: [ #(  ) ]) on: model
+	metrics := MCIMetrics computeMetrics: (config metrics ifNil: [ #(  ) ]) on: mciProjectModel
 ]
 
 { #category : 'accessing' }
