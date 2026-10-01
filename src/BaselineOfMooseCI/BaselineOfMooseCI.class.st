@@ -22,7 +22,7 @@ BaselineOfMooseCI >> defineDependencies: spec [
 		baseline: 'MoosePy' with: [ spec repository: 'github://moosetechnology/MoosePy:master/src' ];
 		baseline: 'TreeSitter' with: [
 				spec
-					repository: 'github://Evref-BL/Pharo-Tree-Sitter:v2.x.x/src';
+					repository: 'github://Evref-BL/Pharo-Tree-Sitter:main/src';
 					loads: #( 'python' ) ];
 		baseline: 'GitBridge' with: [
 				spec
