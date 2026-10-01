@@ -22,8 +22,12 @@ BaselineOfMooseCI >> defineDependencies: spec [
 		baseline: 'MoosePy' with: [ spec repository: 'github://moosetechnology/MoosePy:master/src' ];
 		baseline: 'TreeSitter' with: [
 				spec
-					repository: 'github://Evref-BL/Pharo-Tree-Sitter:main/src';
-					loads: #( 'python' ) ]
+					repository: 'github://Evref-BL/Pharo-Tree-Sitter:v2.x.x/src';
+					loads: #( 'python' ) ];
+		baseline: 'GitBridge' with: [
+				spec
+					repository: 'github://jecisc/GitBridge:v1.x.x/src';
+					loads: #( 'Minimal' ) ]
 ]
 
 { #category : 'baselines' }
@@ -31,7 +35,11 @@ BaselineOfMooseCI >> defineGroups: spec [
 
 	spec
 		group: 'default'
-		with: #( 'MooseCI-Core' 'MooseCI-CLI' 'MooseCI-Tests' 'MooseCI-QualityRules' 'MooseCI-QualityRules-Tests' 'MooseCI-Report' 'MooseCI-Metrics' 'MooseCI-Metrics-Tests' 'MooseCI-QualityRules-Java' 'MooseCI-QualityRules-Python' 'MooseCI-Metrics-Java' 'MooseCI-Metrics-Python' )
+		with: #( 'MooseCI-Core' 'MooseCI-CLI' 'MooseCI-Tests' 'MooseCI-QualityRules' 'MooseCI-QualityRules-Tests' 'MooseCI-Report' 'MooseCI-Metrics' 'MooseCI-Metrics-Tests' 'MooseCI-QualityRules-Java' 'MooseCI-Metrics-Java' );
+		group: 'python'
+		with: #( 'MooseCI-Core-Python' 'MooseCI-QualityRules-Python' 'MooseCI-Metrics-Python' 'MooseCI-Python-Tests');
+		group: 'all'
+		with: #( 'default' 'python' )
 
 ]
 
@@ -39,7 +47,7 @@ BaselineOfMooseCI >> defineGroups: spec [
 BaselineOfMooseCI >> definePackages: spec [
 
 	spec
-		package: 'MooseCI-Core' with: [ spec requires: #( 'MoosePy' 'TreeSitter') ];
+		package: 'MooseCI-Core' with: [ spec requires: #( 'GitBridge' ) ];
 		package: 'MooseCI-CLI';
 		package: 'MooseCI-Tests';
 		package: 'MooseCI-QualityRules';
@@ -47,8 +55,10 @@ BaselineOfMooseCI >> definePackages: spec [
 		package: 'MooseCI-Metrics';
 		package: 'MooseCI-Metrics-Tests';
 		package: 'MooseCI-Report';
-		package: 'MooseCI-QualityRules-Java';
-		package: 'MooseCI-Metrics-Java';
-		package: 'MooseCI-QualityRules-Python';
-		package: 'MooseCI-Metrics-Python'.
+		package: 'MooseCI-QualityRules-Java' with: [ spec requires: #( 'MooseCI-QualityRules' ) ];
+		package: 'MooseCI-Metrics-Java' with: [ spec requires: #( 'MooseCI-Metrics' ) ];
+		package: 'MooseCI-Core-Python' with: [ spec requires: #( 'MooseCI-Core' 'MoosePy' 'TreeSitter' ) ];
+		package: 'MooseCI-QualityRules-Python' with: [ spec requires: #( 'MooseCI-QualityRules' 'MoosePy' ) ];
+		package: 'MooseCI-Metrics-Python' with: [ spec requires: #( 'MooseCI-Metrics' 'MoosePy' ) ];
+		package: 'MooseCI-Python-Tests' with: [ spec requires: #('MooseCI-Core-Python') ]
 ]

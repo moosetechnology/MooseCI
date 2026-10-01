@@ -55,7 +55,12 @@ In would be good to be able to output some visualizations already available in M
 
 The easiest way to run Moose-CI is with Docker. You do not need Pharo or any other dependency.
 
-First, pull the image:
+Moose-CI is published as one image per language. Pick the image that matches your project:
+
+- Java project → `ghcr.io/moosetechnology/moose-ci:latest` (the base image, which includes Java by default).
+- Python project → `ghcr.io/moosetechnology/moose-ci:python` (the base image plus Python support).
+
+First, pull the image you need (the Java image below; replace `latest` with `python` for a Python project):
 
 ```bash
 docker pull ghcr.io/moosetechnology/moose-ci:latest
@@ -79,6 +84,8 @@ You can also run Moose-CI on a project without initializing a config file by pas
 docker run -v /path/to/your/project:/src ghcr.io/moosetechnology/moose-ci:latest analyze /src
 ```
 The project is mounted in the container at `/src`, so you need to pass that path to the `analyze` command.
+
+For a Python project, use the `ghcr.io/moosetechnology/moose-ci:python` image instead of `:latest` in all the commands above.
 
 #### Available commands
 
@@ -221,7 +228,7 @@ jobs:
 
 ### Installation
 
-Load MooseCI in a Moose image with Metacello:
+Load MooseCI in a Moose image with Metacello. The `default` group installs the core of MooseCI with Java support:
 
 ```smalltalk
 Metacello new
@@ -229,6 +236,30 @@ Metacello new
   repository: 'github://moosetechnology/MooseCI:master/src';
   load.
 ```
+
+To also install Python support, load the `python` group:
+
+```smalltalk
+Metacello new
+  baseline: 'MooseCI';
+  repository: 'github://moosetechnology/MooseCI:master/src';
+  load: #( 'default' 'python' ).
+```
+
+To install everything, load the `all` group:
+
+```smalltalk
+Metacello new
+  baseline: 'MooseCI';
+  repository: 'github://moosetechnology/MooseCI:master/src';
+  load: #( 'all' ).
+```
+
+Available groups:
+
+- `default`: core MooseCI and Java support (installed by default).
+- `python`: Python support (depends on `MoosePy` and `TreeSitter`).
+- `all`: everything.
 
 ### Create a new rule
 

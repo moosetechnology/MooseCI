@@ -15,16 +15,11 @@ MCIQualityRules class >> allRules [
 MCIQualityRules class >> defaultRules [
 
 	^ {
-		  (MCIPyLongFileRule key -> MCIPyLongFileRule defaultThreshold).
-		  MCIPyNoDocstringRule key.
 		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
 		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).
-		  MCIPyLocalVariableNamingRule key.
 		  MCIUnusedLocalVariableRule key.
 		  MCIUnusedParameterRule key.
-		  MCIPyUnusedPrivateMethodRule key.
-		  MCIShadowedAttributeRule key.
-		  MCIPyFunctionNamingRule key }
+		  MCIShadowedAttributeRule key }
 ]
 
 { #category : 'accessing' }

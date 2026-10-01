@@ -1,4 +1,4 @@
-name: build and push docker image
+name: build and push docker images
 on:
   push:
     branches:
@@ -22,10 +22,21 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push 
+
+      - name: Build and push base (Java) image
         uses: docker/build-push-action@v5
         with:
           context: ./docker
           file: ./docker/Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/moose-ci:latest
+
+      - name: Build and push Python image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker
+          file: ./docker/Dockerfile.python
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/moose-ci:python
+          build-args: |
+            BASE_IMAGE=ghcr.io/${{ github.repository_owner }}/moose-ci:latest

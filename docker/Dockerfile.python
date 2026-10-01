@@ -1,0 +1,40 @@
+ARG BASE_IMAGE=ghcr.io/moosetechnology/moose-ci:latest
+
+# stage 1: Build tree-sitter libraries needed for Python
+FROM ubuntu:latest AS treesitter-builder
+
+RUN apt-get update && apt-get install -y \
+    git \
+    build-essential
+
+# Build tree-sitter core
+RUN git clone https://github.com/tree-sitter/tree-sitter
+WORKDIR /tree-sitter
+RUN make
+
+# Build tree-sitter python
+WORKDIR /
+RUN git clone https://github.com/tree-sitter/tree-sitter-python
+WORKDIR /tree-sitter-python
+RUN make
+
+# Build tree-sitter typescript
+WORKDIR /
+RUN git clone https://github.com/tree-sitter/tree-sitter-typescript
+WORKDIR /tree-sitter-typescript
+RUN make
+
+# stage 2: Python image on top of the base (Java) image
+FROM ${BASE_IMAGE}
+
+WORKDIR /
+
+# Copy built tree-sitter libraries from builder stage
+COPY --from=treesitter-builder /tree-sitter/libtree-sitter.so /pharo-vm/lib/
+COPY --from=treesitter-builder /tree-sitter-python/libtree-sitter-python.so /pharo-vm/lib/
+COPY --from=treesitter-builder /tree-sitter-typescript/typescript/libtree-sitter-typescript.so /pharo-vm/lib/
+
+# Install the Python group of MooseCI
+COPY mooseci-install.sh /mooseci-install.sh
+RUN chmod +x /mooseci-install.sh
+RUN /mooseci-install.sh python

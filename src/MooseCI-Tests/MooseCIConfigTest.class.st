@@ -9,7 +9,7 @@ Class {
 MooseCIConfigTest >> testAggregatedValidationErrors [
 
 	| config errors |
-	config := MooseCIConfig default.
+	config := MooseCIConfig java.
 	config rules: #( #unknown_rule #another_unknown_rule ).
 
 	errors := config validationErrors.
@@ -23,8 +23,8 @@ MooseCIConfigTest >> testConfigFileWithoutMetricsAttributeIsValid [
 
 	| stonString config |
 	stonString := 'MooseCIConfig {
-	#projectLanguage : #python,
-	#rules : [ #no_docstring ],
+	#projectLanguage : #java,
+	#rules : [ #large_class ],
 	#outputFormats : [ #json ],
 	#outputPath : ''.moose-ci/report'',
 	#visualizations : [ ],
@@ -46,19 +46,10 @@ MooseCIConfigTest >> testConfigForJavaIsValid [
 ]
 
 { #category : 'tests' }
-MooseCIConfigTest >> testConfigForPythonIsValid [
-
-	| config |
-	config := MooseCIConfig for: #python.
-	config validate.
-	self assert: config validationErrors isEmpty
-]
-
-{ #category : 'tests' }
 MooseCIConfigTest >> testDefaultConfigValid [
 
 	| config |
-	config := MooseCIConfig default.
+	config := MooseCIConfig java.
 
 	self assert: config validationErrors isEmpty
 ]
@@ -74,6 +65,12 @@ MooseCIConfigTest >> testEmptyMetricsIsValid [
 ]
 
 { #category : 'tests' }
+MooseCIConfigTest >> testForOnlyEvaluatesRequestedLanguage [
+
+	self assert: (MooseCIConfigForTest for: #java) equals: #javaConfig
+]
+
+{ #category : 'tests' }
 MooseCIConfigTest >> testForReturnsJavaConfig [
 
 	| config |
@@ -81,16 +78,6 @@ MooseCIConfigTest >> testForReturnsJavaConfig [
 
 	self assert: config projectLanguage equals: #java.
 	self assert: config rules equals: MCIQualityRules javaRules
-]
-
-{ #category : 'tests' }
-MooseCIConfigTest >> testForReturnsPythonConfig [
-
-	| config |
-	config := MooseCIConfig for: #python.
-
-	self assert: config projectLanguage equals: #python.
-	self assert: config rules equals: MCIQualityRules pythonRules
 ]
 
 { #category : 'tests' }
@@ -123,18 +110,6 @@ MooseCIConfigTest >> testJavaDefaultConfig [
 ]
 
 { #category : 'tests' }
-MooseCIConfigTest >> testPythonDefaultConfig [
-
-	| config |
-	config := MooseCIConfig python.
-
-	self assert: config projectLanguage equals: #python.
-	self assert: config metrics equals: MCIMetrics pythonMetrics.
-	self assert: config outputPath equals: '.moose-ci/report'.
-	self deny: config isRemote.
-]
-
-{ #category : 'tests' }
 MooseCIConfigTest >> testRuleNotApplicableToLanguageIsReported [
 
 	| config |
@@ -148,7 +123,7 @@ MooseCIConfigTest >> testRuleNotApplicableToLanguageIsReported [
 { #category : 'tests' }
 MooseCIConfigTest >> testToSton [ 
 	|stonString config|
-	config := MooseCIConfig default.
+	config := MooseCIConfig java.
 	stonString := config toSton.
 	
 self assert: (stonString includesSubstring: 'MooseCIConfig').
@@ -160,7 +135,7 @@ self assert: (stonString includesSubstring: '#rules').
 MooseCIConfigTest >> testUnknownMetric [
 
 	| config errors |
-	config := MooseCIConfig default.
+	config := MooseCIConfig java.
 	config metrics: #( #unknown_metric ).
 
 	errors := config validationErrors.
@@ -173,7 +148,7 @@ MooseCIConfigTest >> testUnknownMetric [
 MooseCIConfigTest >> testUnknownRule [
 
 	| config errors |
-	config := MooseCIConfig default.
+	config := MooseCIConfig java.
 	config rules: #( #unknown_rule ).
 
 	errors := config validationErrors.
@@ -186,7 +161,7 @@ MooseCIConfigTest >> testUnknownRule [
 MooseCIConfigTest >> testValidateSignalsError [
 
 	| config |
-	config := MooseCIConfig default.
+	config := MooseCIConfig java.
 	config rules: #( #bogus_rule ).
 
 	self assertBlock: [ config validate ] raises: MooseCIConfigValidationError

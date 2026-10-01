@@ -32,5 +32,5 @@ MCIAnalysisReportTest >> testWriteFiles [
 
 	self assert: outputDirectory hasFiles.
 	self assert: outputDirectory files first extension equals: 'json'.
-	self assert: (outputDirectory files first contents includesSubstring: 'DummyClass')
+	self assert: (outputDirectory files first contents includesSubstring: 'violations')
 ]

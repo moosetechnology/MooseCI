@@ -24,7 +24,7 @@ MCIMetrics class >> computeMetrics: aCollectionOfMetricKeys on: aMooseModel [
 { #category : 'helpers' }
 MCIMetrics class >> defaultMetrics [
 
-	^ #( #files #loc )
+	^ #( #classes )
 ]
 
 { #category : 'accessing' }

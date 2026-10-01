@@ -38,12 +38,9 @@ MooseCIConfig class >> default [
 { #category : 'instance creation' }
 MooseCIConfig class >> for: aSymbol [
 
-	| configs |
-	configs := {
-		           (#java -> self java).
-		           (#python -> self python) } asOrderedDictionary.
-
-	^ configs at: aSymbol ifAbsent: [ Error signal: 'Default config not found for: ' , aSymbol asString ]
+	^ [ self perform: aSymbol ]
+		  on: MessageNotUnderstood
+		  do: [ Error signal: 'Default config not found for: ' , aSymbol asString ]
 ]
 
 { #category : 'accessing' }
@@ -53,20 +50,6 @@ MooseCIConfig class >> java [
 		  projectLanguage: #java;
 		  metrics: MCIMetrics javaMetrics;
 		  rules: MCIQualityRules javaRules;
-		  visualizations: #(  );
-		  outputFormats: MCIReportWriter defaultOutputFormats;
-		  outputPath: '.moose-ci/report';
-		  isRemote: false;
-		  yourself
-]
-
-{ #category : 'accessing' }
-MooseCIConfig class >> python [
-
-	^ self new
-		  projectLanguage: #python;
-		  metrics: MCIMetrics pythonMetrics;
-		  rules: MCIQualityRules pythonRules;
 		  visualizations: #(  );
 		  outputFormats: MCIReportWriter defaultOutputFormats;
 		  outputPath: '.moose-ci/report';
