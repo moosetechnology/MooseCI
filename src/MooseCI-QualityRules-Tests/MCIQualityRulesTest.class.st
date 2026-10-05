@@ -2,17 +2,37 @@ Class {
 	#name : 'MCIQualityRulesTest',
 	#superclass : 'TestCase',
 	#instVars : [
-		'javaModel'
+		'javaModel',
+		'tempFolders'
 	],
 	#category : 'MooseCI-QualityRules-Tests',
 	#package : 'MooseCI-QualityRules-Tests'
 }
+
+{ #category : 'helpers' }
+MCIQualityRulesTest >> javaProjectFrom: aString [
+	"Create a temporary folder containing a Main.java file with the given source code, and return the absolute folder path."
+
+	| folder |
+	folder := FileLocator temp / UUID new asString.
+	folder ensureCreateDirectory.
+	(folder / 'Main.java') writeStreamDo: [ :stream | stream nextPutAll: aString ].
+	tempFolders add: folder.
+	^ folder fullName
+]
 
 { #category : 'running' }
 MCIQualityRulesTest >> setUp [
 	super setUp.
 
 	javaModel := FamixJavaModel new.
+	tempFolders := OrderedCollection new.
+]
+
+{ #category : 'running' }
+MCIQualityRulesTest >> tearDown [
+	tempFolders do: [ :folder | folder exists ifTrue: [ folder ensureDeleteAll ] ].
+	super tearDown
 ]
 
 { #category : 'tests' }
