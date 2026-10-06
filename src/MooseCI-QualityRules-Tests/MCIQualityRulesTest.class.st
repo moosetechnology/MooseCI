@@ -99,18 +99,55 @@ MCIQualityRulesTest >> testMCITooManyParametersRule [
 { #category : 'tests' }
 MCIQualityRulesTest >> testMCIUnusedLocalVariableRule [
 
-	| javaViolations rule |
+	| javaViolations rule code|
 	
-	javaModel add: (FamixJavaLocalVariable new
-			 name: 'aVar';
-			 yourself).
+	code := '
+	public class VerveineJMain {
+
+	public static void main(String[] args) {
+		VerveineJParser parser = new VerveineJParser();
+		parser.configure(args);
+		int a = 0;
+	}
+
+}
+	'.
+	
+	javaModel := MooseCIJavaProjectLoader  load: (self javaProjectFrom: code).
 			
 	rule := MCIUnusedLocalVariableRule new.
 	
 	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
 
 	self assert: javaViolations isNotNil.
-	self assert: javaViolations values first size equals: 1
+	self assert: javaViolations values first size equals: 1.
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testMCIUnusedLocalVariableRule2 [
+
+	| javaViolations rule code|
+	
+	code := '
+	public static  IBinding getDeclarationBinding(AbstractTypeDeclaration node) {
+        IBinding bnd = node.resolveBinding();
+
+        if (bnd == null) {
+            bnd = StubBinding.getBinding(node);
+        }
+
+        return bnd;
+    }
+	'.
+	
+	javaModel := MooseCIJavaProjectLoader  load: (self javaProjectFrom: code).
+			
+	rule := MCIUnusedLocalVariableRule new.
+	
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations isNotNil.
+	self assert: javaViolations values first size equals: 0.
 ]
 
 { #category : 'tests' }
