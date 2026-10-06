@@ -16,7 +16,7 @@ MooseCIJavaProjectLoader class >> load: aProjectFilePath [
 
 	| model |
 	
-	model := FamixJavaFoldersImporter importFolder: aProjectFilePath asFileReference.
+	model := MCIFamixJavaFoldersImporter importFolder: aProjectFilePath asFileReference.
 	model rootFolder: aProjectFilePath.
 	
 	^ model

@@ -48,5 +48,10 @@ MCIUnusedLocalVariableRule >> contextFilterBlock [
 MCIUnusedLocalVariableRule >> queryHandler [
 
 	^ FamixCBQueryHandler on: (FQSelectScriptQuery script: [ :entity |
-			   entity incomingAccesses allSatisfy: [ :e | e isWrite ] ])
+		"take all users of the variable and check if they use it only for writing => writing in it => the variable is unused (not read). And so for variable/object that didn't receive any invocation"
+			   (entity incomingAccesses allSatisfy: [ :e | e isWrite ])
+				   and: [ entity receivingInvocations isEmpty ]
+
+			])
+		
 ]

@@ -2,17 +2,37 @@ Class {
 	#name : 'MCIQualityRulesTest',
 	#superclass : 'TestCase',
 	#instVars : [
-		'javaModel'
+		'javaModel',
+		'tempFolders'
 	],
 	#category : 'MooseCI-QualityRules-Tests',
 	#package : 'MooseCI-QualityRules-Tests'
 }
+
+{ #category : 'helpers' }
+MCIQualityRulesTest >> javaProjectFrom: aString [
+	"Create a temporary folder containing a Main.java file with the given source code, and return the absolute folder path."
+
+	| folder |
+	folder := FileLocator temp / UUID new asString.
+	folder ensureCreateDirectory.
+	(folder / 'Main.java') writeStreamDo: [ :stream | stream nextPutAll: aString ].
+	tempFolders add: folder.
+	^ folder fullName
+]
 
 { #category : 'running' }
 MCIQualityRulesTest >> setUp [
 	super setUp.
 
 	javaModel := FamixJavaModel new.
+	tempFolders := OrderedCollection new.
+]
+
+{ #category : 'running' }
+MCIQualityRulesTest >> tearDown [
+	tempFolders do: [ :folder | folder exists ifTrue: [ folder ensureDeleteAll ] ].
+	super tearDown
 ]
 
 { #category : 'tests' }
@@ -79,18 +99,55 @@ MCIQualityRulesTest >> testMCITooManyParametersRule [
 { #category : 'tests' }
 MCIQualityRulesTest >> testMCIUnusedLocalVariableRule [
 
-	| javaViolations rule |
+	| javaViolations rule code|
 	
-	javaModel add: (FamixJavaLocalVariable new
-			 name: 'aVar';
-			 yourself).
+	code := '
+	public class VerveineJMain {
+
+	public static void main(String[] args) {
+		VerveineJParser parser = new VerveineJParser();
+		parser.configure(args);
+		int a = 0;
+	}
+
+}
+	'.
+	
+	javaModel := MooseCIJavaProjectLoader  load: (self javaProjectFrom: code).
 			
 	rule := MCIUnusedLocalVariableRule new.
 	
 	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
 
 	self assert: javaViolations isNotNil.
-	self assert: javaViolations values first size equals: 1
+	self assert: javaViolations values first size equals: 1.
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testMCIUnusedLocalVariableRule2 [
+
+	| javaViolations rule code|
+	
+	code := '
+	public static  IBinding getDeclarationBinding(AbstractTypeDeclaration node) {
+        IBinding bnd = node.resolveBinding();
+
+        if (bnd == null) {
+            bnd = StubBinding.getBinding(node);
+        }
+
+        return bnd;
+    }
+	'.
+	
+	javaModel := MooseCIJavaProjectLoader  load: (self javaProjectFrom: code).
+			
+	rule := MCIUnusedLocalVariableRule new.
+	
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations isNotNil.
+	self assert: javaViolations values first size equals: 0.
 ]
 
 { #category : 'tests' }
