@@ -4,8 +4,8 @@ Class {
 	#instVars : [
 		'model'
 	],
-	#category : 'MooseCI-QualityRules-Python',
-	#package : 'MooseCI-QualityRules-Python'
+	#category : 'MooseCI-Python-Tests',
+	#package : 'MooseCI-Python-Tests'
 }
 
 { #category : 'running' }

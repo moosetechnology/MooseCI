@@ -22,6 +22,16 @@ MCIQualityRules class >> defaultRules [
 		  MCIShadowedAttributeRule key }
 ]
 
+{ #category : 'as yet unclassified' }
+MCIQualityRules class >> javaRules [
+
+	^ {
+		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThresholds).
+		  (MCILargeClassRule key -> MCILargeClassRule defaultThresholds).
+		  MCIUnusedLocalVariableRule key.
+		  MCIUnusedParameterRule key}
+]
+
 { #category : 'accessing' }
 MCIQualityRules class >> ruleAt: aSymbol [
 

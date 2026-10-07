@@ -4,8 +4,8 @@ I count the packages of a model.
 Class {
 	#name : 'MCIjavaNumberOfPackagesMetric',
 	#superclass : 'MCIAbstractMetric',
-	#category : 'MooseCI-Metrics-Java',
-	#package : 'MooseCI-Metrics-Java'
+	#category : 'MooseCI-Metrics',
+	#package : 'MooseCI-Metrics'
 }
 
 { #category : 'accessing' }

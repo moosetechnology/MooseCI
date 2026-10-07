@@ -1,8 +1,8 @@
 Class {
 	#name : 'MCIJavaMetricsTest',
 	#superclass : 'TestCase',
-	#category : 'MooseCI-Metrics-Java',
-	#package : 'MooseCI-Metrics-Java'
+	#category : 'MooseCI-Metrics-Tests',
+	#package : 'MooseCI-Metrics-Tests'
 }
 
 { #category : 'tests' }

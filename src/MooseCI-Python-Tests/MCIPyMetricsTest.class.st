@@ -1,8 +1,8 @@
 Class {
 	#name : 'MCIPyMetricsTest',
 	#superclass : 'TestCase',
-	#category : 'MooseCI-Metrics-Python',
-	#package : 'MooseCI-Metrics-Python'
+	#category : 'MooseCI-Python-Tests',
+	#package : 'MooseCI-Python-Tests'
 }
 
 { #category : 'tests' }
