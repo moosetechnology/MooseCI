@@ -4,7 +4,7 @@
 
 | Key | Description | Applicable languages |
 | --- | --- | --- |
-| `#files` | Number of source files. | all |
-| `#loc` | Total lines of code. | all |
-| `#packages` | Number of packages. | all |
-| `#classes` | Number of classes. | all |
+| `#files` | Number of source files. | python |
+| `#loc` | Total lines of code. | java, python |
+| `#packages` | Number of packages. | java |
+| `#classes` | Number of classes. | java, python |

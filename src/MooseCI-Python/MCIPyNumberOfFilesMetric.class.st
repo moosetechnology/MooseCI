@@ -28,7 +28,7 @@ MCIPyNumberOfFilesMetric class >> metricName [
 ]
 
 { #category : 'accessing' }
-MCIPyNumberOfFilesMetric >> applicableLanguages [
+MCIPyNumberOfFilesMetric class >> applicableLanguages [
 
 	^ #( #python )
 ]
