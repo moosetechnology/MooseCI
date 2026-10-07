@@ -1,0 +1,6 @@
+- [Home](/)
+- [Getting started](getting-started.md)
+- [Configuration](configuration.md)
+- [Rules](rules.md)
+- [Metrics](metrics.md)
+- [For developers](developers.md)
