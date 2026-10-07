@@ -27,6 +27,12 @@ MCIMetrics class >> defaultMetrics [
 	^ #( #classes )
 ]
 
+{ #category : 'as yet unclassified' }
+MCIMetrics class >> javaMetrics [
+
+	^ #( #packages #classes )
+]
+
 { #category : 'accessing' }
 MCIMetrics class >> metricAt: aSymbol [
 
