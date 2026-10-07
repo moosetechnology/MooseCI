@@ -24,7 +24,7 @@ MooseCIConfigTest >> testConfigFileWithoutMetricsAttributeIsValid [
 	| stonString config |
 	stonString := 'MooseCIConfig {
 	#projectLanguage : #java,
-	#rules : [ #large_class ],
+	#rules : [ #unused_local_variable ],
 	#outputFormats : [ #json ],
 	#outputPath : ''.moose-ci/report'',
 	#visualizations : [ ],
@@ -92,7 +92,7 @@ MooseCIConfigTest >> testGenericRuleValidForAnyLanguage [
 	| config |
 	config := MooseCIConfig default.
 	config projectLanguage: #java.
-	config rules: #( #large_class ).
+	config rules: { (MCILargeClassRule key -> MCILargeClassRule defaultThresholds) }.
 	
 	self assert: config validationErrors isEmpty
 ]
@@ -178,13 +178,27 @@ MooseCIConfigTest >> testMultipleNamedThresholdsAreValid [
 ]
 
 { #category : 'tests' }
-MooseCIConfigTest >> testEmptyThresholdsDictionaryIsValid [
+MooseCIConfigTest >> testMissingThresholdIsReported [
 
-	| config |
+	| config errors |
 	config := MooseCIConfig java.
-	config rules: { (MCILargeClassRule key -> Dictionary new) }.
+	config rules: { (MCILargeClassRule key -> { #methods -> 20 } asDictionary) }.
 
-	self assert: config validationErrors isEmpty
+	errors := config validationErrors.
+
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: '#attributes' ])
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testBareSymbolForThresholdRuleIsInvalid [
+
+	| config errors |
+	config := MooseCIConfig java.
+	config rules: #( #large_class ).
+
+	errors := config validationErrors.
+
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'Missing threshold' ])
 ]
 
 { #category : 'tests' }
@@ -204,7 +218,7 @@ MooseCIConfigTest >> testUnknownThresholdNameIsReported [
 
 	| config errors |
 	config := MooseCIConfig java.
-	config rules: { (MCILargeClassRule key -> { #bogus -> 1 } asDictionary) }.
+	config rules: { (MCILargeClassRule key -> { (#bogus -> 1). (#methods -> 20). (#attributes -> 15) } asDictionary) }.
 
 	errors := config validationErrors.
 
@@ -216,7 +230,7 @@ MooseCIConfigTest >> testNonNumberThresholdValueIsInvalid [
 
 	| config errors |
 	config := MooseCIConfig java.
-	config rules: { (MCILargeClassRule key -> { #methods -> 'many' } asDictionary) }.
+	config rules: { (MCILargeClassRule key -> { (#methods -> 'many'). (#attributes -> 15) } asDictionary) }.
 
 	errors := config validationErrors.
 

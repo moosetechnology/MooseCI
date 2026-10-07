@@ -146,17 +146,19 @@ Moose-CI uses a `moose-ci.ston` config file. Run `moose-ci init` to create one.
 
 You can configure the report output formats and location here too (see [Report output](#report-output)).
 
-You can update the rules list and customize each rule's threshold:
+You can update the rules list and customize each rule's thresholds:
 
 ```ston
 ...
 #rules : [
-		#long_file: 1000,
+		#long_file: { #loc: 1000 },
 		#no_docstring,
-		#too_many_parameters: 10
+		#too_many_parameters: { #parameters: 10 }
 ]
 ...
 ```
+
+A rule that defines thresholds must use the dictionary form and must provide every one of its threshold keys. A missing key is reported as a validation error; a bare symbol is only valid for rules without thresholds.
 
 You can also choose which metrics to compute:
 
@@ -177,10 +179,10 @@ Metrics can be omitted (or set to an empty list) if you do not want to compute a
 
 | Key | Threshold | Description |
 | --- | --- | --- |
-| `#long_file` | 1000 | Reports files whose number of lines of code exceeds the threshold. |
+| `#long_file` | `#loc: 1000` | Reports files whose number of lines of code exceeds the threshold. |
 | `#no_docstring` | N/A | Reports functions, methods and classes that are missing a docstring. |
-| `#too_many_parameters` | 10 | Reports methods whose number of parameters exceeds the threshold. |
-| `#large_class` | 20 | Reports classes that have too many methods or attributes. |
+| `#too_many_parameters` | `#parameters: 10` | Reports methods whose number of parameters exceeds the threshold. |
+| `#large_class` | `#methods: 20, #attributes: 15` | Reports classes that have too many methods or attributes. |
 | `#local_var_naming` | N/A | Reports local variables and parameters whose names do not respect the naming convention. |
 | `#unused_local_variable` | N/A | Reports local variables that are written but never read. |
 | `#unused_parameter` | N/A | Reports function and method parameters that are never used. |
@@ -266,7 +268,7 @@ Available groups:
 A rule is a subclass of `MCIAbstractQualityRule`. It must implement:
 
 - `class >> key`: a unique identifier, e.g. `#too_many_lines`
-- `class >> defaultThreshold`: the threshold used when none is set in the config
+- `class >> defaultThresholds`: an optional dictionary mapping threshold names to numbers, e.g. `{ #loc -> 500 } asDictionary` (empty by default)
 - `contextFilterBlock`: a block that selects the entities to analyze
 - `queryHandler`: a block that decides what counts as a violation
 
@@ -281,8 +283,8 @@ MCITooManyLinesRule class >> key [
 	^ #too_many_lines
 ]
 
-MCITooManyLinesRule class >> defaultThreshold [
-	^ 500
+MCITooManyLinesRule class >> defaultThresholds [
+	^ { #loc -> 500 } asDictionary
 ]
 
 MCITooManyLinesRule >> contextFilterBlock [
@@ -291,23 +293,23 @@ MCITooManyLinesRule >> contextFilterBlock [
 
 MCITooManyLinesRule >> queryHandler [
 	^ FamixCBQueryHandler on: (FQSelectScriptQuery script: [ :entity |
-		entity numberOfLinesOfCode > self threshold ])
+		entity numberOfLinesOfCode > (self thresholdAt: #loc) ])
 ]
 ```
 
-You can also override `ruleName`, `defaultSeverity`, `applicableLanguages` and `description`. `applicableLanguages` is `#all` by default. You can specify it by passing a list of languages, e.g. `#( #python )`. Rules that do not use a threshold return `-1` as their `defaultThreshold` (e.g. `#no_docstring`).
+You can also override `ruleName`, `defaultSeverity`, `applicableLanguages` and `description`. `applicableLanguages` is `#all` by default. You can specify it by passing a list of languages, e.g. `#( #python )`. Rules that do not define `defaultThresholds` have no thresholds (e.g. `#no_docstring`).
 
 New rules are discovered automatically from their `key`, so no registration is needed. To use a rule, add its key to the `#rules` list in `moose-ci.ston`:
 
 ```ston
 #rules : [
-	#too_many_lines: 300,
+	#too_many_lines: { #loc: 300 },
 	#no_docstring
 ]
 ```
 
-- `#too_many_lines: 300`: enables the rule with a custom threshold.
-- `#no_docstring`: enables a rule that has no threshold.
+- `#too_many_lines: { #loc: 300 }`: enables a rule and overrides its `#loc` threshold.
+- `#no_docstring`: enables a rule that has no thresholds.
 
 To make a rule part of the default config created by `moose-ci init`, add its key to `MCIQualityRules class >> pythonRules` (or `javaRules` / `defaultRules`).
 
