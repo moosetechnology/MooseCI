@@ -191,31 +191,10 @@ MCIMetrics class >> mylangMetrics [
 ]
 ```
 
+You can also create your own rules and metrics for the language — see [Create a new rule](#create-a-new-rule) and [Create a new metric](#create-a-new-metric).
+
 Language-specific rule/metric classes must override `applicableLanguages` to return `#( #mylang )`; otherwise they default to `#all` and are accepted for every language. Config validation rejects a rule or metric whose `applicableLanguages` does not include the project language.
 
-See [Create a new rule](#create-a-new-rule) and [Create a new metric](#create-a-new-metric) for how to write a rule or a metric.
-
-### 5. Register the packages
-
-In `BaselineOfMooseCI`:
-
-- add the importer baseline to `defineDependencies:` if the language needs one;
-- add `package: 'MooseCI-Mylang'` and `package: 'MooseCI-Mylang-Tests'` in `definePackages:`;
-- add a group in `defineGroups:` and include it in `all`, e.g. `group: 'mylang' with: #( 'MooseCI-Mylang' 'MooseCI-Mylang-Tests' )`.
-
-Then install it with:
-
-```smalltalk
-Metacello new
-  baseline: 'MooseCI';
-  repository: 'github://moosetechnology/MooseCI:master/src';
-  load: #( 'default' 'mylang' ).
-```
-
-### 6. Add tests
+### 5. Add tests
 
 Add tests in `MooseCI-<Language>-Tests` covering the config (`MooseCIConfig for: #mylang`), the loader (`MooseCIProjectLoader forLanguage: #mylang`), and the language rules/metrics.
-
-### 7. Native importer dependencies
-
-If the importer depends on native libraries, mirror the Python setup in `docker/` so the runtime image can load it.
