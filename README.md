@@ -213,7 +213,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: moosetechnology/setup-MooseCI@main
+      - uses: moosetechnology/setup-MooseCI@v1.0.0
         with:
           project-path: .
 ```
