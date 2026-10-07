@@ -20,10 +20,10 @@ docker run -v "$(pwd):/src" ghcr.io/moosetechnology/moose-ci:latest analyze
 
 ## Documentation
 
-Full documentation is available at **https://moosetechnology.github.io/MooseCI/** (source in [`docs/`](docs/)):
+Full documentation is available at **https://modularmoose.org/MooseCI/** (source in [`docs/`](docs/)):
 
-- [Getting started](https://moosetechnology.github.io/MooseCI/#/getting-started)
-- [Configuration](https://moosetechnology.github.io/MooseCI/#/configuration)
-- [Rules](https://moosetechnology.github.io/MooseCI/#/rules)
-- [Metrics](https://moosetechnology.github.io/MooseCI/#/metrics)
-- [For developers](https://moosetechnology.github.io/MooseCI/#/developers)
+- [Getting started](https://modularmoose.org/MooseCI/#/getting-started)
+- [Configuration](https://modularmoose.org/MooseCI/#/configuration)
+- [Rules](https://modularmoose.org/MooseCI/#/rules)
+- [Metrics](https://modularmoose.org/MooseCI/#/metrics)
+- [For developers](https://modularmoose.org/MooseCI/#/developers)

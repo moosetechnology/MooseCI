@@ -50,6 +50,8 @@ You can configure the output in `moose-ci.ston`:
 
 ## Rules
 
+See the [available rules](rules.md).
+
 You can update the rules list and customize each rule's thresholds:
 
 ```ston
@@ -64,9 +66,9 @@ You can update the rules list and customize each rule's thresholds:
 
 A rule that defines thresholds must use the dictionary form and must provide every one of its threshold keys. A missing key is reported as a validation error; a bare symbol is only valid for rules without thresholds.
 
-See [Rules](rules.md) for the list of available rules.
-
 ## Metrics
+
+See the [available metrics](metrics.md).
 
 You can also choose which metrics to compute:
 
@@ -82,5 +84,3 @@ You can also choose which metrics to compute:
 ```
 
 Metrics can be omitted (or set to an empty list) if you do not want to compute any metric.
-
-See [Metrics](metrics.md) for the list of available metrics.

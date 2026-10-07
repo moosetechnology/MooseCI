@@ -9,6 +9,6 @@ Moose-CI runs automatic [Moose](https://modularmoose.org/) analyses on software 
 
 - [Getting started](getting-started.md) — run Moose-CI with Docker or in CI.
 - [Configuration](configuration.md) — the `moose-ci.ston` config file.
-- [Rules](rules.md) — available quality rules and how to add one.
-- [Metrics](metrics.md) — available metrics and how to add one.
-- [For developers](developers.md) — install from source and add a new language.
+- [Rules](rules.md) — available quality rules.
+- [Metrics](metrics.md) — available metrics.
+- [For developers](developers.md) — install from source, create a rule or a metric, and add a new language.
