@@ -21,12 +21,6 @@ MCIPyUnusedPrivateMethodRule class >> defaultSeverity [
 ]
 
 { #category : 'accessing' }
-MCIPyUnusedPrivateMethodRule class >> defaultThreshold [ 
-
-	^ -1
-]
-
-{ #category : 'accessing' }
 MCIPyUnusedPrivateMethodRule class >> description [
 
 	^ 'Reports class-private methods that are never invoked.'

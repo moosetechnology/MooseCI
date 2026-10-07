@@ -21,12 +21,6 @@ MCIPyNoDocstringRule class >> defaultSeverity [
 ]
 
 { #category : 'accessing' }
-MCIPyNoDocstringRule class >> defaultThreshold [ 
-
-	^ -1
-]
-
-{ #category : 'accessing' }
 MCIPyNoDocstringRule class >> description [
 
 	^ 'Reports functions, methods and classes that are missing a docstring.'

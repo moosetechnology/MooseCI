@@ -15,9 +15,9 @@ MCITooManyParametersRule class >> defaultSeverity [
 ]
 
 { #category : 'accessing' }
-MCITooManyParametersRule class >> defaultThreshold [ 
+MCITooManyParametersRule class >> defaultThresholds [ 
 
-	^ 10
+	^  { #parameters -> 10 } asDictionary 
 ]
 
 { #category : 'accessing' }
@@ -47,5 +47,5 @@ MCITooManyParametersRule >> contextFilterBlock [
 { #category : 'accessing' }
 MCITooManyParametersRule >> queryHandler [
 
-	^ FamixCBQueryHandler on: (FQSelectScriptQuery script: [ :entity | entity parameters size > self threshold ])
+	^ FamixCBQueryHandler on: (FQSelectScriptQuery script: [ :entity | entity parameters size > (self thresholdAt: #parameters) ])
 ]

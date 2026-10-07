@@ -15,12 +15,6 @@ MCIShadowedAttributeRule class >> defaultSeverity [
 ]
 
 { #category : 'accessing' }
-MCIShadowedAttributeRule class >> defaultThreshold [ 
-
-	^ -1
-]
-
-{ #category : 'accessing' }
 MCIShadowedAttributeRule class >> description [
 
 	^ 'Reports attributes whose name duplicates their containing class name.'

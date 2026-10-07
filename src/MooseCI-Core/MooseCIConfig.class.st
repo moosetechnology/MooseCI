@@ -139,22 +139,60 @@ MooseCIConfig >> checkRulesInto: errors [
 			^ errors ].
 
 	rules do: [ :each |
-			| key threshold |
-			key := each isAssociation
-				       ifTrue: [
-						       each key.
-						       threshold := each value.
-						       self checkThresholdValue: each into: errors ]
-				       ifFalse: [ self checkRuleSymbol: each into: errors ] ]
+			each isAssociation
+				ifTrue: [ self checkThresholdsValue: each into: errors ]
+				ifFalse: [
+						self checkRuleSymbol: each into: errors.
+						self checkBareRuleThresholds: each into: errors ] ]
 ]
 
 { #category : 'validation' }
-MooseCIConfig >> checkThresholdValue: anAssociation into: errors [
+MooseCIConfig >> checkBareRuleThresholds: aSymbol into: errors [
 
-	| threshold |
+	| ruleClass |
+	ruleClass := self ruleClassAt: aSymbol.
+	ruleClass ifNil: [ ^ self ].
+
+	self checkMissingThresholdsFor: ruleClass provided: #(  ) into: errors
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkMissingThresholdsFor: aRuleClass provided: someKeys into: errors [
+
+	aRuleClass defaultThresholds keys do: [ :name |
+			(someKeys includes: name) ifFalse: [
+				errors add: 'Missing threshold #' , name , ' for the rule #' , aRuleClass key ] ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkThresholdsValue: anAssociation into: errors [
+
+	| thresholds ruleClass |
 	self checkRuleSymbol: anAssociation key into: errors.
-	threshold := anAssociation value.
-	threshold isNumber ifFalse: [ errors add: 'Threshold for ' , anAssociation key , ' must be a number' ].
+	thresholds := anAssociation value.
+
+	thresholds isDictionary ifFalse: [
+			errors add: 'Thresholds for #' , anAssociation key , ' must be a dictionary'.
+			^ self ].
+
+	ruleClass := self ruleClassAt: anAssociation key.
+	ruleClass ifNil: [ ^ self ].
+
+	self checkMissingThresholdsFor: ruleClass provided: thresholds keys into: errors.
+
+	thresholds keysAndValuesDo: [ :key :value |
+			(ruleClass defaultThresholds keys includes: key) ifFalse: [
+				errors add: 'unknown threshold #' , key , ' for the rule #' , anAssociation key ].
+			value isNumber ifFalse: [
+				errors add: 'Thresholds for #' , anAssociation key , ' > #' , key , ' must be a number' ] ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> ruleClassAt: aSymbol [
+
+	^ MCIAbstractQualityRule subclasses
+		  detect: [ :each | each key = aSymbol ]
+		  ifNone: [ nil ]
 ]
 
 { #category : 'accessing' }

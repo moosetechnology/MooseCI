@@ -21,12 +21,6 @@ MCIPyFunctionNamingRule class >> defaultSeverity [
 ]
 
 { #category : 'accessing' }
-MCIPyFunctionNamingRule class >> defaultThreshold [ 
-
-	^ -1
-]
-
-{ #category : 'accessing' }
 MCIPyFunctionNamingRule class >> description [
 
 	^ 'Reports functions whose names do not comply with the naming convention.'

@@ -15,9 +15,9 @@ MCILargeClassRule class >> defaultSeverity [
 ]
 
 { #category : 'accessing' }
-MCILargeClassRule class >> defaultThreshold [ 
+MCILargeClassRule class >> defaultThresholds [ 
 
-	^ 20
+	^  { (#methods -> 20). (#attributes -> 15) } asDictionary 
 ]
 
 { #category : 'accessing' }
@@ -48,5 +48,5 @@ MCILargeClassRule >> contextFilterBlock [
 MCILargeClassRule >> queryHandler [
 
 	^ FamixCBQueryHandler on: (FQSelectScriptQuery script: [ :entity |
-			   entity methods size > self threshold or: [ entity attributes size > 15 ] ])
+			   entity methods size > (self thresholdAt: #methods) or: [ entity attributes size > (self thresholdAt: #attributes) ] ])
 ]

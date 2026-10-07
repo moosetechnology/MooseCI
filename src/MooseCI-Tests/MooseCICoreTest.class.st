@@ -55,7 +55,7 @@ MooseCICoreTest >> testRunCritics [
 MooseCICoreTest >> testRunCriticsWithCustomConfigThreshold [
 
 	| rules |
-	rules := { (MCILargeClassRule key -> 1) }.
+	rules := { (MCILargeClassRule key -> { #methods -> 1 } asDictionary) }.
 
 	mooseCICore projectPath: MooseCIBridge mockProjectTests / 'java-only'.
 	mooseCICore config rules: rules.

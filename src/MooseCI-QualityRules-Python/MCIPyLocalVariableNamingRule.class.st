@@ -21,12 +21,6 @@ MCIPyLocalVariableNamingRule class >> defaultSeverity [
 ]
 
 { #category : 'accessing' }
-MCIPyLocalVariableNamingRule class >> defaultThreshold [ 
-
-	^ -1
-]
-
-{ #category : 'accessing' }
 MCIPyLocalVariableNamingRule class >> description [
 
 	^ 'Reports local variables and parameters whose names do not respect the naming convention.'

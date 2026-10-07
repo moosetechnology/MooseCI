@@ -15,9 +15,9 @@ MCIPyLongFileRule class >> applicableLanguages [
 ]
 
 { #category : 'accessing' }
-MCIPyLongFileRule class >> defaultThreshold [ 
+MCIPyLongFileRule class >> defaultThresholds [
 
-	^ 1000
+	^ { (#loc -> 1000) } asDictionary 
 ]
 
 { #category : 'accessing' }
@@ -48,5 +48,5 @@ MCIPyLongFileRule >> contextFilterBlock [
 { #category : 'accessing' }
 MCIPyLongFileRule >> queryHandler [
 
-	^ FamixCBQueryHandler on: (FQSelectScriptQuery script: [ :entity | entity numberOfLinesOfCode > self threshold ])
+	^ FamixCBQueryHandler on: (FQSelectScriptQuery script: [ :entity | entity numberOfLinesOfCode > (self thresholdAt: #loc) ])
 ]

@@ -117,7 +117,9 @@ MooseCICore >> runCritics [
 			         rule isAssociation
 				         ifTrue: [
 						         mciQualityRule := (MCIQualityRules ruleAt: rule key) new.
-						         mciQualityRule threshold: rule value ]
+						         mciQualityRule thresholds: (mciQualityRule thresholds copy
+								          addAll: rule value;
+								          yourself) ]
 				         ifFalse: [ mciQualityRule := (MCIQualityRules ruleAt: rule) new ].
 
 			         mciQualityRule ].

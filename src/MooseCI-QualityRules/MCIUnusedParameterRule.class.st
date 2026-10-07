@@ -15,12 +15,6 @@ MCIUnusedParameterRule class >> defaultSeverity [
 ]
 
 { #category : 'accessing' }
-MCIUnusedParameterRule class >> defaultThreshold [ 
-
-	^ -1
-]
-
-{ #category : 'accessing' }
 MCIUnusedParameterRule class >> description [
 
 	^ 'Reports function and method parameters that are never used.'

@@ -4,8 +4,8 @@ Extension { #name : 'MCIQualityRules' }
 MCIQualityRules class >> javaRules [
 
 	^ {
-		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
-		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).
+		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThresholds).
+		  (MCILargeClassRule key -> MCILargeClassRule defaultThresholds).
 		  MCIUnusedLocalVariableRule key.
 		  MCIUnusedParameterRule key}
 ]
