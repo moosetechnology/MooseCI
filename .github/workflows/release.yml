@@ -1,0 +1,40 @@
+name: release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+  packages: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push base
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker
+          file: ./docker/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/moosetechnology/moose-ci:${{ github.ref_name }}
+            ghcr.io/moosetechnology/moose-ci:latest
+      - name: Build and push python
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker
+          file: ./docker/Dockerfile.python
+          push: true
+          tags: |
+            ghcr.io/moosetechnology/moose-ci:${{ github.ref_name }}-python
+            ghcr.io/moosetechnology/moose-ci:python
+          build-args: BASE_IMAGE=ghcr.io/moosetechnology/moose-ci:${{ github.ref_name }}
+      - name: Create release
+        run: gh release create "${{ github.ref_name }}" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
