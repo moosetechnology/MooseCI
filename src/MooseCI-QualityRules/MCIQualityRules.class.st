@@ -15,8 +15,8 @@ MCIQualityRules class >> allRules [
 MCIQualityRules class >> defaultRules [
 
 	^ {
-		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThreshold).
-		  (MCILargeClassRule key -> MCILargeClassRule defaultThreshold).
+		  (MCITooManyParametersRule key -> MCITooManyParametersRule defaultThresholds).
+		  (MCILargeClassRule key -> MCILargeClassRule defaultThresholds).
 		  MCIUnusedLocalVariableRule key.
 		  MCIUnusedParameterRule key.
 		  MCIShadowedAttributeRule key }

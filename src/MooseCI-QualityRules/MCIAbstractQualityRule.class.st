@@ -5,7 +5,7 @@ A rule detects, in a Moose model, the entities that violate a quality constraint
 
 New rules (Subclasses) must implement:
 - `MCIAbstractQualityRule class >> #key` ............... unique identifier, e.g. `#longClass`
-- `MCIAbstractQualityRule class >> #defaultThreshold` .. threshold used when none is set
+- `MCIAbstractQualityRule class >> #defaultThresholds` .. thresholds used when none is set
 - `MCIAbstractQualityRule >> #contextFilterBlock` ...... block restricting the analyzed entities. 
 - `MCIAbstractQualityRule >> #queryHandler` ............ block deciding what counts as a violation 
 
@@ -22,8 +22,8 @@ Class {
 	#name : 'MCIAbstractQualityRule',
 	#superclass : 'Object',
 	#instVars : [
-		'threshold',
-		'severity'
+		'severity',
+		'thresholds'
 	],
 	#category : 'MooseCI-QualityRules',
 	#package : 'MooseCI-QualityRules'
@@ -52,9 +52,9 @@ MCIAbstractQualityRule class >> defaultSeverity [
 ]
 
 { #category : 'accessing' }
-MCIAbstractQualityRule class >> defaultThreshold [ 
+MCIAbstractQualityRule class >> defaultThresholds [
 
-	^ self subclassResponsibility
+	^ Dictionary new
 ]
 
 { #category : 'accessing' }
@@ -102,7 +102,7 @@ MCIAbstractQualityRule >> contextFilterBlock [
 MCIAbstractQualityRule >> initialize [
 
 	super initialize.
-	threshold := self class defaultThreshold.
+	thresholds := self class defaultThresholds copy.
 	severity := self class defaultSeverity
 ]
 
@@ -137,13 +137,19 @@ MCIAbstractQualityRule >> severity: aFamixCBSeverityClass [
 ]
 
 { #category : 'accessing' }
-MCIAbstractQualityRule >> threshold [
+MCIAbstractQualityRule >> thresholdAt: aSymbol [ 
 
-	^ threshold
+	^ self thresholds at: aSymbol
 ]
 
 { #category : 'accessing' }
-MCIAbstractQualityRule >> threshold: aNumber [
+MCIAbstractQualityRule >> thresholds [
 
-	threshold := aNumber
+	^ thresholds
+]
+
+{ #category : 'accessing' }
+MCIAbstractQualityRule >> thresholds: aDictionary [
+
+	thresholds := aDictionary
 ]

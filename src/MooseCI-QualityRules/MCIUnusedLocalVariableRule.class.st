@@ -15,12 +15,6 @@ MCIUnusedLocalVariableRule class >> defaultSeverity [
 ]
 
 { #category : 'accessing' }
-MCIUnusedLocalVariableRule class >> defaultThreshold [ 
-
-	^ -1
-]
-
-{ #category : 'accessing' }
 MCIUnusedLocalVariableRule class >> description [
 
 	^ 'Reports local variables that are written but never read.'

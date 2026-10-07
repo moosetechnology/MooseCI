@@ -21,7 +21,7 @@ MCIPyUnusedPrivateMethodRule class >> defaultSeverity [
 ]
 
 { #category : 'accessing' }
-MCIPyUnusedPrivateMethodRule class >> defaultThreshold [ 
+MCIPyUnusedPrivateMethodRule class >> defaultThresholds [ 
 
 	^ -1
 ]

@@ -139,22 +139,34 @@ MooseCIConfig >> checkRulesInto: errors [
 			^ errors ].
 
 	rules do: [ :each |
-			| key threshold |
+			| key |
 			key := each isAssociation
-				       ifTrue: [
-						       each key.
-						       threshold := each value.
-						       self checkThresholdValue: each into: errors ]
+				       ifTrue: [ self checkThresholdsValue: each into: errors ]
 				       ifFalse: [ self checkRuleSymbol: each into: errors ] ]
 ]
 
 { #category : 'validation' }
-MooseCIConfig >> checkThresholdValue: anAssociation into: errors [
+MooseCIConfig >> checkThresholdsValue: anAssociation into: errors [
 
-	| threshold |
+	| thresholds |
 	self checkRuleSymbol: anAssociation key into: errors.
-	threshold := anAssociation value.
-	threshold isNumber ifFalse: [ errors add: 'Threshold for ' , anAssociation key , ' must be a number' ].
+	thresholds := anAssociation value.
+
+	thresholds isDictionary ifFalse: [
+			errors add: 'Thresholds for #' , anAssociation key , ' must be a dictionary'.
+			^ self ].
+
+	thresholds keysAndValuesDo: [ :key :value |
+			| rule |
+			rule := MCIQualityRules ruleAt: anAssociation key.
+
+			(rule new thresholds keys includes: key) ifFalse: [
+					errors add: 'unknown threshold #' , key , ' for the rule #', anAssociation key.
+					^ self ].
+
+			value isNumber ifFalse: [
+					errors add: 'Thresholds for #' , anAssociation key , ' > #' , key , ' must be a number'.
+					^ self ] ]
 ]
 
 { #category : 'accessing' }
