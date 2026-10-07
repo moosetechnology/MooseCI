@@ -39,7 +39,7 @@ MCIMetricsTest >> testDefaultApplicableLanguagesIsAll [
 { #category : 'tests' }
 MCIMetricsTest >> testDefaultMetrics [
 
-	self assert: MCIMetrics defaultMetrics equals: #( #files #loc )
+	self assert: MCIMetrics defaultMetrics equals: #( #classes )
 ]
 
 { #category : 'tests' }
