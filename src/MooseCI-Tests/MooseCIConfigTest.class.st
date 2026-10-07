@@ -166,3 +166,74 @@ MooseCIConfigTest >> testValidateSignalsError [
 
 	self assertBlock: [ config validate ] raises: MooseCIConfigValidationError
 ]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testMultipleNamedThresholdsAreValid [
+
+	| config |
+	config := MooseCIConfig java.
+	config rules: { (MCILargeClassRule key -> { (#methods -> 20). (#attributes -> 15) } asDictionary) }.
+
+	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testEmptyThresholdsDictionaryIsValid [
+
+	| config |
+	config := MooseCIConfig java.
+	config rules: { (MCILargeClassRule key -> Dictionary new) }.
+
+	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testScalarThresholdIsInvalid [
+
+	| config errors |
+	config := MooseCIConfig java.
+	config rules: { (MCILargeClassRule key -> 20) }.
+
+	errors := config validationErrors.
+
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'dictionary' ])
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testUnknownThresholdNameIsReported [
+
+	| config errors |
+	config := MooseCIConfig java.
+	config rules: { (MCILargeClassRule key -> { #bogus -> 1 } asDictionary) }.
+
+	errors := config validationErrors.
+
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'bogus' ])
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testNonNumberThresholdValueIsInvalid [
+
+	| config errors |
+	config := MooseCIConfig java.
+	config rules: { (MCILargeClassRule key -> { #methods -> 'many' } asDictionary) }.
+
+	errors := config validationErrors.
+
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'number' ])
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testToStonSerializesNamedThresholds [
+
+	| config stonString parsed largeClass |
+	config := MooseCIConfig java.
+	stonString := config toSton.
+
+	self assert: (stonString includesSubstring: '#methods').
+	self assert: (stonString includesSubstring: '#attributes').
+
+	parsed := STON fromString: stonString.
+	largeClass := parsed rules detect: [ :each | each isAssociation and: [ each key = #large_class ] ].
+	self assert: largeClass value equals: { (#methods -> 20). (#attributes -> 15) } asDictionary
+]

@@ -35,3 +35,9 @@ MooseCIPyConfigTest >> testPythonDefaultConfig [
 	self assert: config outputPath equals: '.moose-ci/report'.
 	self deny: config isRemote.
 ]
+
+{ #category : 'tests' }
+MooseCIPyConfigTest >> testLongFileDefaultThresholds [
+
+	self assert: MCIPyLongFileRule new thresholds equals: { #loc -> 1000 } asDictionary
+]

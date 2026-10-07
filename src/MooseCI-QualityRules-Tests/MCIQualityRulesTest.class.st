@@ -67,7 +67,7 @@ MCIQualityRulesTest >> testMCILargeClassRule [
 		add: method;
 		add: class.
 	rule := MCILargeClassRule new.
-	rule threshold: 0.
+	rule thresholds: { (#methods -> 0). (#attributes -> 0) } asDictionary.
 	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
 
 	self assert: javaViolations isNotNil
@@ -89,7 +89,7 @@ MCIQualityRulesTest >> testMCITooManyParametersRule [
 		add: method;
 		add: param.
 	rule := MCITooManyParametersRule new.
-	rule threshold: 0.
+	rule thresholds: { #parameters -> 0 } asDictionary.
 	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
 
 	self assert: javaViolations isNotNil.
@@ -192,4 +192,37 @@ MCIQualityRulesTest >> testRulesAt [
 
 	self assert: rules size equals: 2.
 	self assert: (rules allSatisfy: [ :rule | rule superclass = MCIAbstractQualityRule  ]).
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testDefaultThresholdsIsEmptyDictionary [
+
+	| rule |
+	rule := MCIUnusedLocalVariableRule new.
+
+	self assert: rule thresholds isDictionary.
+	self assert: rule thresholds isEmpty
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testThresholdsAreNotSharedBetweenInstances [
+
+	| first second |
+	first := MCILargeClassRule new.
+	second := MCILargeClassRule new.
+	first thresholds at: #methods put: 42.
+
+	self assert: (second thresholds at: #methods) equals: 20
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testLargeClassDefaultThresholds [
+
+	self assert: MCILargeClassRule new thresholds equals: { (#methods -> 20). (#attributes -> 15) } asDictionary
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testTooManyParametersDefaultThresholds [
+
+	self assert: MCITooManyParametersRule new thresholds equals: { #parameters -> 10 } asDictionary
 ]
