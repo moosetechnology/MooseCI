@@ -168,6 +168,81 @@ MCIQualityRulesTest >> testMCIUnusedParameterRule [
 ]
 
 { #category : 'tests' }
+MCIQualityRulesTest >> testMCIUnusedParameterRuleIgnoresInterfaceImplementation [
+
+	| javaViolations rule code |
+	code := '
+interface Vehicle {
+	void move(int distance);
+}
+
+class Car implements Vehicle {
+	public void move(int distance) {
+		System.out.println("moving");
+	}
+}
+
+public class Main {
+}
+	'.
+
+	javaModel := MooseCIJavaProjectLoader load: (self javaProjectFrom: code).
+
+	rule := MCIUnusedParameterRule new.
+
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations isNotNil.
+	self assert: javaViolations values first isEmpty
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testMCIUnusedParameterRuleIgnoresInterfaceMethodDeclaration [
+
+	| javaViolations rule code |
+	code := '
+interface Vehicle {
+	void move(int distance);
+}
+
+public class Main {
+}
+	'.
+
+	javaModel := MooseCIJavaProjectLoader load: (self javaProjectFrom: code).
+
+	rule := MCIUnusedParameterRule new.
+
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations isNotNil.
+	self assert: javaViolations values first isEmpty
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testMCIUnusedParameterRuleIgnoresAbstractMethodDeclaration [
+
+	| javaViolations rule code |
+	code := '
+abstract class Shape {
+	public abstract double area(double scale);
+}
+
+public class Main {
+}
+	'.
+
+	javaModel := MooseCIJavaProjectLoader load: (self javaProjectFrom: code).
+
+	rule := MCIUnusedParameterRule new.
+
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations isNotNil.
+	self assert: javaViolations values first isEmpty
+]
+
+{ #category : 'tests' }
 MCIQualityRulesTest >> testRuleAt [
 
 	| aRuleClass |

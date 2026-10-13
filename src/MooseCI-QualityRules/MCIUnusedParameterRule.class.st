@@ -37,9 +37,34 @@ MCIUnusedParameterRule >> contextFilterBlock [
 
 	^ [ :collection |
 		  | functions params |
-		  functions := collection select: [ :each | (each class usesTrait: FamixTFunction) or: [ each class usesTrait: FamixTMethod ] ].
+		  functions := collection select: [ :each | ((each class usesTrait: FamixTFunction) or: [ each class usesTrait: FamixTMethod ]) and: [ (self isContractMethod: each) not ] ].
+		
 		  params := ((functions select: [ :each | each parameters isNotEmpty ]) collect: [ :each | each parameters ]) flatCollect: [ :each | each ].
-		  params]
+		  params
+		
+		
+		]
+]
+
+{ #category : 'testing' }
+MCIUnusedParameterRule >> isContractMethod: aBehaviouralEntity [
+	"true for a method whose params are imposed by a java contract (interfaces, overriden method).
+so we don't take them as methods/function candidates"
+
+	| parentType |
+	"skip it if it's not java or a language that doesn't has parentType"
+	(aBehaviouralEntity respondsTo: #parentType) ifFalse: [ ^ false ].
+	parentType := aBehaviouralEntity parentType.
+	parentType ifNil: [ ^ false ].
+
+	(aBehaviouralEntity respondsTo: #isMethodDefinition) ifFalse: [ ^ false ].
+	aBehaviouralEntity isMethodDefinition ifFalse: [ ^ true ].
+
+	((aBehaviouralEntity respondsTo: #overriddenMethod) and: [ parentType respondsTo: #isInterface ]) ifFalse: [ ^ false ].
+
+	parentType isInterface ifTrue: [ ^ false ].
+
+	^ aBehaviouralEntity overriddenMethod isNotNil
 ]
 
 { #category : 'accessing' }
