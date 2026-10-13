@@ -49,7 +49,7 @@ MCIUnusedParameterRule >> contextFilterBlock [
 { #category : 'testing' }
 MCIUnusedParameterRule >> isContractMethod: aBehaviouralEntity [
 	"true for a method whose params are imposed by a java contract (interfaces, overriden method).
-so we don't report them"
+so we don't take them as methods/function candidates"
 
 	| parentType |
 	"skip it if it's not java or a language that doesn't has parentType"
@@ -60,7 +60,7 @@ so we don't report them"
 	(aBehaviouralEntity respondsTo: #isMethodDefinition) ifFalse: [ ^ false ].
 	aBehaviouralEntity isMethodDefinition ifFalse: [ ^ true ].
 
-	((aBehaviouralEntity respondsTo: #overridenMethod) and: [ parentType respondsTo: #isInterface ]) ifFalse: [ ^ false ].
+	((aBehaviouralEntity respondsTo: #overriddenMethod) and: [ parentType respondsTo: #isInterface ]) ifFalse: [ ^ false ].
 
 	parentType isInterface ifTrue: [ ^ false ].
 
