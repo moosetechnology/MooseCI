@@ -58,5 +58,9 @@ BaselineOfMooseCI >> definePackages: spec [
 		package: 'MooseCI-Metrics-Tests';
 		package: 'MooseCI-Report';
 		package: 'MooseCI-Python' with: [ spec requires: #( 'MooseCI-Core' 'MoosePy' 'TreeSitter' ) ];
-		package: 'MooseCI-Python-Tests' with: [ spec requires: #('MooseCI-Python') ]
+		package: 'MooseCI-Python-Tests' with: [ spec requires: #('MooseCI-Python'); 
+		package: 'MooseCI-Corese' with: [ spec requires: #( 'MooseCI-Core') ];
+		package: 'MooseCI-Corese-Tests' with: [ spec requires: #('MooseCI-Corese')]
+			
+			]
 ]
