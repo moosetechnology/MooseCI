@@ -7,13 +7,35 @@ Class {
 
 { #category : 'private - initialization' }
 MooseCIInitCommand class >> init [
-	
+
 	<commandline>
 	^ (ClapCommandSpec id: #init)
-		description: 'Initializing a configuration file for moose-ci';
-		commandClass: self;
-		addHelp;
-        yourself
+		  description: 'Initializing a configuration file for moose-ci';
+		  commandClass: self;
+		  addPositional: #template spec: [ :positional |
+				  positional
+					  description: 'Optional config template (e.g. java, python, corese)';
+					  defaultValue: [ :arg :app | nil ] ];
+		  addFlag: #list description: 'List the available config templates';
+		  addHelp;
+		  yourself
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIInitCommand >> configFromDetectedLanguage [
+
+	| language |
+	language := MooseCILanguageDetector detect: FileLocator workingDirectory.
+
+	self outputStreamDo: [ :out |
+			out
+				lf;
+				nextPutAll: 'Language detected: ';
+				nextPutAll: language primary asString;
+				lf;
+				lf ].
+
+	^ MooseCIConfig for: language primary
 ]
 
 { #category : 'as yet unclassified' }
@@ -39,27 +61,22 @@ MooseCIInitCommand >> createDefaultStonConfigFile [
 { #category : 'execution' }
 MooseCIInitCommand >> execute [
 
-	| fileName language |
+	| fileName |
+	(self hasFlag: #list) ifTrue: [ ^ self listTemplates ].
 	fileName := MooseCIConfig configFileName.
+
 	self outputStreamDo: [ :out |
 			out
 				lf;
 				nextPutAll: 'Creating a MooseCI config file...';
 				lf;
 				lf ].
-	language := MooseCILanguageDetector detect: FileLocator workingDirectory.
-
-	self outputStreamDo: [ :out |
-			out
-				lf;
-				nextPutAll: 'Language detected: ';
-				nextPutAll: language primary asString;
-				lf;
-				lf ].
 
 	[
-		self createConfigFileFor: language primary.
-		
+		| config |
+		config := self resolveConfig.
+		self writeConfig: config to: fileName.
+
 		self outputStreamDo: [ :out |
 				out
 					nextPutAll: (AnsiColor green: 'Config written to ' , fileName);
@@ -72,7 +89,55 @@ MooseCIInitCommand >> execute [
 		do: [ :e |
 				self outputStreamDo: [ :out |
 						out
-							nextPutAll: (AnsiColor red: 'Error while creating the config file');
-							nextPutAll: e messageText.
-						out lf ] ]
+							nextPutAll: (AnsiColor red: 'Error while creating the config file: ');
+							nextPutAll: e messageText;
+							lf ].
+				Exit signalFailure ]
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIInitCommand >> listTemplates [
+
+	| templates |
+	templates := MooseCIConfig templateNames.
+
+	self outputStreamDo: [ :out |
+			out
+				lf;
+				nextPutAll: 'Available config templates:';
+				lf.
+			templates
+				ifEmpty: [
+						out
+							tab;
+							nextPutAll: '(none)';
+							lf ]
+				ifNotEmpty: [
+						templates do: [ :each |
+								out
+									tab;
+									nextPutAll: (AnsiColor yellow: '- ', each asString);
+									lf ] ] ].
+
+	self exitSuccess
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIInitCommand >> resolveConfig [
+
+	^ self template 
+		ifNotNil: [ :name | MooseCIConfig configForTemplate: name asSymbol ] 
+		ifNil: [ self configFromDetectedLanguage ]
+]
+
+{ #category : 'accessing' }
+MooseCIInitCommand >> template [
+
+	^ self positional: #template
+]
+
+{ #category : 'writing' }
+MooseCIInitCommand >> writeConfig: aMooseCIConfig to: aFileName [
+
+	FileLocator workingDirectory / aFileName writeStreamDo: [ :stream | stream nextPutAll: aMooseCIConfig toSton ]
 ]

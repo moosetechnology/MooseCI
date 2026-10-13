@@ -1,0 +1,8 @@
+ARG BASE_IMAGE=ghcr.io/moosetechnology/moose-ci:latest
+FROM ${BASE_IMAGE}
+
+WORKDIR /
+
+COPY mooseci-install.sh /mooseci-install.sh
+RUN chmod +x /mooseci-install.sh
+RUN /mooseci-install.sh corese

@@ -10,6 +10,12 @@ Class {
 }
 
 { #category : 'accessing' }
+MCIPyNumberOfFilesMetric class >> applicableLanguages [
+
+	^ #( #python )
+]
+
+{ #category : 'accessing' }
 MCIPyNumberOfFilesMetric class >> description [
 
 	^ 'Number of source files.'
@@ -25,12 +31,6 @@ MCIPyNumberOfFilesMetric class >> key [
 MCIPyNumberOfFilesMetric class >> metricName [ 
 
 	^ 'Files'
-]
-
-{ #category : 'accessing' }
-MCIPyNumberOfFilesMetric class >> applicableLanguages [
-
-	^ #( #python )
 ]
 
 { #category : 'computing' }

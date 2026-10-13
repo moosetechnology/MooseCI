@@ -40,3 +40,13 @@ jobs:
           tags: ghcr.io/${{ github.repository_owner }}/moose-ci:python
           build-args: |
             BASE_IMAGE=ghcr.io/${{ github.repository_owner }}/moose-ci:latest
+            
+      - name: Build and push corese image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker
+          file: ./docker/Dockerfile.corese
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/moose-ci:corese
+          build-args: |
+            BASE_IMAGE=ghcr.io/${{ github.repository_owner }}/moose-ci:latest
