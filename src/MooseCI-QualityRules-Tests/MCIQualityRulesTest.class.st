@@ -168,6 +168,111 @@ MCIQualityRulesTest >> testMCIUnusedParameterRule [
 ]
 
 { #category : 'tests' }
+MCIQualityRulesTest >> testMCIUnusedParameterRuleIgnoresInterfaceImplementation [
+
+	| interface interfaceMethod implementingClass implementingMethod parameter rule javaViolations |
+	interface := FamixJavaInterface new
+		             name: 'AnInterface';
+		             yourself.
+	interfaceMethod := FamixJavaMethod new
+		                   name: 'doSomething';
+		                   signature: 'doSomething(java.lang.String)';
+		                   yourself.
+	interface addMethod: interfaceMethod.
+
+	implementingClass := FamixJavaClass new
+		                     name: 'AnImplementation';
+		                     yourself.
+	implementingMethod := FamixJavaMethod new
+		                      name: 'doSomething';
+		                      signature: 'doSomething(java.lang.String)';
+		                      yourself.
+	parameter := FamixJavaParameter new
+		             name: 'unusedParameter';
+		             yourself.
+	implementingMethod addParameter: parameter.
+	implementingClass addMethod: implementingMethod.
+
+	FamixJavaImplementation new
+		interface: interface;
+		implementingClass: implementingClass;
+		yourself.
+
+	javaModel
+		add: interface;
+		add: interfaceMethod;
+		add: implementingClass;
+		add: implementingMethod;
+		add: parameter.
+
+	rule := MCIUnusedParameterRule new.
+
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations values first isEmpty
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testMCIUnusedParameterRuleIgnoresInterfaceMethodDeclaration [
+
+	| interface method parameter rule javaViolations |
+	interface := FamixJavaInterface new
+		             name: 'AnInterface';
+		             yourself.
+	method := FamixJavaMethod new
+		          name: 'doSomething';
+		          signature: 'doSomething(java.lang.String)';
+		          yourself.
+	parameter := FamixJavaParameter new
+		             name: 'aParameter';
+		             yourself.
+	method addParameter: parameter.
+	interface addMethod: method.
+
+	javaModel
+		add: interface;
+		add: method;
+		add: parameter.
+
+	rule := MCIUnusedParameterRule new.
+
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations values first isEmpty
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testMCIUnusedParameterRuleIgnoresAbstractMethodDeclaration [
+
+	| class method parameter rule javaViolations |
+	class := FamixJavaClass new
+		         name: 'AnAbstractClass';
+		         isAbstract: true;
+		         yourself.
+	method := FamixJavaMethod new
+		          name: 'doSomething';
+		          signature: 'doSomething(java.lang.String)';
+		          isAbstract: true;
+		          yourself.
+	parameter := FamixJavaParameter new
+		             name: 'aParameter';
+		             yourself.
+	method addParameter: parameter.
+	class addMethod: method.
+
+	javaModel
+		add: class;
+		add: method;
+		add: parameter.
+
+	rule := MCIUnusedParameterRule new.
+
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations values first isEmpty
+]
+
+{ #category : 'tests' }
 MCIQualityRulesTest >> testRuleAt [
 
 	| aRuleClass |
