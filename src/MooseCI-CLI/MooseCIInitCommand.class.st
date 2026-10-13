@@ -16,6 +16,7 @@ MooseCIInitCommand class >> init [
 				  positional
 					  description: 'Optional config template (e.g. java, python, corese)';
 					  defaultValue: [ :arg :app | nil ] ];
+		  addFlag: #list description: 'List the available config templates';
 		  addHelp;
 		  yourself
 ]
@@ -61,6 +62,7 @@ MooseCIInitCommand >> createDefaultStonConfigFile [
 MooseCIInitCommand >> execute [
 
 	| fileName |
+	(self hasFlag: #list) ifTrue: [ ^ self listTemplates ].
 	fileName := MooseCIConfig configFileName.
 
 	self outputStreamDo: [ :out |
@@ -91,6 +93,33 @@ MooseCIInitCommand >> execute [
 							nextPutAll: e messageText;
 							lf ].
 				Exit signalFailure ]
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIInitCommand >> listTemplates [
+
+	| templates |
+	templates := MooseCIConfig templateNames.
+
+	self outputStreamDo: [ :out |
+			out
+				lf;
+				nextPutAll: 'Available config templates:';
+				lf.
+			templates
+				ifEmpty: [
+						out
+							tab;
+							nextPutAll: '(none)';
+							lf ]
+				ifNotEmpty: [
+						templates do: [ :each |
+								out
+									tab;
+									nextPutAll: (AnsiColor yellow: '- ', each asString);
+									lf ] ] ].
+
+	self exitSuccess
 ]
 
 { #category : 'as yet unclassified' }
