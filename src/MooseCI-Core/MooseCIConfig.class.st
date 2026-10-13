@@ -55,6 +55,7 @@ MooseCIConfig class >> for: aSymbol [
 { #category : 'accessing' }
 MooseCIConfig class >> java [
 
+	<mciConfigTemplate>
 	^ self new
 		  projectLanguage: #java;
 		  metrics: MCIMetrics javaMetrics;

@@ -3,6 +3,7 @@ Extension { #name : 'MooseCIConfig' }
 { #category : '*MooseCI-Python' }
 MooseCIConfig class >> python [
 
+	<mciConfigTemplate>
 	^ self new
 		  projectLanguage: #python;
 		  metrics: MCIMetrics pythonMetrics;
