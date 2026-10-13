@@ -21,6 +21,15 @@ MooseCIConfig class >> configFileName [
 	^ 'moose-ci.ston'
 ]
 
+{ #category : 'as yet unclassified' }
+MooseCIConfig class >> configForTemplate: aSymbol [
+
+	(self templateNames includes: aSymbol) ifFalse: [
+		MCIConfigTemplateNotFoundError signal: 'Unknown template: ' , aSymbol asString , '. Available: ' , self templateNames printString ].
+
+	^ self perform: aSymbol
+]
+
 { #category : 'accessing' }
 MooseCIConfig class >> default [
 
@@ -55,6 +64,22 @@ MooseCIConfig class >> java [
 		  outputPath: '.moose-ci/report';
 		  isRemote: false;
 		  yourself
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIConfig class >> templateNames [
+
+	^ (Pragma allNamed: #mciConfigTemplate) collect: [ :pragma | pragma methodSelector ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkBareRuleThresholds: aSymbol into: errors [
+
+	| ruleClass |
+	ruleClass := self ruleClassAt: aSymbol.
+	ruleClass ifNil: [ ^ self ].
+
+	self checkMissingThresholdsFor: ruleClass provided: #(  ) into: errors
 ]
 
 { #category : 'validation' }
@@ -93,6 +118,14 @@ MooseCIConfig >> checkMetricsInto: errors [
 			^ self ].
 
 	metrics do: [ :each | self checkMetricSymbol: each into: errors ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkMissingThresholdsFor: aRuleClass provided: someKeys into: errors [
+
+	aRuleClass defaultThresholds keys do: [ :name |
+			(someKeys includes: name) ifFalse: [
+				errors add: 'Missing threshold #' , name , ' for the rule #' , aRuleClass key ] ]
 ]
 
 { #category : 'validation' }
@@ -147,24 +180,6 @@ MooseCIConfig >> checkRulesInto: errors [
 ]
 
 { #category : 'validation' }
-MooseCIConfig >> checkBareRuleThresholds: aSymbol into: errors [
-
-	| ruleClass |
-	ruleClass := self ruleClassAt: aSymbol.
-	ruleClass ifNil: [ ^ self ].
-
-	self checkMissingThresholdsFor: ruleClass provided: #(  ) into: errors
-]
-
-{ #category : 'validation' }
-MooseCIConfig >> checkMissingThresholdsFor: aRuleClass provided: someKeys into: errors [
-
-	aRuleClass defaultThresholds keys do: [ :name |
-			(someKeys includes: name) ifFalse: [
-				errors add: 'Missing threshold #' , name , ' for the rule #' , aRuleClass key ] ]
-]
-
-{ #category : 'validation' }
 MooseCIConfig >> checkThresholdsValue: anAssociation into: errors [
 
 	| thresholds ruleClass |
@@ -185,14 +200,6 @@ MooseCIConfig >> checkThresholdsValue: anAssociation into: errors [
 				errors add: 'unknown threshold #' , key , ' for the rule #' , anAssociation key ].
 			value isNumber ifFalse: [
 				errors add: 'Thresholds for #' , anAssociation key , ' > #' , key , ' must be a number' ] ]
-]
-
-{ #category : 'validation' }
-MooseCIConfig >> ruleClassAt: aSymbol [
-
-	^ MCIAbstractQualityRule subclasses
-		  detect: [ :each | each key = aSymbol ]
-		  ifNone: [ nil ]
 ]
 
 { #category : 'accessing' }
@@ -265,6 +272,14 @@ MooseCIConfig >> projectLanguage [
 MooseCIConfig >> projectLanguage: aSymbol [
 
 	projectLanguage := aSymbol
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> ruleClassAt: aSymbol [
+
+	^ MCIAbstractQualityRule subclasses
+		  detect: [ :each | each key = aSymbol ]
+		  ifNone: [ nil ]
 ]
 
 { #category : 'accessing' }
