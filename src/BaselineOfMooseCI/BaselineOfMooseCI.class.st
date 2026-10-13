@@ -38,8 +38,10 @@ BaselineOfMooseCI >> defineGroups: spec [
 		with: #( 'MooseCI-Core' 'MooseCI-CLI' 'MooseCI-Tests' 'MooseCI-QualityRules' 'MooseCI-QualityRules-Tests' 'MooseCI-Report' 'MooseCI-Metrics' 'MooseCI-Metrics-Tests' );
 		group: 'python'
 		with: #( 'MooseCI-Python' 'MooseCI-Python-Tests');
+		group: 'corese' 
+		with: #( 'MooseCI-Corese' 'MooseCI-Corese-Tests');
 		group: 'all'
-		with: #( 'default' 'python' )
+		with: #( 'default' 'python' 'corese')
 
 ]
 
