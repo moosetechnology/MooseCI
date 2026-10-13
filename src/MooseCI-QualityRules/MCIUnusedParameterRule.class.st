@@ -60,9 +60,8 @@ so we don't take them as methods/function candidates"
 	(aBehaviouralEntity respondsTo: #isMethodDefinition) ifFalse: [ ^ false ].
 	aBehaviouralEntity isMethodDefinition ifFalse: [ ^ true ].
 
-	((aBehaviouralEntity respondsTo: #overriddenMethod) and: [ parentType respondsTo: #isInterface ]) ifFalse: [ ^ false ].
+	((aBehaviouralEntity respondsTo: #overriddenMethod) and: [ parentType respondsTo: #lookUpInInterfaces: ]) ifFalse: [ ^ false ].
 
-	parentType isInterface ifTrue: [ ^ false ].
 
 	^ aBehaviouralEntity overriddenMethod isNotNil
 ]
