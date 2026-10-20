@@ -45,6 +45,31 @@ MCIArchitectureRuleTest >> ruleWith: sentences [
 		  yourself
 ]
 
+{ #category : 'accessing - methods' }
+MCIArchitectureRuleTest >> testCanOnlyRespected [
+
+	self assert: (self violationsOf: 'infra canOnly invoke domain') isEmpty
+]
+
+{ #category : 'accessing - methods' }
+MCIArchitectureRuleTest >> testCanOnlyViolated [
+
+	self assert: (self violationsOf: 'ui canOnly invoke domain') size equals: 1
+]
+
+{ #category : 'accessing - methods' }
+MCIArchitectureRuleTest >> testCannotDepend [
+
+	  self assert: (self violationsOf: 'domain cannot depend infra') isNotEmpty
+]
+
+{ #category : 'accessing - methods' }
+MCIArchitectureRuleTest >> testCannotRespected [
+
+	self assert: (self violationsOf: 'ui cannot invoke domain') isEmpty.
+	self assert: (self violationsOf: 'domain cannot invoke infra') isEmpty
+]
+
 { #category : 'tests' }
 MCIArchitectureRuleTest >> testCannotViolated [
 
@@ -54,6 +79,24 @@ MCIArchitectureRuleTest >> testCannotViolated [
 	
 	self assert: violations size equals: 1.
 	self assert: violations anyOne violatingEntity equals: (self methodNamed: 'get') outgoingInvocations anyOne
+]
+
+{ #category : 'accessing - methods' }
+MCIArchitectureRuleTest >> testCannotViolatedFromInfra [
+
+	 self assert: (self violationsOf: 'infra cannot invoke domain') size equals: 1
+]
+
+{ #category : 'accessing - methods' }
+MCIArchitectureRuleTest >> testConditionsOnOnePerSentence [
+
+	| conditions |
+	
+	conditions := (self ruleWith: #( 'ui cannot invoke infra' 'domain cannot invoke ui' )) conditionsOn: self model.
+
+	self assert: conditions size equals: 2.
+	self assert: (conditions collect: #name) asArray equals: #( 'ui cannot invoke infra' 'domain cannot invoke ui' ).
+	self assert: (conditions allSatisfy: [ :condition | condition severity = FamixCBErrorSeverity ])
 ]
 
 { #category : 'tests' }
@@ -90,6 +133,13 @@ MCIArchitectureRuleTest >> testConstraintFromModulesInvoke [
 ]
 
 { #category : 'accessing - methods' }
+MCIArchitectureRuleTest >> testExistingRulesStillGiveOneCondition [
+	"Guard for the MCIAbstractQualityRule >> #conditionsOn: "
+
+	self assert: (MCITooManyParametersRule new conditionsOn: self model) size equals: 1
+]
+
+{ #category : 'accessing - methods' }
 MCIArchitectureRuleTest >> testKeyAndSeverity [
 
 	self assert: MCIArchitectureRule key equals: #architecture.
@@ -110,9 +160,43 @@ MCIArchitectureRuleTest >> testModulesOn [
 ]
 
 { #category : 'accessing - methods' }
+MCIArchitectureRuleTest >> testMustRespected [
+
+	       self assert: (self violationsOf: 'ui must invoke infra') isEmpty
+]
+
+{ #category : 'accessing - methods' }
+MCIArchitectureRuleTest >> testMustViolated [
+
+	   self assert: (self violationsOf: 'ui must invoke domain') size equals: 1
+]
+
+{ #category : 'accessing - methods' }
+MCIArchitectureRuleTest >> testOnlyCanRespected [
+	"infra is only invoked from ui"
+
+	self assert: (self violationsOf: 'ui onlyCan invoke infra') isEmpty
+]
+
+{ #category : 'accessing - methods' }
+MCIArchitectureRuleTest >> testOnlyCanViolated [
+	"infra is invoked from ui, which is not domain"
+
+	self assert: (self violationsOf: 'domain onlyCan invoke infra') size equals: 1
+]
+
+{ #category : 'accessing - methods' }
+MCIArchitectureRuleTest >> testQueryHandlerIsNotImplemented [
+
+	self should: [ (self ruleWith: #(  )) queryHandler ] raise: ShouldNotImplement
+]
+
+{ #category : 'accessing - methods' }
 MCIArchitectureRuleTest >> violationsOf: aSentence [
 
 	| violations |
 	violations := MCIQualityRules runRules: { (self ruleWith: { aSentence }) } on: self model.
+	self assert: violations size equals: 1.
+	
 	^ violations values first
 ]
