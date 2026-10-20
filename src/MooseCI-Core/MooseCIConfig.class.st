@@ -88,6 +88,9 @@ MooseCIConfig >> checkArchitecture: options into: errors [
 			               errors add: '#architecture needs #constraints'.
 			               ^ self ].
 
+	constraints isEmpty ifTrue: [
+			errors add: '#constraints must be a collection of sentences'.
+			^ self ].
 	modules isDictionary ifFalse: [
 			errors add: '#modules must be a dictionary of module name -> regex'.
 			^ self ].

@@ -37,6 +37,16 @@ MooseCIConfigTest >> testAggregatedValidationErrors [
 ]
 
 { #category : 'as yet unclassified' }
+MooseCIConfigTest >> testArchitectureEmptyConstraints [
+
+	| errors |
+	errors := (self configWithArchitecture: (self architectureWith: #(  ))) validationErrors.
+
+	self assert: errors size equals: 1.
+	self assert: (errors first includesSubstring: '#constraints')
+]
+
+{ #category : 'as yet unclassified' }
 MooseCIConfigTest >> testArchitectureFromStonIsValid [
 
 	| config |
@@ -59,6 +69,49 @@ MooseCIConfigTest >> testArchitectureFromStonIsValid [
 ]
 
 { #category : 'as yet unclassified' }
+MooseCIConfigTest >> testArchitectureInvalidRegex [
+
+	| options errors |
+	options := self architectureWith: #( 'ui cannot depend domain' ).
+	(options at: #modules) at: #ui put: '(ui'.
+
+	errors := (self configWithArchitecture: options) validationErrors.
+
+	self assert: errors size equals: 1.
+	self assert: (errors first includesSubstring: 'Invalid regex')
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIConfigTest >> testArchitectureUnknownDependency [
+
+	| errors |
+	errors := (self configWithArchitecture: (self architectureWith: #( 'ui cannot call domain' ))) validationErrors.
+
+	self assert: errors size equals: 1.
+	self assert: (errors first includesSubstring: 'Unknown dependency')
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIConfigTest >> testArchitectureUnknownModule [
+
+	| errors |
+	errors := (self configWithArchitecture: (self architectureWith: #( 'ui cannot depend infra' ))) validationErrors.
+
+	self assert: errors size equals: 1.
+	self assert: (errors first includesSubstring: 'Unknown module')
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIConfigTest >> testArchitectureUnknownVerb [
+
+	| errors |
+	errors := (self configWithArchitecture: (self architectureWith: #( 'ui mustNot depend domain' ))) validationErrors.
+
+	self assert: errors size equals: 1.
+	self assert: (errors first includesSubstring: 'Unknown verb')
+]
+
+{ #category : 'as yet unclassified' }
 MooseCIConfigTest >> testArchitectureValid [
 
 	| config sentences |
@@ -67,6 +120,16 @@ MooseCIConfigTest >> testArchitectureValid [
 	config := self configWithArchitecture: (self architectureWith: sentences).
 
 	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIConfigTest >> testArchitectureWrongWordCount [
+
+	| errors |
+	errors := (self configWithArchitecture: (self architectureWith: #( 'ui cannot depend' ))) validationErrors.
+
+	self assert: errors size equals: 1.
+	self assert: (errors first includesSubstring: '<module> <verb> <dependency> <module>')
 ]
 
 { #category : 'tests' }
