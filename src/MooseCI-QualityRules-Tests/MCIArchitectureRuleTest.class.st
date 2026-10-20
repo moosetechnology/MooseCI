@@ -102,7 +102,7 @@ MCIArchitectureRuleTest >> testModulesOn [
 	| modules |
 	modules := (self ruleWith: #(  )) modulesOn: self model.
 
-	self assert: modules keys equals: #( #domain #ui #infra ).
+	self assert: modules keys asSet equals: #( #domain #ui #infra ) asSet.
 	self assert: ((modules at: #ui) memberEntities includes: (self methodNamed: 'get')).
 	self assert: ((modules at: #infra) memberEntities includes: (self methodNamed: 'load')).
 	self assert: ((modules at: #domain) memberEntities includes: (self methodNamed: 'getId')).
