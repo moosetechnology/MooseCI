@@ -50,7 +50,7 @@ MCIArchitectureRule class >> verbs [
 ]
 
 { #category : 'accessing' }
-MCIArchitectureRule >> conditionOn: aMooseModel [
+MCIArchitectureRule >> conditionsOn: aMooseModel [
 
 	| modules |
 	modules := self modulesOn: aMooseModel.
@@ -72,7 +72,7 @@ MCIArchitectureRule >> constraintFrom: aSentence modules: modules [
 	constraint := (modules at: words first asSymbol) perform: words second asSymbol.
 	
 	"... <dependency> <module>"
-	constraint perform: words third asSymbol with: (modules at: words fourth asSymbol).
+	constraint perform: (words third, ':') asSymbol with: (modules at: words fourth asSymbol).
 	
 	constraint description: aSentence.
 	

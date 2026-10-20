@@ -45,6 +45,50 @@ MCIArchitectureRuleTest >> ruleWith: sentences [
 		  yourself
 ]
 
+{ #category : 'tests' }
+MCIArchitectureRuleTest >> testCannotViolated [
+
+	| violations |
+	
+	violations := self violationsOf: 'ui cannot invoke infra'.
+	
+	self assert: violations size equals: 1.
+	self assert: violations anyOne violatingEntity equals: (self methodNamed: 'get') outgoingInvocations anyOne
+]
+
+{ #category : 'tests' }
+MCIArchitectureRuleTest >> testConstraintFromModules [
+
+	| rule modules sentencesDict |
+	rule := self ruleWith: #(  ).
+	modules := rule modulesOn: self model.
+
+	sentencesDict := {
+		                 ('ui cannot depend infra' -> DCLCannotConstraint).
+		                 ('ui must depend infra' -> DCLMustConstraint).
+		                 ('ui canOnly depend infra' -> DCLCanOnlyConstraint).
+		                 ('ui onlyCan depend infra' -> DCLOnlyCanConstraint) }.
+
+	sentencesDict do: [ :each |
+			| constraint |
+			constraint := rule constraintFrom: each key modules: modules.
+			self assert: constraint class equals: each value.
+			self assert: constraint moduleA identicalTo: (modules at: #ui).
+			self assert: constraint moduleB identicalTo: (modules at: #infra).
+			self assert: constraint description equals: each key ]
+]
+
+{ #category : 'tests' }
+MCIArchitectureRuleTest >> testConstraintFromModulesInvoke [
+
+	| rule constraint |
+	rule := self ruleWith: #(  ).
+	constraint := rule constraintFrom: 'ui cannot invoke infra' modules: (rule modulesOn: self model).
+	
+	self assert: constraint associations isNotEmpty.
+	self assert: (constraint associations allSatisfy: [ :assoc | assoc usesFamixTrait: FamixTInvocation ])
+]
+
 { #category : 'accessing - methods' }
 MCIArchitectureRuleTest >> testKeyAndSeverity [
 
