@@ -55,10 +55,9 @@ MCIArchitectureRule >> conditionsOn: aMooseModel [
 	| modules |
 	modules := self modulesOn: aMooseModel.
 	^ (self thresholdAt: #constraints) collect: [ :sentence |
-			  | cbCondition |
-			  cbCondition := (self constraintFrom: sentence modules: modules) asCBCondition.
-			  cbCondition severity: self class defaultSeverity.
-			  ^ cbCondition ]
+			  (self constraintFrom: sentence modules: modules) asCBCondition
+				  severity: self severity;
+				  yourself ]
 ]
 
 { #category : 'accessing' }
@@ -97,4 +96,11 @@ MCIArchitectureRule >> modulesOn: aMooseModel [
 					 model: aMooseModel;
 					 yourself) ].
 	^ modules
+]
+
+{ #category : 'accessing' }
+MCIArchitectureRule >> queryHandler [
+	"Each constraint brings its own DCLQueryHandler (see DCLAbstractConstraint>>asCBCondition). Use #conditionsOn:"
+
+	^ self shouldNotImplement
 ]
