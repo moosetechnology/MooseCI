@@ -14,19 +14,19 @@ MooseCIConfig {
 		},
 		#unused_local_variable,
 		#unused_parameter,
+		#architecture : {
+			#modules : { 
+				#ui: '.*\\.ui\\..*',
+				#domain: '.*\\.domain\\..*',
+				#infra: '.*\\.infra\\..*' 
+			},
+			#constraints : [
+				'domain cannot depend infra',
+				'ui must depend domain',
+				'ui canOnly depend domain'
+			]
+		}
 	],
-	#architecture : {
-		#modules : { 
-			#ui: '.ui\\..*',
-			#domain: '.domain\\..*',
-			#infra: '.infra\\..*' 
-		},
-    	#constraints : [
-			'domain cannot depend infra',
-			'ui must depend domain',
-			'ui canOnly depend domain'
-    	]
-	},
 	#outputFormats : [
 		#json
 	],
