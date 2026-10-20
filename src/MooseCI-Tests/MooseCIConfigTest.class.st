@@ -5,6 +5,24 @@ Class {
 	#package : 'MooseCI-Tests'
 }
 
+{ #category : 'as yet unclassified' }
+MooseCIConfigTest >> architectureWith: sentences [
+
+	^ {
+		  (#modules -> {
+			   (#ui -> '.*\.ui\..*').
+			   (#domain -> '.*\.domain\..*') } asDictionary).
+		  (#constraints -> sentences) } asDictionary
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIConfigTest >> configWithArchitecture: options [
+
+	^ MooseCIConfig java
+		  rules: { (#architecture -> options) };
+		  yourself
+]
+
 { #category : 'tests' }
 MooseCIConfigTest >> testAggregatedValidationErrors [
 
@@ -16,6 +34,51 @@ MooseCIConfigTest >> testAggregatedValidationErrors [
 
 	self assert: errors size equals: 2.
 	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'unknown_rule' ])
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIConfigTest >> testArchitectureFromStonIsValid [
+
+	| config |
+	
+	config := STON fromString: 'MooseCIConfig {
+        #projectLanguage : #java,
+        #rules : [
+                #architecture : {
+                        #modules : { #ui : ''.*\\.ui\\..*'', #domain : ''.*\\.domain\\..*'' },
+                        #constraints : [ ''ui cannot depend domain'' ]
+                }
+        ],
+        #outputFormats : [ #json ],
+        #outputPath : ''.moose-ci/report'',
+        #visualizations : [ ],
+        #isRemote : false
+}'.
+
+	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIConfigTest >> testArchitectureValid [
+
+	| config sentences |
+	
+	sentences := #( 'ui cannot depend domain' 'domain canOnly invoke ui' ).
+	config := self configWithArchitecture: (self architectureWith: sentences).
+
+	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testBareSymbolForThresholdRuleIsInvalid [
+
+	| config errors |
+	config := MooseCIConfig java.
+	config rules: #( #large_class ).
+
+	errors := config validationErrors.
+
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'Missing threshold' ])
 ]
 
 { #category : 'tests' }
@@ -110,6 +173,51 @@ MooseCIConfigTest >> testJavaDefaultConfig [
 ]
 
 { #category : 'tests' }
+MooseCIConfigTest >> testMissingThresholdIsReported [
+
+	| config errors |
+	config := MooseCIConfig java.
+	config rules: { (MCILargeClassRule key -> { #methods -> 20 } asDictionary) }.
+
+	errors := config validationErrors.
+
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: '#attributes' ])
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testMultipleNamedThresholdsAreValid [
+
+	| config |
+	config := MooseCIConfig java.
+	config rules: { (MCILargeClassRule key -> { (#methods -> 20). (#attributes -> 15) } asDictionary) }.
+
+	self assert: config validationErrors isEmpty
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testNonNumberThresholdValueIsInvalid [
+
+	| config errors |
+	config := MooseCIConfig java.
+	config rules: { (MCILargeClassRule key -> { (#methods -> 'many'). (#attributes -> 15) } asDictionary) }.
+
+	errors := config validationErrors.
+
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'number' ])
+]
+
+{ #category : 'as yet unclassified' }
+MooseCIConfigTest >> testOnlyArchitectureKeyIsInvalid [
+
+	| errors |
+	errors := (MooseCIConfig java
+		           rules: #( #architecture );
+		           yourself) validationErrors.
+
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'modules' ])
+]
+
+{ #category : 'tests' }
 MooseCIConfigTest >> testRuleNotApplicableToLanguageIsReported [
 
 	| config |
@@ -121,6 +229,18 @@ MooseCIConfigTest >> testRuleNotApplicableToLanguageIsReported [
 ]
 
 { #category : 'tests' }
+MooseCIConfigTest >> testScalarThresholdIsInvalid [
+
+	| config errors |
+	config := MooseCIConfig java.
+	config rules: { (MCILargeClassRule key -> 20) }.
+
+	errors := config validationErrors.
+
+	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'dictionary' ])
+]
+
+{ #category : 'tests' }
 MooseCIConfigTest >> testToSton [ 
 	|stonString config|
 	config := MooseCIConfig java.
@@ -129,6 +249,21 @@ MooseCIConfigTest >> testToSton [
 self assert: (stonString includesSubstring: 'MooseCIConfig').
 self assert: (stonString includesSubstring: '#metrics').
 self assert: (stonString includesSubstring: '#rules').
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testToStonSerializesNamedThresholds [
+
+	| config stonString parsed largeClass |
+	config := MooseCIConfig java.
+	stonString := config toSton.
+
+	self assert: (stonString includesSubstring: '#methods').
+	self assert: (stonString includesSubstring: '#attributes').
+
+	parsed := STON fromString: stonString.
+	largeClass := parsed rules detect: [ :each | each isAssociation and: [ each key = #large_class ] ].
+	self assert: largeClass value equals: { (#methods -> 20). (#attributes -> 15) } asDictionary
 ]
 
 { #category : 'tests' }
@@ -158,62 +293,6 @@ MooseCIConfigTest >> testUnknownRule [
 ]
 
 { #category : 'tests' }
-MooseCIConfigTest >> testValidateSignalsError [
-
-	| config |
-	config := MooseCIConfig java.
-	config rules: #( #bogus_rule ).
-
-	self assertBlock: [ config validate ] raises: MooseCIConfigValidationError
-]
-
-{ #category : 'tests' }
-MooseCIConfigTest >> testMultipleNamedThresholdsAreValid [
-
-	| config |
-	config := MooseCIConfig java.
-	config rules: { (MCILargeClassRule key -> { (#methods -> 20). (#attributes -> 15) } asDictionary) }.
-
-	self assert: config validationErrors isEmpty
-]
-
-{ #category : 'tests' }
-MooseCIConfigTest >> testMissingThresholdIsReported [
-
-	| config errors |
-	config := MooseCIConfig java.
-	config rules: { (MCILargeClassRule key -> { #methods -> 20 } asDictionary) }.
-
-	errors := config validationErrors.
-
-	self assert: (errors anySatisfy: [ :each | each includesSubstring: '#attributes' ])
-]
-
-{ #category : 'tests' }
-MooseCIConfigTest >> testBareSymbolForThresholdRuleIsInvalid [
-
-	| config errors |
-	config := MooseCIConfig java.
-	config rules: #( #large_class ).
-
-	errors := config validationErrors.
-
-	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'Missing threshold' ])
-]
-
-{ #category : 'tests' }
-MooseCIConfigTest >> testScalarThresholdIsInvalid [
-
-	| config errors |
-	config := MooseCIConfig java.
-	config rules: { (MCILargeClassRule key -> 20) }.
-
-	errors := config validationErrors.
-
-	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'dictionary' ])
-]
-
-{ #category : 'tests' }
 MooseCIConfigTest >> testUnknownThresholdNameIsReported [
 
 	| config errors |
@@ -226,28 +305,11 @@ MooseCIConfigTest >> testUnknownThresholdNameIsReported [
 ]
 
 { #category : 'tests' }
-MooseCIConfigTest >> testNonNumberThresholdValueIsInvalid [
+MooseCIConfigTest >> testValidateSignalsError [
 
-	| config errors |
+	| config |
 	config := MooseCIConfig java.
-	config rules: { (MCILargeClassRule key -> { (#methods -> 'many'). (#attributes -> 15) } asDictionary) }.
+	config rules: #( #bogus_rule ).
 
-	errors := config validationErrors.
-
-	self assert: (errors anySatisfy: [ :each | each includesSubstring: 'number' ])
-]
-
-{ #category : 'tests' }
-MooseCIConfigTest >> testToStonSerializesNamedThresholds [
-
-	| config stonString parsed largeClass |
-	config := MooseCIConfig java.
-	stonString := config toSton.
-
-	self assert: (stonString includesSubstring: '#methods').
-	self assert: (stonString includesSubstring: '#attributes').
-
-	parsed := STON fromString: stonString.
-	largeClass := parsed rules detect: [ :each | each isAssociation and: [ each key = #large_class ] ].
-	self assert: largeClass value equals: { (#methods -> 20). (#attributes -> 15) } asDictionary
+	self assertBlock: [ config validate ] raises: MooseCIConfigValidationError
 ]
