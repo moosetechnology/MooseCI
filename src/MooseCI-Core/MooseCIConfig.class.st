@@ -74,6 +74,36 @@ MooseCIConfig class >> templateNames [
 ]
 
 { #category : 'validation' }
+MooseCIConfig >> checkArchitecture: options into: errors [
+
+	| modules constraints |
+	options isDictionary ifFalse: [
+			errors add: '#architecture must be a dictionary with #modules and #constraints'.
+			^ self ].
+
+	modules := options at: #modules ifAbsent: [
+			           errors add: '#architecture needs #modules'.
+			           ^ self ].
+	constraints := options at: #constraints ifAbsent: [
+			               errors add: '#architecture needs #constraints'.
+			               ^ self ].
+
+	modules isDictionary ifFalse: [
+			errors add: '#modules must be a dictionary of module name -> regex'.
+			^ self ].
+
+	modules keysAndValuesDo: [ :name :regex |
+			(regex isString and: [
+					 [
+						 regex asRegex.
+						 true ]
+						 on: Error
+						 do: [ false ] ]) ifFalse: [ errors add: 'Invalid regex for module #' , name ] ].
+
+	constraints do: [ :sentence | self checkConstraint: sentence modules: modules into: errors ]
+]
+
+{ #category : 'validation' }
 MooseCIConfig >> checkBareRuleThresholds: aSymbol into: errors [
 
 	| ruleClass |
@@ -81,6 +111,32 @@ MooseCIConfig >> checkBareRuleThresholds: aSymbol into: errors [
 	ruleClass ifNil: [ ^ self ].
 
 	self checkMissingThresholdsFor: ruleClass provided: #(  ) into: errors
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkConstraint: aSentence modules: modules into: errors [
+	"aSentence must be '<module> <verb> <dependency> <module>'."
+
+	| words |
+	aSentence isString ifFalse: [
+			errors add: 'Each constraint must be a string'.
+			^ self ].
+
+	words := aSentence substrings.
+	words size = 4 ifFalse: [
+			errors add: 'Constraint ''' , aSentence , ''' must be: <module> <verb> <dependency> <module>'.
+			^ self ].
+
+	(modules includesKey: words first asSymbol) ifFalse: [ errors add: 'Unknown module ''' , words first , ''' in ''' , aSentence , '''' ].
+
+	(MCIArchitectureRule verbs includes: words second asSymbol) ifFalse: [
+		errors add: 'Unknown verb ''' , words second , ''' in ''' , aSentence , ''' (expected: ' , (' ' join: MCIArchitectureRule verbs) , ')' ].
+
+	(MCIArchitectureRule dependencies includes: words third asSymbol) ifFalse: [
+			errors add:
+				'Unknown dependency ''' , words third , ''' in ''' , aSentence , ''' (expected: ' , (' ' join: MCIArchitectureRule dependencies) , ')' ].
+
+	(modules includesKey: words fourth asSymbol) ifFalse: [ errors add: 'Unknown module ''' , words fourth , ''' in ''' , aSentence , '''' ]
 ]
 
 { #category : 'validation' }
@@ -174,7 +230,10 @@ MooseCIConfig >> checkRulesInto: errors [
 
 	rules do: [ :each |
 			each isAssociation
-				ifTrue: [ self checkThresholdsValue: each into: errors ]
+				ifTrue: [
+						each key = MCIArchitectureRule key
+							ifTrue: [ self checkArchitecture: each value into: errors ]
+							ifFalse: [ self checkThresholdsValue: each into: errors ] ]
 				ifFalse: [
 						self checkRuleSymbol: each into: errors.
 						self checkBareRuleThresholds: each into: errors ] ]
