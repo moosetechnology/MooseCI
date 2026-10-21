@@ -160,6 +160,22 @@ MCIArchitectureRuleTest >> testModulesOn [
 ]
 
 { #category : 'accessing - methods' }
+MCIArchitectureRuleTest >> testMooseNameSeparator [
+
+	| controller get |
+	controller := self model allModelClasses detect: [ :class | class name = 'Controller' ].
+	get := self methodNamed: 'get'.
+
+	self assert: controller mooseName equals: 'example.ui.Controller'.
+	self assert: (get mooseName beginsWith: 'example.ui.Controller.').
+
+
+	self assert: ('.*\.ui\..*' asRegex matches: controller mooseName).
+	self deny: ('ui' asRegex matches: controller mooseName).
+	self deny: ('.*\.domain\..*' asRegex matches: controller mooseName)
+]
+
+{ #category : 'accessing - methods' }
 MCIArchitectureRuleTest >> testMustRespected [
 
 	       self assert: (self violationsOf: 'ui must invoke infra') isEmpty
