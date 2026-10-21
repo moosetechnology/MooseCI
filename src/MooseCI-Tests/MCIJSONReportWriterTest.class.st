@@ -22,6 +22,18 @@ MCIJSONReportWriterTest >> testEntityObjectForAssociation [
 ]
 
 { #category : 'tests' }
+MCIJSONReportWriterTest >> testEntityObjectForNamedEntity [
+
+	| get object |
+	get := MCIArchitectureRuleTest model allModelMethods detect: [ :method | method name = 'get' ].
+
+	object := MCIJSONReportWriter new entityObject: get.
+
+	self assert: (object at: 'entity') equals: 'get'.
+	self assert: ((object at: 'file') endsWith: 'Controller.java')
+]
+
+{ #category : 'tests' }
 MCIJSONReportWriterTest >> testJsonStringContainsMetricsAndViolations [
 
 	| contents |
