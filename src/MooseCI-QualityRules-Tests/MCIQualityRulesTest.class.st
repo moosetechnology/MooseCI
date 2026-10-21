@@ -52,6 +52,22 @@ MCIQualityRulesTest >> testDefaultApplicableLanguagesIsAll [
 ]
 
 { #category : 'tests' }
+MCIQualityRulesTest >> testDefaultThresholdsIsEmptyDictionary [
+
+	| rule |
+	rule := MCIUnusedLocalVariableRule new.
+
+	self assert: rule thresholds isDictionary.
+	self assert: rule thresholds isEmpty
+]
+
+{ #category : 'tests' }
+MCIQualityRulesTest >> testLargeClassDefaultThresholds [
+
+	self assert: MCILargeClassRule new thresholds equals: { (#methods -> 20). (#attributes -> 15) } asDictionary
+]
+
+{ #category : 'tests' }
 MCIQualityRulesTest >> testMCILargeClassRule [
 
 	| javaViolations class method rule |
@@ -168,6 +184,29 @@ MCIQualityRulesTest >> testMCIUnusedParameterRule [
 ]
 
 { #category : 'tests' }
+MCIQualityRulesTest >> testMCIUnusedParameterRuleIgnoresAbstractMethodDeclaration [
+
+	| javaViolations rule code |
+	code := '
+abstract class Shape {
+	public abstract double area(double scale);
+}
+
+public class Main {
+}
+	'.
+
+	javaModel := MooseCIJavaProjectLoader load: (self javaProjectFrom: code).
+
+	rule := MCIUnusedParameterRule new.
+
+	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
+
+	self assert: javaViolations isNotNil.
+	self assert: javaViolations values first isEmpty
+]
+
+{ #category : 'tests' }
 MCIQualityRulesTest >> testMCIUnusedParameterRuleIgnoresInterfaceImplementation [
 
 	| javaViolations rule code |
@@ -220,29 +259,6 @@ public class Main {
 ]
 
 { #category : 'tests' }
-MCIQualityRulesTest >> testMCIUnusedParameterRuleIgnoresAbstractMethodDeclaration [
-
-	| javaViolations rule code |
-	code := '
-abstract class Shape {
-	public abstract double area(double scale);
-}
-
-public class Main {
-}
-	'.
-
-	javaModel := MooseCIJavaProjectLoader load: (self javaProjectFrom: code).
-
-	rule := MCIUnusedParameterRule new.
-
-	javaViolations := MCIQualityRules runRules: { rule } on: javaModel.
-
-	self assert: javaViolations isNotNil.
-	self assert: javaViolations values first isEmpty
-]
-
-{ #category : 'tests' }
 MCIQualityRulesTest >> testRuleAt [
 
 	| aRuleClass |
@@ -270,16 +286,6 @@ MCIQualityRulesTest >> testRulesAt [
 ]
 
 { #category : 'tests' }
-MCIQualityRulesTest >> testDefaultThresholdsIsEmptyDictionary [
-
-	| rule |
-	rule := MCIUnusedLocalVariableRule new.
-
-	self assert: rule thresholds isDictionary.
-	self assert: rule thresholds isEmpty
-]
-
-{ #category : 'tests' }
 MCIQualityRulesTest >> testThresholdsAreNotSharedBetweenInstances [
 
 	| first second |
@@ -288,12 +294,6 @@ MCIQualityRulesTest >> testThresholdsAreNotSharedBetweenInstances [
 	first thresholds at: #methods put: 42.
 
 	self assert: (second thresholds at: #methods) equals: 20
-]
-
-{ #category : 'tests' }
-MCIQualityRulesTest >> testLargeClassDefaultThresholds [
-
-	self assert: MCILargeClassRule new thresholds equals: { (#methods -> 20). (#attributes -> 15) } asDictionary
 ]
 
 { #category : 'tests' }
