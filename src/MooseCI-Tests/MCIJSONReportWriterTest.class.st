@@ -6,6 +6,22 @@ Class {
 }
 
 { #category : 'tests' }
+MCIJSONReportWriterTest >> testEntityObjectForAssociation [
+
+	| get invocation object |
+	get := MCIArchitectureRuleTest model allModelMethods detect: [ :method | method name = 'get' ].
+
+	invocation := get outgoingInvocations detect: [ :each | each candidates anySatisfy: [ :candidate | candidate name = 'load' ] ].
+
+	object := MCIJSONReportWriter new entityObject: invocation.
+
+	self assert: (object at: 'entity') equals: 'get -> load'.
+	self assert: ((object at: 'file') endsWith: 'Controller.java').
+	self assert: (object at: 'startLine') isNumber.
+	self assert: (object at: 'endLine') >= (object at: 'startLine')
+]
+
+{ #category : 'tests' }
 MCIJSONReportWriterTest >> testJsonStringContainsMetricsAndViolations [
 
 	| contents |
