@@ -34,7 +34,7 @@ By default a JSON report is written to `report-<TIMESTAMP>.json`:
 }
 ```
 
-Violations are grouped by rule. Each group contains the rule name, its severity, the number of violating entities and the details of each entity (name, file and source lines).
+Violations are grouped by rule. Each group contains the rule name, its severity, the number of violating entities and the details of each entity (name, file and source lines). For architecture rules, the entity is a dependency written `source -> target`.
 
 You can configure the output in `moose-ci.ston`:
 
@@ -65,6 +65,8 @@ You can update the rules list and customize each rule's thresholds:
 ```
 
 A rule that defines thresholds must use the dictionary form and must provide every one of its threshold keys. A missing key is reported as a validation error; a bare symbol is only valid for rules without thresholds.
+
+To check dependencies between modules, add the `#architecture` rule. See [Architecture constraints](rules.md?id=architecture-constraints).
 
 ## Metrics
 
