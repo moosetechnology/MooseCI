@@ -55,7 +55,7 @@ MCIArchitectureRule >> conditionsOn: aMooseModel [
 	| modules |
 	modules := self modulesOn: aMooseModel.
 	^ (self thresholdAt: #constraints) collect: [ :sentence |
-			  (self constraintFrom: sentence modules: modules) asCBCondition
+			  (self constraintFrom: sentence modules: modules)
 				  severity: self severity;
 				  yourself ]
 ]
