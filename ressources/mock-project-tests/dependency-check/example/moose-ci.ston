@@ -16,14 +16,20 @@ MooseCIConfig {
 		#unused_parameter,
 		#architecture : {
 			#modules : { 
-				#ui: '.*\\.ui\\..*',
-				#domain: '.*\\.domain\\..*',
-				#infra: '.*\\.infra\\..*' 
+				#ui: {
+					#include: '.*\\.ui\\..*'
+				},
+				#domain: {
+					#include: '.*\\.domain\\..*',
+					#exclude: '.*\\.domain\\.DomainBootstrap.*'
+				},
+				#infra: '.*\\.infra\\..*'
 			},
 			#constraints : [
-				'domain cannot depend infra',
-				'ui must depend domain',
-				'ui canOnly depend domain'
+				'domain cannot dependOn infra',
+				'ui must dependOn domain',
+				'ui canOnly dependOn domain',
+				'ui canOnly invoke domain'
 			]
 		}
 	],
