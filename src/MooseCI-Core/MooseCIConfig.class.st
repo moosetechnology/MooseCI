@@ -193,7 +193,9 @@ MooseCIConfig >> checkModule: aSpec named: aName into: errors [
 		ifTrue: [ self checkRegex: (aSpec at: #include) for: 'module #' , aName into: errors ]
 		ifFalse: [ errors add: 'Module #' , aName , ' needs #include' ].
 
-	aSpec at: #exclude ifPresent: [ :regex | self checkRegex: regex for: 'exclude of module #' , aName into: errors ]
+	aSpec at: #exclude ifPresent: [ :regex | self checkRegex: regex for: 'exclude of module #' , aName into: errors ].
+
+	(aSpec keys reject: [ :key | #( include exclude ) includes: key ]) do: [ :key | errors add: 'Unknown key #' , key , ' in module #' , aName ]
 ]
 
 { #category : 'validation' }
