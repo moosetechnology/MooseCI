@@ -95,13 +95,7 @@ MooseCIConfig >> checkArchitecture: options into: errors [
 			errors add: '#modules must be a dictionary of module name -> regex'.
 			^ self ].
 
-	modules keysAndValuesDo: [ :name :regex |
-			(regex isString and: [
-					 [
-						 regex asRegex.
-						 true ]
-						 on: Error
-						 do: [ false ] ]) ifFalse: [ errors add: 'Invalid regex for module #' , name ] ].
+	modules keysAndValuesDo: [ :name :spec | self checkModule: spec named: name into: errors ].
 
 	constraints do: [ :sentence | self checkConstraint: sentence modules: modules into: errors ]
 ]
@@ -189,11 +183,36 @@ MooseCIConfig >> checkMissingThresholdsFor: aRuleClass provided: someKeys into: 
 ]
 
 { #category : 'validation' }
+MooseCIConfig >> checkModule: aSpec named: aName into: errors [
+
+	aSpec isString ifTrue: [ ^ self checkRegex: aSpec for: 'module #' , aName into: errors ].
+
+	aSpec isDictionary ifFalse: [ ^ errors add: 'Module #' , aName , ' must be a regex or a dictionary with #include and optional #exclude' ].
+
+	(aSpec includesKey: #include)
+		ifTrue: [ self checkRegex: (aSpec at: #include) for: 'module #' , aName into: errors ]
+		ifFalse: [ errors add: 'Module #' , aName , ' needs #include' ].
+
+	aSpec at: #exclude ifPresent: [ :regex | self checkRegex: regex for: 'exclude of module #' , aName into: errors ]
+]
+
+{ #category : 'validation' }
 MooseCIConfig >> checkProjectLanguageInto: errors [
 
 	projectLanguage isNil ifTrue: [ ^ self ].
 	(MooseCILanguageDetector extensionMap values includes: projectLanguage) ifFalse: [
 		errors add: 'Unsupported project language: ' , projectLanguage asString ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkRegex: aString for: aLabel into: errors [
+
+	(aString isString and: [
+			 [
+				 aString asRegex.
+				 true ]
+				 on: Error
+				 do: [ false ] ]) ifFalse: [ errors add: 'Invalid regex for ' , aLabel ]
 ]
 
 { #category : 'validation' }

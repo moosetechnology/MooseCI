@@ -92,14 +92,31 @@ MCIArchitectureRule >> contextFilterBlock [
 ]
 
 { #category : 'accessing' }
+MCIArchitectureRule >> excludeOf: aSpec [
+
+	aSpec isString
+		ifTrue: [ ^ nil ]
+		ifFalse: [ ^ aSpec at: #exclude ifAbsent: [ nil ] ]
+]
+
+{ #category : 'accessing' }
+MCIArchitectureRule >> includeOf: aSpec [
+
+	aSpec isString
+		ifTrue: [ ^ aSpec ]
+		ifFalse: [ ^ aSpec at: #include ]
+]
+
+{ #category : 'accessing' }
 MCIArchitectureRule >> modulesOn: aMooseModel [
 
 	| modules |
 	modules := Dictionary new.
-	(self thresholdAt: #modules) keysAndValuesDo: [ :name :regex |
+	(self thresholdAt: #modules) keysAndValuesDo: [ :name :spec |
 			modules at: name asSymbol put: (DCLModuleOnMooseName new
 					 name: name;
-					 description: regex;
+					 description: (self includeOf: spec);
+					 exclude: (self excludeOf: spec);
 					 model: aMooseModel;
 					 yourself) ].
 	^ modules
