@@ -22,7 +22,12 @@ MCIArchitectureRule class >> defaultThresholds [
 { #category : 'accessing' }
 MCIArchitectureRule class >> dependencies [
 
-	^ #( depend invoke access reference inherit )
+	^ OrderedDictionary newFrom: {
+			  (#dependOn -> #depend:).
+			  (#invoke -> #invoke:).
+			  (#access -> #access:).
+			  (#reference -> #reference:).
+			  (#inheritFrom -> #inherit:) }
 ]
 
 { #category : 'accessing' }
@@ -66,16 +71,18 @@ MCIArchitectureRule >> constraintFrom: aSentence modules: modules [
 
 	| words constraint |
 	words := aSentence substrings.
-	
+
 	"<module> <verb>"
 	constraint := (modules at: words first asSymbol) perform: words second asSymbol.
-	
+
 	"... <dependency> <module>"
-	constraint perform: (words third, ':') asSymbol with: (modules at: words fourth asSymbol).
-	
+	constraint 
+		perform: (self class dependencies at: words third asSymbol) 
+		with: (modules at: words fourth asSymbol).
+
 	constraint description: aSentence.
-	
-	^ constraint 
+
+	^ constraint
 ]
 
 { #category : 'accessing' }

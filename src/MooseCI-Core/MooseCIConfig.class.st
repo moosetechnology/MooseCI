@@ -135,9 +135,9 @@ MooseCIConfig >> checkConstraint: aSentence modules: modules into: errors [
 	(MCIArchitectureRule verbs includes: words second asSymbol) ifFalse: [
 		errors add: 'Unknown verb ''' , words second , ''' in ''' , aSentence , ''' (expected: ' , (' ' join: MCIArchitectureRule verbs) , ')' ].
 
-	(MCIArchitectureRule dependencies includes: words third asSymbol) ifFalse: [
+	(MCIArchitectureRule dependencies keys includes: words third asSymbol) ifFalse: [
 			errors add:
-				'Unknown dependency ''' , words third , ''' in ''' , aSentence , ''' (expected: ' , (' ' join: MCIArchitectureRule dependencies) , ')' ].
+				'Unknown dependency ''' , words third , ''' in ''' , aSentence , ''' (expected: ' , (' ' join: MCIArchitectureRule dependencies keys) , ')' ].
 
 	(modules includesKey: words fourth asSymbol) ifFalse: [ errors add: 'Unknown module ''' , words fourth , ''' in ''' , aSentence , '''' ]
 ]

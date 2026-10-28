@@ -60,7 +60,7 @@ MCIArchitectureRuleTest >> testCanOnlyViolated [
 { #category : 'accessing - methods' }
 MCIArchitectureRuleTest >> testCannotDepend [
 
-	  self assert: (self violationsOf: 'domain cannot depend infra') isNotEmpty
+	  self assert: (self violationsOf: 'domain cannot dependOn infra') isNotEmpty
 ]
 
 { #category : 'accessing - methods' }
@@ -107,10 +107,10 @@ MCIArchitectureRuleTest >> testConstraintFromModules [
 	modules := rule modulesOn: self model.
 
 	sentencesDict := {
-		                 ('ui cannot depend infra' -> DCLCannotConstraint).
-		                 ('ui must depend infra' -> DCLMustConstraint).
-		                 ('ui canOnly depend infra' -> DCLCanOnlyConstraint).
-		                 ('ui onlyCan depend infra' -> DCLOnlyCanConstraint) }.
+		                 ('ui cannot dependOn infra' -> DCLCannotConstraint).
+		                 ('ui must dependOn infra' -> DCLMustConstraint).
+		                 ('ui canOnly dependOn infra' -> DCLCanOnlyConstraint).
+		                 ('ui onlyCan dependOn infra' -> DCLOnlyCanConstraint) }.
 
 	sentencesDict do: [ :each |
 			| constraint |

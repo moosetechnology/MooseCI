@@ -56,7 +56,7 @@ MooseCIConfigTest >> testArchitectureFromStonIsValid [
         #rules : [
                 #architecture : {
                         #modules : { #ui : ''.*\\.ui\\..*'', #domain : ''.*\\.domain\\..*'' },
-                        #constraints : [ ''ui cannot depend domain'' ]
+                        #constraints : [ ''ui cannot dependOn domain'' ]
                 }
         ],
         #outputFormats : [ #json ],
@@ -72,7 +72,7 @@ MooseCIConfigTest >> testArchitectureFromStonIsValid [
 MooseCIConfigTest >> testArchitectureInvalidRegex [
 
 	| options errors |
-	options := self architectureWith: #( 'ui cannot depend domain' ).
+	options := self architectureWith: #( 'ui cannot dependOn domain' ).
 	(options at: #modules) at: #ui put: '(ui'.
 
 	errors := (self configWithArchitecture: options) validationErrors.
@@ -95,7 +95,7 @@ MooseCIConfigTest >> testArchitectureUnknownDependency [
 MooseCIConfigTest >> testArchitectureUnknownModule [
 
 	| errors |
-	errors := (self configWithArchitecture: (self architectureWith: #( 'ui cannot depend infra' ))) validationErrors.
+	errors := (self configWithArchitecture: (self architectureWith: #( 'ui cannot dependOn infra' ))) validationErrors.
 
 	self assert: errors size equals: 1.
 	self assert: (errors first includesSubstring: 'Unknown module')
@@ -105,7 +105,7 @@ MooseCIConfigTest >> testArchitectureUnknownModule [
 MooseCIConfigTest >> testArchitectureUnknownVerb [
 
 	| errors |
-	errors := (self configWithArchitecture: (self architectureWith: #( 'ui mustNot depend domain' ))) validationErrors.
+	errors := (self configWithArchitecture: (self architectureWith: #( 'ui mustNot dependOn domain' ))) validationErrors.
 
 	self assert: errors size equals: 1.
 	self assert: (errors first includesSubstring: 'Unknown verb')
@@ -116,7 +116,7 @@ MooseCIConfigTest >> testArchitectureValid [
 
 	| config sentences |
 	
-	sentences := #( 'ui cannot depend domain' 'domain canOnly invoke ui' ).
+	sentences := #( 'ui cannot inheritFrom domain' 'domain canOnly invoke ui' ).
 	config := self configWithArchitecture: (self architectureWith: sentences).
 
 	self assert: config validationErrors isEmpty
