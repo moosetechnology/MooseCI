@@ -68,6 +68,22 @@ MooseCIConfigTest >> testArchitectureFromStonIsValid [
 	self assert: config validationErrors isEmpty
 ]
 
+{ #category : 'tests' }
+MooseCIConfigTest >> testArchitectureInvalidExcludeRegex [
+
+	| options errors |
+	options := self architectureWith: #( 'ui cannot dependOn domain' ).
+	(options at: #modules) at: #ui put: {
+			(#include -> '.*\.ui\..*').
+			(#exclude -> '(test') } asDictionary.
+
+	errors := (self configWithArchitecture: options) validationErrors.
+
+	self assert: errors size equals: 1.
+	self assert: (errors first includesSubstring: 'Invalid regex').
+	self assert: (errors first includesSubstring: 'exclude')
+]
+
 { #category : 'as yet unclassified' }
 MooseCIConfigTest >> testArchitectureInvalidRegex [
 
@@ -79,6 +95,19 @@ MooseCIConfigTest >> testArchitectureInvalidRegex [
 
 	self assert: errors size equals: 1.
 	self assert: (errors first includesSubstring: 'Invalid regex')
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testArchitectureModuleMissingInclude [
+
+	| options errors |
+	options := self architectureWith: #( 'ui cannot dependOn domain' ).
+	(options at: #modules) at: #ui put: { (#exclude -> '.*test.*') } asDictionary.
+
+	errors := (self configWithArchitecture: options) validationErrors.
+
+	self assert: errors size equals: 1.
+	self assert: (errors first includesSubstring: '#include')
 ]
 
 { #category : 'as yet unclassified' }
@@ -99,6 +128,21 @@ MooseCIConfigTest >> testArchitectureUnknownModule [
 
 	self assert: errors size equals: 1.
 	self assert: (errors first includesSubstring: 'Unknown module')
+]
+
+{ #category : 'tests' }
+MooseCIConfigTest >> testArchitectureUnknownModuleKey [
+
+	| options errors |
+	options := self architectureWith: #( 'ui cannot dependOn domain' ).
+	(options at: #modules) at: #ui put: {
+			(#include -> '.*\.ui\..*').
+			(#exlude -> '.*test.*') } asDictionary.
+
+	errors := (self configWithArchitecture: options) validationErrors.
+
+	self assert: errors size equals: 1.
+	self assert: (errors first includesSubstring: 'exlude')
 ]
 
 { #category : 'as yet unclassified' }

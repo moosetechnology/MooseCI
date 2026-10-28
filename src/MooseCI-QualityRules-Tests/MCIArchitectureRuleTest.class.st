@@ -45,6 +45,40 @@ MCIArchitectureRuleTest >> ruleWith: sentences [
 		  yourself
 ]
 
+{ #category : 'as yet unclassified' }
+MCIArchitectureRuleTest >> ruleWithModules: aDictionary sentences: sentences [
+
+	^ MCIArchitectureRule new
+		  thresholds: {
+				  (#modules -> aDictionary).
+				  (#constraints -> sentences) } asDictionary;
+		  yourself
+]
+
+{ #category : 'as yet unclassified' }
+MCIArchitectureRuleTest >> testArchitectureModuleWithExcludeFromStonIsValid [
+
+	| config |
+	config := STON fromString: 'MooseCIConfig {
+        #projectLanguage : #java,
+        #rules : [
+                #architecture : {
+                        #modules : {
+                                #ui : { #include : ''.*\\.ui\\..*'', #exclude : ''.*\\.ui\\.test\\..*'' },
+                                #domain : ''.*\\.domain\\..*''
+                        },
+                        #constraints : [ ''ui cannot dependOn domain'' ]
+                }
+        ],
+        #outputFormats : [ #json ],
+        #outputPath : ''.moose-ci/report'',
+        #visualizations : [ ],
+        #isRemote : false
+}'.
+
+	self assert: config validationErrors isEmpty
+]
+
 { #category : 'accessing - methods' }
 MCIArchitectureRuleTest >> testCanOnlyRespected [
 
@@ -132,6 +166,24 @@ MCIArchitectureRuleTest >> testConstraintFromModulesInvoke [
 	self assert: (constraint associations allSatisfy: [ :assoc | assoc usesFamixTrait: FamixTInvocation ])
 ]
 
+{ #category : 'as yet unclassified' }
+MCIArchitectureRuleTest >> testExcludeRemovesViolation [
+
+	| rule constraint |
+	
+	rule := self
+		        ruleWithModules: {
+				        (#ui -> {
+					         (#include -> '.*\.ui\..*').
+					         (#exclude -> '.*\.ui\.Controller\.get.*') } asDictionary).
+				        (#domain -> '.*\.domain\..*').
+				        (#infra -> '.*\.infra\..*') } asDictionary
+		        sentences: #( 'ui canOnly invoke domain' ).
+	constraint := (rule conditionsOn: self model) first.
+
+	self assert: constraint check isEmpty
+]
+
 { #category : 'accessing - methods' }
 MCIArchitectureRuleTest >> testExistingRulesStillGiveOneCondition [
 	"Guard for the MCIAbstractQualityRule >> #conditionsOn: "
@@ -157,6 +209,34 @@ MCIArchitectureRuleTest >> testModulesOn [
 	self assert: ((modules at: #infra) memberEntities includes: (self methodNamed: 'load')).
 	self assert: ((modules at: #domain) memberEntities includes: (self methodNamed: 'getId')).
 	self deny: ((modules at: #ui) memberEntities includes: (self methodNamed: 'load'))
+]
+
+{ #category : 'as yet unclassified' }
+MCIArchitectureRuleTest >> testModulesOnWithExclude [
+
+	| rule ui |
+	rule := self
+		        ruleWithModules: { (#ui -> {
+				         (#include -> '.*\.ui\..*').
+				         (#exclude -> '.*\.ui\.Controller\.get.*') } asDictionary) } asDictionary
+		        sentences: #(  ).
+	ui := (rule modulesOn: self model) at: #ui.
+
+	self deny: (ui memberEntities includes: (self methodNamed: 'get')).
+	self assert: (ui memberEntities anySatisfy: [ :e | e mooseName = 'example.ui.Controller' ])
+]
+
+{ #category : 'as yet unclassified' }
+MCIArchitectureRuleTest >> testModulesOnWithoutExcludeSameAsString [
+
+	| withDict withString |
+	
+	withDict := ((self ruleWithModules: { (#ui -> { (#include -> '.*\.ui\..*') } asDictionary) } asDictionary sentences: #(  )) modulesOn:
+		             self model) at: #ui.
+		
+	withString := ((self ruleWith: #(  )) modulesOn: self model) at: #ui.
+
+	self assert: withDict memberEntities asSet equals: withString memberEntities asSet
 ]
 
 { #category : 'accessing - methods' }
