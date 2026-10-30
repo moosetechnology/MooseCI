@@ -1,17 +1,40 @@
 Class {
 	#name : 'MooseCICLITest',
 	#superclass : 'TestCase',
+	#instVars : [
+		'workingDirectory',
+		'previousWorkingDirectory'
+	],
 	#category : 'MooseCI-Tests',
 	#package : 'MooseCI-Tests'
 }
+
+{ #category : 'running' }
+MooseCICLITest >> setUp [
+
+	super setUp.
+	"Run each test in a fresh working directory holding a tiny project, so the CLI neither reads nor overwrites the moose-ci.ston next to the image"
+	workingDirectory := (FileLocator temp / ('moose-ci-cli-test-' , UUID new asString36)) asFileReference.
+	workingDirectory ensureCreateDirectory.
+	MooseCIBridge mockProjectTests / 'one-file' / 'main.py' copyTo: workingDirectory / 'main.py'.
+	previousWorkingDirectory := DiskStore classVarNamed: #DefaultWorkingDirectory.
+	DiskStore classVarNamed: #DefaultWorkingDirectory put: workingDirectory path
+]
+
+{ #category : 'running' }
+MooseCICLITest >> tearDown [
+
+	DiskStore classVarNamed: #DefaultWorkingDirectory put: previousWorkingDirectory.
+	workingDirectory ensureDeleteAll.
+	super tearDown
+]
 
 { #category : 'tests' }
 MooseCICLITest >> testAnalyzeCommandWithConfig [
 
 	| context |
-	context := MooseCICLI mooseci activateWith: {
-			           'moose-ci'.
-			           'analyze'}.
+	self writeConfig: MooseCIConfig python.
+	context := MooseCICLI mooseci activateWith: { 'moose-ci'. 'analyze' }.
 
 	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'moose-ci.ston found').
 	self assert: context exitStatus equals: 0
@@ -21,9 +44,10 @@ MooseCICLITest >> testAnalyzeCommandWithConfig [
 MooseCICLITest >> testAnalyzeCommandWithConfigInvalid [
 
 	| context |
-	context := MooseCICLI mooseci activateWith: {
-			           'moose-ci'.
-			           'analyze'}.
+	self writeConfig: (MooseCIConfig python
+			 rules: #(  );
+			 yourself).
+	context := MooseCICLI mooseci activateWith: { 'moose-ci'. 'analyze' }.
 
 	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'Invalid configuration file').
 	self assert: context exitStatus equals: 1
@@ -39,9 +63,8 @@ MooseCICLITest >> testAnalyzeCommandWithConfigNotFound [
 MooseCICLITest >> testAnalyzeCommandWithConfigValid [
 
 	| context |
-	context := MooseCICLI mooseci activateWith: {
-			           'moose-ci'.
-			           'analyze'}.
+	self writeConfig: MooseCIConfig python.
+	context := MooseCICLI mooseci activateWith: { 'moose-ci'. 'analyze' }.
 
 	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'Valid configuration file').
 	self assert: context exitStatus equals: 0
@@ -80,9 +103,11 @@ MooseCICLITest >> testAnalyzeLocalProjectCommand [
 MooseCICLITest >> testAnalyzeLocalProjectCommandNoProjectPathProvided [
 
 	| context |
-	
-	self assertBlock: [ context := MooseCICLI mooseci activateWith: { 'moose-ci'. 'analyze' } ] raises: NotFound.
-	
+	self writeConfig: MooseCIConfig python.
+	context := MooseCICLI mooseci activateWith: { 'moose-ci'. 'analyze' }.
+
+	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'Analyzing ' , workingDirectory fullName).
+	self assert: context exitStatus equals: 0
 ]
 
 { #category : 'tests' }
@@ -107,4 +132,10 @@ MooseCICLITest >> testInitCommandDetectsLanguage [
 
 	self assert: (context stdio stdout contents utf8Decoded includesSubstring: 'Language detected:').
 	self assert: context exitStatus equals: 0
+]
+
+{ #category : 'running' }
+MooseCICLITest >> writeConfig: aMooseCIConfig [
+
+	workingDirectory / MooseCIConfig configFileName writeStreamDo: [ :stream | stream nextPutAll: aMooseCIConfig toSton ]
 ]
