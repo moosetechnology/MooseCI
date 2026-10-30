@@ -1,0 +1,42 @@
+MooseCIConfig {
+	#projectLanguage : #java,
+	#metrics : [
+		#packages,
+		#classes
+	],
+	#rules : [
+		#too_many_parameters : {
+			#parameters : 10
+		},
+		#large_class : {
+			#attributes : 15,
+			#methods : 20
+		},
+		#unused_local_variable,
+		#unused_parameter,
+		#architecture : {
+			#modules : { 
+				#ui: {
+					#include: '.*\\.ui\\..*'
+				},
+				#domain: {
+					#include: '.*\\.domain\\..*',
+					#exclude: '.*\\.domain\\.DomainBootstrap.*'
+				},
+				#infra: '.*\\.infra\\..*'
+			},
+			#constraints : [
+				'domain cannot dependOn infra',
+				'ui must dependOn domain',
+				'ui canOnly dependOn domain',
+				'ui canOnly invoke domain'
+			]
+		}
+	],
+	#outputFormats : [
+		#json
+	],
+	#outputPath : '.moose-ci/report',
+	#visualizations : [ ],
+	#isRemote : false
+}

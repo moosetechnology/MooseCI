@@ -74,6 +74,33 @@ MooseCIConfig class >> templateNames [
 ]
 
 { #category : 'validation' }
+MooseCIConfig >> checkArchitecture: options into: errors [
+
+	| modules constraints |
+	options isDictionary ifFalse: [
+			errors add: '#architecture must be a dictionary with #modules and #constraints'.
+			^ self ].
+
+	modules := options at: #modules ifAbsent: [
+			           errors add: '#architecture needs #modules'.
+			           ^ self ].
+	constraints := options at: #constraints ifAbsent: [
+			               errors add: '#architecture needs #constraints'.
+			               ^ self ].
+
+	constraints isEmpty ifTrue: [
+			errors add: '#constraints must be a collection of sentences'.
+			^ self ].
+	modules isDictionary ifFalse: [
+			errors add: '#modules must be a dictionary of module name -> regex'.
+			^ self ].
+
+	modules keysAndValuesDo: [ :name :spec | self checkModule: spec named: name into: errors ].
+
+	constraints do: [ :sentence | self checkConstraint: sentence modules: modules into: errors ]
+]
+
+{ #category : 'validation' }
 MooseCIConfig >> checkBareRuleThresholds: aSymbol into: errors [
 
 	| ruleClass |
@@ -81,6 +108,32 @@ MooseCIConfig >> checkBareRuleThresholds: aSymbol into: errors [
 	ruleClass ifNil: [ ^ self ].
 
 	self checkMissingThresholdsFor: ruleClass provided: #(  ) into: errors
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkConstraint: aSentence modules: modules into: errors [
+	"aSentence must be '<module> <verb> <dependency> <module>'."
+
+	| words |
+	aSentence isString ifFalse: [
+			errors add: 'Each constraint must be a string'.
+			^ self ].
+
+	words := aSentence substrings.
+	words size = 4 ifFalse: [
+			errors add: 'Constraint ''' , aSentence , ''' must be: <module> <verb> <dependency> <module>'.
+			^ self ].
+
+	(modules includesKey: words first asSymbol) ifFalse: [ errors add: 'Unknown module ''' , words first , ''' in ''' , aSentence , '''' ].
+
+	(MCIArchitectureRule verbs includes: words second asSymbol) ifFalse: [
+		errors add: 'Unknown verb ''' , words second , ''' in ''' , aSentence , ''' (expected: ' , (' ' join: MCIArchitectureRule verbs) , ')' ].
+
+	(MCIArchitectureRule dependencies keys includes: words third asSymbol) ifFalse: [
+			errors add:
+				'Unknown dependency ''' , words third , ''' in ''' , aSentence , ''' (expected: ' , (' ' join: MCIArchitectureRule dependencies keys) , ')' ].
+
+	(modules includesKey: words fourth asSymbol) ifFalse: [ errors add: 'Unknown module ''' , words fourth , ''' in ''' , aSentence , '''' ]
 ]
 
 { #category : 'validation' }
@@ -130,11 +183,38 @@ MooseCIConfig >> checkMissingThresholdsFor: aRuleClass provided: someKeys into: 
 ]
 
 { #category : 'validation' }
+MooseCIConfig >> checkModule: aSpec named: aName into: errors [
+
+	aSpec isString ifTrue: [ ^ self checkRegex: aSpec for: 'module #' , aName into: errors ].
+
+	aSpec isDictionary ifFalse: [ ^ errors add: 'Module #' , aName , ' must be a regex or a dictionary with #include and optional #exclude' ].
+
+	(aSpec includesKey: #include)
+		ifTrue: [ self checkRegex: (aSpec at: #include) for: 'module #' , aName into: errors ]
+		ifFalse: [ errors add: 'Module #' , aName , ' needs #include' ].
+
+	aSpec at: #exclude ifPresent: [ :regex | self checkRegex: regex for: 'exclude of module #' , aName into: errors ].
+
+	(aSpec keys reject: [ :key | #( include exclude ) includes: key ]) do: [ :key | errors add: 'Unknown key #' , key , ' in module #' , aName ]
+]
+
+{ #category : 'validation' }
 MooseCIConfig >> checkProjectLanguageInto: errors [
 
 	projectLanguage isNil ifTrue: [ ^ self ].
 	(MooseCILanguageDetector extensionMap values includes: projectLanguage) ifFalse: [
 		errors add: 'Unsupported project language: ' , projectLanguage asString ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkRegex: aString for: aLabel into: errors [
+
+	(aString isString and: [
+			 [
+				 aString asRegex.
+				 true ]
+				 on: Error
+				 do: [ false ] ]) ifFalse: [ errors add: 'Invalid regex for ' , aLabel ]
 ]
 
 { #category : 'validation' }
@@ -174,7 +254,10 @@ MooseCIConfig >> checkRulesInto: errors [
 
 	rules do: [ :each |
 			each isAssociation
-				ifTrue: [ self checkThresholdsValue: each into: errors ]
+				ifTrue: [
+						each key = MCIArchitectureRule key
+							ifTrue: [ self checkArchitecture: each value into: errors ]
+							ifFalse: [ self checkThresholdsValue: each into: errors ] ]
 				ifFalse: [
 						self checkRuleSymbol: each into: errors.
 						self checkBareRuleThresholds: each into: errors ] ]
