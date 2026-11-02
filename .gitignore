@@ -2,3 +2,4 @@ PharoDebug.log
 .DS_Store
 ressources/**/*.json
 *.jar
+!ressources/html-report/sample-report.json

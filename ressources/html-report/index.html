@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MooseCI report</title>
+  <link rel="stylesheet" href="report.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <span class="brand">MooseCI</span>
+      <span class="topbar-meta" id="meta"></span>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">Dark</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="summary" aria-label="Summary">
+      <div class="gate" id="gate"></div>
+      <dl class="measures" id="measures"></dl>
+    </section>
+
+    <section class="issues" aria-label="Issues">
+      <aside class="facets" id="facets"></aside>
+      <div class="issue-list">
+        <div class="toolbar">
+          <input type="search" id="search" placeholder="Filter by entity or file" aria-label="Filter by entity or file">
+          <span class="toolbar-count" id="shown-count"></span>
+          <button type="button" class="link-button" id="clear-filters" hidden>Clear filters</button>
+        </div>
+        <div id="rules"></div>
+        <p class="empty" id="empty" hidden>No issues match the current filters.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Filled by MCIHTMLReportWriter; empty during development, then sample-report.json is fetched. -->
+  <script id="report" type="application/json"></script>
+  <script src="report.js"></script>
+</body>
+</html>

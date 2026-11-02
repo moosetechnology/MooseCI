@@ -1,0 +1,148 @@
+{
+  "metrics" : {
+    "packages" : 4,
+    "classes" : 23
+  },
+  "violations" : [
+    {
+      "rule" : "domain cannot dependOn infra",
+      "category" : "architecture",
+      "severity" : "Error",
+      "count" : 3,
+      "entities" : [
+        {
+          "entity" : "bootstrap -> Repository",
+          "file" : "domain/DomainBootstrap.java",
+          "startLine" : 8,
+          "endLine" : 14
+        },
+        {
+          "entity" : "Order -> Repository",
+          "file" : "domain/Order.java",
+          "startLine" : 21,
+          "endLine" : 27
+        },
+        {
+          "entity" : "total -> query",
+          "file" : "domain/Order.java",
+          "startLine" : 33,
+          "endLine" : 40
+        }
+      ]
+    },
+    {
+      "rule" : "ui canOnly dependOn domain",
+      "category" : "architecture",
+      "severity" : "Error",
+      "count" : 1,
+      "entities" : [
+        {
+          "entity" : "get -> load",
+          "file" : "ui/Controller.java",
+          "startLine" : 10,
+          "endLine" : 12
+        }
+      ]
+    },
+    {
+      "rule" : "Large class",
+      "category" : "quality",
+      "severity" : "Warning",
+      "count" : 2,
+      "entities" : [
+        {
+          "entity" : "OrderService",
+          "file" : "domain/OrderService.java",
+          "startLine" : 1,
+          "endLine" : 412
+        },
+        {
+          "entity" : "LegacyMapper",
+          "file" : "infra/LegacyMapper.java",
+          "startLine" : 1,
+          "endLine" : 298
+        }
+      ]
+    },
+    {
+      "rule" : "Too many parameters",
+      "category" : "quality",
+      "severity" : "Warning",
+      "count" : 1,
+      "entities" : [
+        {
+          "entity" : "createOrder",
+          "file" : "domain/OrderService.java",
+          "startLine" : 54,
+          "endLine" : 81
+        }
+      ]
+    },
+    {
+      "rule" : "Unused parameter",
+      "category" : "quality",
+      "severity" : "Information",
+      "count" : 4,
+      "entities" : [
+        {
+          "entity" : "id",
+          "file" : "ui/Controller.java",
+          "startLine" : 10,
+          "endLine" : 10
+        },
+        {
+          "entity" : "context",
+          "file" : "infra/Repository.java",
+          "startLine" : 18,
+          "endLine" : 18
+        },
+        {
+          "entity" : "locale",
+          "file" : "ui/View.java",
+          "startLine" : 42,
+          "endLine" : 42
+        },
+        {
+          "entity" : "</script><b>escaped</b>",
+          "file" : "ui/View.java",
+          "startLine" : 57,
+          "endLine" : 57
+        }
+      ]
+    },
+    {
+      "rule" : "Unused local variable",
+      "category" : "quality",
+      "severity" : "Hint",
+      "count" : 2,
+      "entities" : [
+        {
+          "entity" : "tmp",
+          "file" : "infra/LegacyMapper.java",
+          "startLine" : 120,
+          "endLine" : 120
+        },
+        {
+          "entity" : "result",
+          "file" : "domain/OrderService.java",
+          "startLine" : 233,
+          "endLine" : 233
+        }
+      ]
+    },
+    {
+      "rule" : "Shadowed attribute",
+      "category" : "quality",
+      "severity" : "Hint",
+      "count" : 1,
+      "entities" : [
+        {
+          "entity" : "Order",
+          "file" : null,
+          "startLine" : null,
+          "endLine" : null
+        }
+      ]
+    }
+  ]
+}
