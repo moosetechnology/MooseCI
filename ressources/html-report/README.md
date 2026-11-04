@@ -1,11 +1,17 @@
 # HTML report template
 
-The page shown by the HTML report: `index.html`, `report.css` and `report.js`. The report data goes into the empty `<script id="report" type="application/json">` slot. When the slot is empty, as it is here, the page loads `sample-report.json` instead.
+The page shown by the HTML report. Open `index.html` directly in a browser to preview it: no server needed.
 
-To preview it, serve this folder over HTTP (browsers block `fetch` on `file://`):
+- `index.html`: page skeleton. The report data goes into the empty `<script id="report" type="application/json">` slot. When the slot is empty, as it is here, the page uses `sample-report.js`.
+- `report.css`: styles, light and dark themes.
+- `js/`: plain scripts (no modules) that share the `window.MooseCIReport` object. `index.html` loads them in order and `main.js` runs last.
+  - `data.js`: constants, filter state, loading and queries on the report
+  - `dom.js`: DOM helpers
+  - `summary.js`: header and measures
+  - `facets.js`: severity and rule filters
+  - `issues.js`: issue list, grouped by category and rule
+  - `theme.js`: light and dark toggle
+  - `main.js`: entry point
+- `sample-report.js`: sample data for development only. It is not part of the generated report.
 
-```bash
-python3 -m http.server -d ressources/html-report
-```
-
-Then open http://localhost:8000.
+To add a component, create a file in `js/` and add its `<script src>` to `index.html` before `main.js`.

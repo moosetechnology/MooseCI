@@ -14,9 +14,6 @@
   --information: #1f6fb5;
   --hint: #6b7280;
 
-  --passed: #1d7f3b;
-  --failed: #c42b1c;
-  --on-status: #ffffff;
 
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
@@ -42,9 +39,6 @@
     --information: #6ea8eb;
     --hint: #9aa1aa;
 
-    --passed: #4cb871;
-    --failed: #f0736a;
-    --on-status: #111317;
 
     color-scheme: dark;
   }
@@ -66,9 +60,6 @@
   --information: #6ea8eb;
   --hint: #9aa1aa;
 
-  --passed: #4cb871;
-  --failed: #f0736a;
-  --on-status: #111317;
 
   color-scheme: dark;
 }
@@ -148,7 +139,7 @@ input {
   padding: 24px;
 }
 
-/* Summary: quality gate + measures */
+/* Summary: measures */
 
 .summary {
   display: flex;
@@ -158,38 +149,7 @@ input {
   margin-bottom: 24px;
 }
 
-.gate {
-  padding: 16px 24px;
-  border-right: 1px solid var(--border);
-  min-width: 200px;
-}
-
-.gate-label,
 .measure dt {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.gate-status {
-  display: inline-block;
-  margin-top: 6px;
-  padding: 3px 10px;
-  border-radius: var(--radius);
-  color: var(--on-status);
-  font-weight: 600;
-  font-size: 15px;
-}
-
-.gate-status.passed {
-  background: var(--passed);
-}
-
-.gate-status.failed {
-  background: var(--failed);
-}
-
-.gate-reason {
-  margin-top: 6px;
   color: var(--muted);
   font-size: 12px;
 }
@@ -483,11 +443,6 @@ input {
 
   .summary {
     flex-direction: column;
-  }
-
-  .gate {
-    border-right: 0;
-    border-bottom: 1px solid var(--border);
   }
 
   .measure {

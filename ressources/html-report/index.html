@@ -17,7 +17,6 @@
 
   <main class="page">
     <section class="summary" aria-label="Summary">
-      <div class="gate" id="gate"></div>
       <dl class="measures" id="measures"></dl>
     </section>
 
@@ -35,8 +34,17 @@
     </section>
   </main>
 
-  <!-- Filled by MCIHTMLReportWriter; empty during development, then sample-report.json is fetched. -->
+  <!-- Filled by MCIHTMLReportWriter; empty during development, then sample-report.js provides the data. -->
   <script id="report" type="application/json"></script>
-  <script src="report.js"></script>
+  <script src="sample-report.js"></script>
+
+  <!-- Order matters: each file adds to window.MooseCIReport, main.js runs last. -->
+  <script src="js/data.js"></script>
+  <script src="js/dom.js"></script>
+  <script src="js/summary.js"></script>
+  <script src="js/facets.js"></script>
+  <script src="js/issues.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
