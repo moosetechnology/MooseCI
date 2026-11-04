@@ -409,18 +409,20 @@ input {
 }
 
 .entity {
+  min-width: 12em;
   font-family: var(--mono);
   font-size: 13px;
   overflow-wrap: anywhere;
 }
 
+/* Paths can be long and absolute: let them wrap instead of squeezing the entity column. */
 .location {
-  width: 1%;
+  width: 45%;
   color: var(--muted);
   font-family: var(--mono);
   font-size: 12px;
   text-align: right;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .empty {

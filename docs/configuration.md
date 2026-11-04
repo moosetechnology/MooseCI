@@ -40,12 +40,13 @@ You can configure the output in `moose-ci.ston`:
 
 ```ston
 #outputFormats : [
-		#json
+		#json,
+		#html
 ],
 #outputPath : '.moose-ci/report'
 ```
 
-- `#outputFormats`: list of formats to write. `#json` is the only format available for now.
+- `#outputFormats`: list of formats to write: `#json` and `#html`. The HTML report (`report-<TIMESTAMP>.html`) is a single self-contained file that opens in any browser, with filters by severity and rule, and architecture constraints listed apart from quality rules.
 - `#outputPath`: directory (relative to the project) where the report files are written.
 
 ## Rules
