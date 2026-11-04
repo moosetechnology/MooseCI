@@ -287,6 +287,16 @@ MCIArchitectureRuleTest >> testQueryHandlerIsNotImplemented [
 	self should: [ (self ruleWith: #(  )) queryHandler ] raise: ShouldNotImplement
 ]
 
+{ #category : 'tests' }
+MCIArchitectureRuleTest >> testReportCategory [
+
+	| conditions |
+	conditions := (self ruleWith: #( 'ui cannot invoke infra' )) conditionsOn: self model.
+
+	self assert: conditions first reportCategory equals: 'architecture'.
+	self assert: MCILargeClassRule new condition reportCategory equals: 'quality'
+]
+
 { #category : 'accessing - methods' }
 MCIArchitectureRuleTest >> violationsOf: aSentence [
 

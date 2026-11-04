@@ -42,23 +42,21 @@ MCIJSONReportWriter >> entityObject: anEntity [
 { #category : 'as yet unclassified' }
 MCIJSONReportWriter >> jsonObject [
 
-	| violations|
-	violations := self report violations select: [:each | each isNotEmpty].
-	
+	| violations |
+	violations := self report violations select: [ :each | each isNotEmpty ].
+
 	^ OrderedDictionary newFrom: {
-		  ('metrics' -> self metricsObject).
-		  ('violations' -> 
-			(violations associations collect: [ :asso |
-				|entities|
-				entities := (asso value collect: [ :violation | self entityObject: violation violatingEntity ]) .
-				
-				    OrderedDictionary newFrom: {
-					    ('rule' -> asso key name).
-					    ('severity' -> asso key severity title).
-					    ('count' -> asso value size).
-					    ('entities' -> entities asArray ) 
-					} ])) 
-		}
+			  ('metrics' -> self metricsObject).
+			  ('violations' -> (violations associations collect: [ :asso |
+					    | entities |
+					    entities := asso value collect: [ :violation | self entityObject: violation violatingEntity ].
+
+					    OrderedDictionary newFrom: {
+							    ('rule' -> asso key name).
+							    ('category' -> asso key reportCategory).
+							    ('severity' -> asso key severity title).
+							    ('count' -> asso value size).
+							    ('entities' -> entities asArray) } ])) }
 ]
 
 { #category : 'writing' }
