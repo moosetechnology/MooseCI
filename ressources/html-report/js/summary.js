@@ -43,12 +43,12 @@
     var metrics = report.metrics || {};
     R.clear(measures);
 
+    Object.keys(metrics).forEach(function (key) {
+      measures.appendChild(measure(R.humanize(key), metrics[key]));
+    });
     measures.appendChild(issuesMeasure());
     R.CATEGORIES.forEach(function (category) {
       measures.appendChild(measure(category.title, R.totalIssues(R.groupsIn(category.key))));
-    });
-    Object.keys(metrics).forEach(function (key) {
-      measures.appendChild(measure(R.humanize(key), metrics[key]));
     });
   }
 
