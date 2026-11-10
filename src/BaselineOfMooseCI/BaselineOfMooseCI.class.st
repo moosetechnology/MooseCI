@@ -28,7 +28,7 @@ BaselineOfMooseCI >> defineDependencies: spec [
 			spec
 				repository: 'github://jecisc/GitBridge:v1.x.x/src';
 				loads: #( 'Minimal' ) ];
-		baseline: 'DependencyConstraint' with: [ spec repository: 'github://moosetechnology/DependencyConstraint:critic-browser/src' ]
+		baseline: 'ArchitecturalConstraints' with: [ spec repository: 'github://moosetechnology/DependencyConstraint:master/src' ]
 ]
 
 { #category : 'baselines' }
@@ -50,7 +50,7 @@ BaselineOfMooseCI >> defineGroups: spec [
 BaselineOfMooseCI >> definePackages: spec [
 
 	spec
-		package: 'MooseCI-Core' with: [ spec requires: #( 'GitBridge' 'DependencyConstraint' ) ];
+		package: 'MooseCI-Core' with: [ spec requires: #( 'GitBridge' 'ArchitecturalConstraints' ) ];
 		package: 'MooseCI-CLI';
 		package: 'MooseCI-Tests';
 		package: 'MooseCI-QualityRules';
