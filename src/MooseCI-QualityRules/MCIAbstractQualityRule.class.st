@@ -7,7 +7,8 @@ New rules (Subclasses) must implement:
 - `MCIAbstractQualityRule class >> #key` ............... unique identifier, e.g. `#longClass`
 - `MCIAbstractQualityRule class >> #defaultThresholds` .. thresholds used when none is set
 - `MCIAbstractQualityRule >> #contextFilterBlock` ...... block restricting the analyzed entities. 
-- `MCIAbstractQualityRule >> #queryHandler` ............ block deciding what counts as a violation 
+
+implement `#queryHandler`, or override `#conditionsOn:` to produce several conditions 
 
 and may override `MCIAbstractQualityRule class >> #ruleName` and `MCIAbstractQualityRule class >> #defaultSeverity`.
 
@@ -81,6 +82,12 @@ MCIAbstractQualityRule >> condition [
 	^ (FamixCBCondition named: self name on: self queryHandler)
 		  severity: self severity;
 		  yourself
+]
+
+{ #category : 'accessing' }
+MCIAbstractQualityRule >> conditionsOn: aMooseModel [
+
+	^ { self condition }
 ]
 
 { #category : 'accessing' }

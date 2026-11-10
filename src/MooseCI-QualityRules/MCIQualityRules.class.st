@@ -55,15 +55,13 @@ MCIQualityRules class >> runRules: aCollection on: aMooseModel [
 	criticModel setEntities: aMooseModel withoutStubs.
 
 	aCollection do: [ :rule |
-			| context condition |
+			| context |
 			context := rule context.
-			condition := rule condition.
-			
+
 			criticModel addChildToRootContext: context.
-			context addChild: condition.
-			
-			criticModel runCondition: condition 
-			].
-		
+			(rule conditionsOn: aMooseModel) do: [ :condition |
+					context addChild: condition.
+					criticModel runCondition: condition ] ].
+
 	^ criticModel violations
 ]

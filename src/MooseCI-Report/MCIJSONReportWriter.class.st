@@ -20,14 +20,23 @@ MCIJSONReportWriter class >> formatKey [
 { #category : 'as yet unclassified' }
 MCIJSONReportWriter >> entityObject: anEntity [
 
-	| anchor |
-	anchor := anEntity sourceAnchor.
+	| anchor located label target |
+	located := anEntity.
+	label := anEntity isAssociation
+		         ifTrue: [
+				         located := anEntity source.
+				         target := anEntity target.
+				         target isCollection ifTrue: [ target := target ifEmpty: [ nil ] ifNotEmpty: [ :c | c anyOne ] ].
+				         anEntity source name , ' -> ' , (target ifNil: [ '?' ] ifNotNil: [ :t | t name ]) ]
+		         ifFalse: [ anEntity name ].
+
+	anchor := located sourceAnchor.
 
 	^ OrderedDictionary newFrom: {
-			  ('entity' -> anEntity name).
-			  ('file' -> anchor fileName).
-			  ('startLine' -> anchor startLine).
-			  ('endLine' -> anchor endLine) }
+			  ('entity' -> label).
+			  ('file' -> (anchor ifNotNil: [ anchor fileName ])).
+			  ('startLine' -> (anchor ifNotNil: [ anchor startLine ])).
+			  ('endLine' -> (anchor ifNotNil: [ anchor endLine ])) }
 ]
 
 { #category : 'as yet unclassified' }

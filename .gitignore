@@ -1,3 +1,4 @@
 PharoDebug.log
 .DS_Store
 ressources/**/*.json
+*.jar
