@@ -34,7 +34,7 @@ MooseCIConfig {
 		}
 	],
 	#outputFormats : [
-		#json
+		#json, #html
 	],
 	#outputPath : '.moose-ci/report',
 	#visualizations : [ ],

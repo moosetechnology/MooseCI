@@ -5,6 +5,12 @@ Class {
 	#package : 'MooseCI-Core'
 }
 
+{ #category : 'accessing' }
+MooseCIBridge class >> htmlReportTemplate [
+
+	^ self root / 'ressources/html-report'
+]
+
 { #category : 'class initialization' }
 MooseCIBridge class >> initialize [
 	SessionManager default registerSystemClassNamed: self name

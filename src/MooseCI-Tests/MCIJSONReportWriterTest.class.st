@@ -44,6 +44,17 @@ MCIJSONReportWriterTest >> testJsonStringContainsMetricsAndViolations [
 ]
 
 { #category : 'tests' }
+MCIJSONReportWriterTest >> testJsonStringHasQualityCategory [
+
+	| json |
+	json := STONJSON fromString: (MCIJSONReportWriter new
+			         report: report;
+			         jsonString).
+
+	self assert: ((json at: 'violations') allSatisfy: [ :group | (group at: 'category') = 'quality' ])
+]
+
+{ #category : 'tests' }
 MCIJSONReportWriterTest >> testJsonStringIsValidJson [
 
 	| json metrics violations |

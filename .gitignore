@@ -1,4 +1,5 @@
 PharoDebug.log
 .DS_Store
 ressources/**/*.json
+**/.moose-ci/report
 *.jar
