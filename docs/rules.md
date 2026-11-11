@@ -14,7 +14,7 @@
 | `#unused_private_method` | N/A | python | Reports class-private methods that are never invoked. |
 | `#shadowed_attribute` | N/A | java, python | Reports attributes whose name duplicates their containing class name. |
 | `#function_naming` | N/A | python | Reports functions whose names do not comply with the naming convention. |
-| `#architecture` | `#modules`, `#constraints` | java | Checks dependencies between modules against architecture constraints. See [Architecture constraints](?id=architecture-constraints). |
+| `#architecture` | `#modules`, `#constraints` | java, python | Checks dependencies between modules against architecture constraints. See [Architecture constraints](?id=architecture-constraints). |
 
 ## Architecture constraints
 
@@ -30,9 +30,9 @@ The `#architecture` rule checks the dependencies between parts of your code agai
 				#infra : '.*\\.infra\\..*'
 			},
 			#constraints : [
-				'domain cannot depend infra',
-				'ui must depend domain',
-				'ui canOnly depend domain'
+				'domain cannot dependOn infra',
+				'ui must dependOn domain',
+				'ui canOnly dependOn domain'
 			]
 		}
 ]
@@ -43,6 +43,8 @@ The `#architecture` rule checks the dependencies between parts of your code agai
 `#modules` is a dictionary that maps a module name to a regex. An entity belongs to a module when its **mooseName** matches the regex.
 
 > **The regex must match the whole mooseName.** In Java, mooseNames use `.` as the separator (`example.ui.Controller`, `example.ui.Controller.get(int)`). Write `'.*\\.ui\\..*'`, not `'ui'`, which matches nothing. In STON, a `\` is written `\\`.
+>
+> In Python, mooseNames start at the module (file) name, not at the package path, so a regex on a package folder name does not match.
 
 ### Constraints
 
@@ -61,13 +63,13 @@ Each constraint is a sentence of exactly four words:
 
 | Dependency | Kind of association checked |
 | --- | --- |
-| `depend` | any dependency |
+| `dependOn` | any dependency |
 | `invoke` | method invocations |
 | `access` | attribute and variable accesses |
 | `reference` | type references |
-| `inherit` | inheritance |
+| `inheritFrom` | inheritance |
 
-Each sentence is checked as its own rule with the **Error** severity, and the sentence is used as the rule name in the reports.
+Each sentence is checked as its own rule with the **Error** severity, and the sentence is used as the rule name in the reports. In the reports, architecture rules have the `architecture` category; the other rules have the `quality` category.
 
 ### Report
 
@@ -75,7 +77,8 @@ Each violation is a dependency (an association), shown as `source -> target`. Th
 
 ```json
 {
-  "rule" : "ui canOnly depend domain",
+  "rule" : "ui canOnly dependOn domain",
+  "category" : "architecture",
   "severity" : "Error",
   "count" : 1,
   "entities" : [
@@ -93,9 +96,9 @@ Each violation is a dependency (an association), shown as `source -> target`. Th
 
 The config is validated before the analysis. An invalid sentence stops `analyze` with an error such as:
 
-- `Constraint 'ui depend domain' must be: <module> <verb> <dependency> <module>`
-- `Unknown verb 'cant' in 'ui cant depend domain' (expected: cannot must canOnly onlyCan)`
-- `Unknown dependency 'call' in 'ui cannot call infra' (expected: depend invoke access reference inherit)`
-- `Unknown module 'web' in 'web cannot depend infra'`
+- `Constraint 'ui dependOn domain' must be: <module> <verb> <dependency> <module>`
+- `Unknown verb 'cant' in 'ui cant dependOn domain' (expected: cannot must canOnly onlyCan)`
+- `Unknown dependency 'call' in 'ui cannot call infra' (expected: dependOn invoke access reference inheritFrom)`
+- `Unknown module 'web' in 'web cannot dependOn infra'`
 
 It also reports a missing `#modules` or `#constraints`, an empty `#constraints`, and an invalid regex.

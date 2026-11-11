@@ -19,6 +19,7 @@ By default a JSON report is written to `report-<TIMESTAMP>.json`:
   "violations" : [
     {
       "rule" : "No docstring",
+      "category" : "quality",
       "severity" : "Hint",
       "count" : 3,
       "entities" : [
@@ -34,7 +35,7 @@ By default a JSON report is written to `report-<TIMESTAMP>.json`:
 }
 ```
 
-Violations are grouped by rule. Each group contains the rule name, its severity, the number of violating entities and the details of each entity (name, file and source lines). For architecture rules, the entity is a dependency written `source -> target`.
+Only rules with at least one violation are listed. Violations are grouped by rule. Each group contains the rule name, its category (`quality`, or `architecture` for [architecture constraints](rules.md?id=architecture-constraints)), its severity, the number of violating entities and the details of each entity (name, file and source lines). For architecture rules, the entity is a dependency written `source -> target`.
 
 You can configure the output in `moose-ci.ston`:
 

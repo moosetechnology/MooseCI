@@ -11,21 +11,115 @@
   <link rel="stylesheet" media="(prefers-color-scheme: dark)"
     href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css">
 
-  
+  <style>
+    .version-picker {
+      display: block;
+      margin: 0 15px 10px;
+      font-size: 0.85em;
+    }
+
+    .version-picker select {
+      width: 100%;
+      margin-top: 4px;
+      padding: 4px;
+      font: inherit;
+      color: inherit;
+      background: transparent;
+      border: 1px solid currentColor;
+      border-radius: 3px;
+      color-scheme: light dark;
+    }
+
+    .version-note {
+      padding: 8px 12px;
+      margin-bottom: 1em;
+      border-left: 4px solid currentColor;
+      opacity: 0.85;
+    }
+  </style>
 
 </head>
 
 <body>
   <div id="app">Loading Moose-CI documentation&hellip;</div>
   <script>
-    window.$docsify = {
-      name: 'Moose-CI',
-      repo: 'moosetechnology/MooseCI',
-      loadSidebar: true,
-      subMaxLevel: 2,
-      auto2top: true,
-      search: 'auto'
-    };
+    // Versioned docs: ?v=<release tag> loads the Markdown of that tag from GitHub; without it, the docs of master.
+    (function () {
+      var REPO = 'moosetechnology/MooseCI';
+      // Releases whose tag has no docs/ folder
+      var UNDOCUMENTED = ['v0.1.0'];
+      var requested = new URLSearchParams(location.search).get('v');
+      // Only a tag name, so ?v= cannot point outside the repository
+      var version = requested && /^v\d+(\.\d+)*$/.test(requested) ? requested : null;
+
+      function urlFor(aVersion) {
+        return location.pathname + (aVersion ? '?v=' + aVersion : '') + location.hash;
+      }
+
+      // The pages are written for master (latest images, master branch): point them to the selected release.
+      function pinToVersion(markdown) {
+        if (!version) { return markdown; }
+        return markdown
+          .replace(/moose-ci:latest\b/g, 'moose-ci:' + version)
+          .replace(/moose-ci:python\b/g, 'moose-ci:' + version + '-python')
+          .replace(/moose-ci:corese\b/g, 'moose-ci:' + version + '-corese')
+          .replace(/MooseCI:master\//g, 'MooseCI:' + version + '/');
+      }
+
+      function addOption(select, value, label) {
+        var option = document.createElement('option');
+        option.value = value;
+        option.textContent = label;
+        option.selected = value === (version || '');
+        select.appendChild(option);
+      }
+
+      function versionPicker() {
+        var label = document.createElement('label');
+        label.className = 'version-picker';
+        label.textContent = 'Version';
+        var select = document.createElement('select');
+        addOption(select, '', 'latest (master)');
+        if (version) { addOption(select, version, version); }
+        select.addEventListener('change', function () { location.href = urlFor(select.value); });
+        label.appendChild(select);
+
+        fetch('https://api.github.com/repos/' + REPO + '/releases?per_page=100')
+          .then(function (response) { return response.ok ? response.json() : []; })
+          .then(function (releases) {
+            releases
+              .filter(function (release) { return !release.draft; })
+              .map(function (release) { return release.tag_name; })
+              .filter(function (tag) { return tag !== version && UNDOCUMENTED.indexOf(tag) < 0; })
+              .forEach(function (tag) { addOption(select, tag, tag); });
+          })
+          .catch(function () { /* the picker keeps master and the current version */ });
+        return label;
+      }
+
+      window.$docsify = {
+        name: 'Moose-CI',
+        repo: REPO,
+        basePath: version ? 'https://raw.githubusercontent.com/' + REPO + '/' + version + '/docs/' : '',
+        loadSidebar: true,
+        subMaxLevel: 2,
+        auto2top: true,
+        search: { paths: 'auto', namespace: version || 'master' },
+        plugins: [function (hook) {
+          hook.beforeEach(pinToVersion);
+          hook.afterEach(function (html) {
+            if (!version) { return html; }
+            return '<p class="version-note">Documentation of Moose-CI ' + version +
+              '. <a href="' + urlFor(null) + '">See the latest documentation</a>.</p>' + html;
+          });
+          hook.mounted(function () {
+            var sidebar = document.querySelector('.sidebar');
+            var name = sidebar && sidebar.querySelector('.app-name');
+            if (name) { name.insertAdjacentElement('afterend', versionPicker()); }
+          });
+        }]
+      };
+    })();
   </script>
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
