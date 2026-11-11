@@ -1,0 +1,13 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'MooseCI',
+      #directory : 'src',
+      #load : [ 'all' ],
+      #registerInIceberg : true
+    }
+  ],
+  #preTesting : SCICustomScript {
+    #path : 'script/smalltalkci-verveinej.st'
+  }
+}
