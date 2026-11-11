@@ -12,6 +12,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
+      # VerveineJ v5.1.1 is compiled for Java 25; the runner's default Java is older
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
       - name: Download VerveineJ
         run: |
           curl -fsSL -o "$RUNNER_TEMP/VerveineJ.jar" \
