@@ -13,17 +13,18 @@ Some of the features it should offer:
 - [x] load a project (either from the command line or in a configuration file)
 - [ ] accept projects in any programming language that Moose can handle (C, Java, Pharo, Python, TypeScript, ...)
 - [ ] run a list of analyses (either "standard" ones, or some specified in a configuration file)
-- [x] output the results as JSON and console text
-- [ ] output the results in other formats (XML, CSV, HTML, ...)
+- [x] output the results as JSON, HTML and console text
+- [ ] output the results in other formats (XML, CSV, ...)
 
 Some metrics and analyses that are envisioned:
 
 - [x] size (LOC, \# of classes, ...)
 - [x] report the number of entities that fail the rules
-- [ ] list too-big classes (based on LOC or \# members)
+- [x] list too-big classes (based on \# members)
 - [ ] list too-big methods/functions (based on LOC)
 - [ ] list too-complex methods/functions (based on cyclomatic complexity)
-- [ ] list too-large method/function APIs (\# number of parameters)
+- [x] list too-large method/function APIs (\# number of parameters)
+- [x] check dependencies between modules against [architecture constraints](rules.md?id=architecture-constraints)
 - [ ] packages/modules in cyclic dependencies
 - [ ] list of code clones
 
@@ -45,7 +46,9 @@ Moose-CI is published as one image per language. Pick the image that matches you
 - Java project → `ghcr.io/moosetechnology/moose-ci:latest` (the base image, which includes Java by default).
 - Python project → `ghcr.io/moosetechnology/moose-ci:python` (the base image plus Python support).
 
-First, pull the image you need (the Java image below; replace `latest` with `python` for a Python project):
+Each [release](https://github.com/moosetechnology/MooseCI/releases) also has its own images, `moose-ci:<version>` and `moose-ci:<version>-python` (for example `moose-ci:v0.2.1`). Use them to keep the same Moose-CI version over time. The documentation of a release is available from the version menu.
+
+First, pull the image you need (the Java image below; for a Python project, use the Python image above):
 
 ```bash
 docker pull ghcr.io/moosetechnology/moose-ci:latest
@@ -71,7 +74,7 @@ docker run -v /path/to/your/project:/src ghcr.io/moosetechnology/moose-ci:latest
 
 The project is mounted in the container at `/src`, so you need to pass that path to the `analyze` command.
 
-For a Python project, use the `ghcr.io/moosetechnology/moose-ci:python` image instead of `:latest` in all the commands above.
+For a Python project, use the Python image in all the commands above.
 
 ### Available commands
 
@@ -95,13 +98,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: moosetechnology/setup-MooseCI@v1.0.0
+      - uses: moosetechnology/setup-MooseCI@v2
         with:
           project-path: .
+          project-language: java
 ```
 
+- `project-language` (required): `java` or `python`. It selects the Moose-CI Docker image.
 - `project-path`: the folder to analyze, relative to the workspace. Default: `.`
+- `mooseci-version`: the Moose-CI release to use, e.g. `v0.2.1`. Each version of the action has its own default; see the [action's README](https://github.com/moosetechnology/setup-MooseCI).
+- `comment-on-pr`: `"false"` to not comment on pull requests. Default: `"true"`.
 - `actions: write` is needed to upload the report artifact.
 - `pull-requests: write` is needed to comment the report link on pull requests.
 - The `moose-ci.ston` config file must be placed inside the analyzed project folder (see [Configuration](configuration.md)).
+- The JSON and HTML reports (the formats listed in `#outputFormats`) are uploaded as the `moose-ci-report` artifact.
 - On pull requests, the action comments the report download URL and the analysis summary on the PR.
