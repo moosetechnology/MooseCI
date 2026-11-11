@@ -3,7 +3,8 @@ SmalltalkCISpec {
     SCIMetacelloLoadSpec {
       #baseline : 'MooseCI',
       #directory : 'src',
-      #registerInIceberg : true   
+      #load : [ 'all' ],
+      #registerInIceberg : true
     }
   ],
   #preTesting : SCICustomScript {

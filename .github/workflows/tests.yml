@@ -17,6 +17,14 @@ jobs:
           curl -fsSL -o "$RUNNER_TEMP/VerveineJ.jar" \
             https://github.com/moosetechnology/VerveineJ/releases/download/v5.1.1/VerveineJ-v5.1.1.jar
           echo "VERVEINEJ_JAR=$RUNNER_TEMP/VerveineJ.jar" >> "$GITHUB_ENV"
+      # Native libraries of the Python group, built like in docker/Dockerfile.python
+      - name: Build tree-sitter
+        run: |
+          git clone --depth 1 https://github.com/tree-sitter/tree-sitter "$RUNNER_TEMP/tree-sitter"
+          make -C "$RUNNER_TEMP/tree-sitter"
+          git clone --depth 1 https://github.com/tree-sitter/tree-sitter-python "$RUNNER_TEMP/tree-sitter-python"
+          make -C "$RUNNER_TEMP/tree-sitter-python"
+          sudo cp "$RUNNER_TEMP/tree-sitter/libtree-sitter.so" "$RUNNER_TEMP/tree-sitter-python/libtree-sitter-python.so" /usr/lib/
       - uses: hpi-swa/setup-smalltalkCI@v1
         id: smalltalkci
         with:
