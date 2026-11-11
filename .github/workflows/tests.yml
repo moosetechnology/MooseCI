@@ -12,6 +12,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
+      - name: Download VerveineJ
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/VerveineJ.jar" \
+            https://github.com/moosetechnology/VerveineJ/releases/download/v5.1.1/VerveineJ-v5.1.1.jar
+          echo "VERVEINEJ_JAR=$RUNNER_TEMP/VerveineJ.jar" >> "$GITHUB_ENV"
       - uses: hpi-swa/setup-smalltalkCI@v1
         id: smalltalkci
         with:
