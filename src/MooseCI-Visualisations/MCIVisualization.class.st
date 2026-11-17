@@ -3,7 +3,8 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'of',
-		'in'
+		'in',
+		'view'
 	],
 	#category : 'MooseCI-Visualisations',
 	#package : 'MooseCI-Visualisations'
@@ -15,6 +16,20 @@ MCIVisualization class >> kinds [
 	^ {
 		  (#packages -> FamixTPackage).
 		  (#classes -> FamixTClass) } asDictionary
+]
+
+{ #category : 'as yet unclassified' }
+MCIVisualization class >> views [
+
+	^ {
+		  (#dsm -> MiDSMBrowser).
+		  (#architecturalMap -> MiArchitecturalMapBrowser) } asDictionary
+]
+
+{ #category : 'testing' }
+MCIVisualization >> canShowIn: aMooseModel [
+
+	^ self newBrowser canFollowEntity: (self entitiesIn: aMooseModel)
 ]
 
 { #category : 'shapes' }
@@ -40,7 +55,22 @@ MCIVisualization >> in: aRegexString [
 ]
 
 { #category : 'instance creation' }
+MCIVisualization >> newBrowser [
+
+	| browserClass |
+	browserClass := self class views at: view.
+	
+	^ browserClass newApplication: MiApplication current model: browserClass newModel
+]
+
+{ #category : 'instance creation' }
 MCIVisualization >> of: aSymbol [
 
 	of := aSymbol
+]
+
+{ #category : 'accessing' }
+MCIVisualization >> view: aVizNameSymbol [
+
+	view := aVizNameSymbol
 ]

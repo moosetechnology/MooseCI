@@ -21,6 +21,18 @@ MCIVisualizationTest >> model [
 ]
 
 { #category : 'accessing' }
+MCIVisualizationTest >> testArchitecturalMapCanShowPackages [
+
+	| visualization |
+	visualization := MCIVisualization new
+		                 view: #architecturalMap;
+		                 of: #packages;
+		                 yourself.
+		
+	self assert: (visualization canShowIn: self model)
+]
+
+{ #category : 'accessing' }
 MCIVisualizationTest >> testClassesInRegex [
 
 	| visualization |
@@ -30,6 +42,33 @@ MCIVisualizationTest >> testClassesInRegex [
 		                 yourself.
 
 	self assert: ((visualization entitiesIn: self model) collect: #mooseName) asSet equals: #( #'example.ui.Controller' ) asSet
+]
+
+{ #category : 'accessing' }
+MCIVisualizationTest >> testDsmCanShowClasses [
+
+	| visualization |
+	visualization := MCIVisualization new
+		                 view: #dsm;
+		                 of: #classes;
+		                 yourself.
+	self assert: (visualization canShowIn: self model)
+]
+
+{ #category : 'accessing' }
+MCIVisualizationTest >> testNewBrowserIsTheViewBrowser [
+
+	self
+		assert: (MCIVisualization new
+				 view: #dsm;
+				 yourself) newBrowser class
+		equals: MiDSMBrowser.
+		
+	self
+		assert: (MCIVisualization new
+				 view: #architecturalMap;
+				 yourself) newBrowser class
+		equals: MiArchitecturalMapBrowser
 ]
 
 { #category : 'accessing' }
