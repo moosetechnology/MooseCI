@@ -36,7 +36,11 @@ MooseCIConfig {
 	#outputFormats : [
 		#json, #html
 	],
+	#visualizations : [
+		{ #view : #dsm, #of : #packages },
+		{ #view : #dsm, #of : #classes, #in : '.*\\.ui\\..*' },
+		{ #view : #architecturalMap, #of : #packages, #in : '.*\\.domain\\..*' }
+	],
 	#outputPath : '.moose-ci/report',
-	#visualizations : [ ],
 	#isRemote : false
 }
