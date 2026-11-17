@@ -39,7 +39,7 @@ MooseCIConfig {
 	#visualizations : [
 		{ #view : #dsm, #of : #packages },
 		{ #view : #dsm, #of : #classes, #in : '.*\\.ui\\..*' },
-		{ #view : #architecturalMap, #of : #packages, #in : '.*\\.domain\\..*' }
+		{ #view : #architecturalMap, #of : #packages }
 	],
 	#outputPath : '.moose-ci/report',
 	#isRemote : false
