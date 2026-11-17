@@ -48,6 +48,24 @@ MCIVisualization >> entitiesIn: aMooseModel [
 	^ entities asMooseGroup
 ]
 
+{ #category : 'as yet unclassified' }
+MCIVisualization >> exportOn: aMooseModel to: aFileReference [
+
+	| browser canvas |
+	browser := self newBrowser.
+	browser followEntity: (self entitiesIn: aMooseModel).
+
+	canvas := RSCanvas new.
+	browser mciVisualization buildInCanvas: canvas.
+
+	aFileReference parent ensureCreateDirectory.
+
+	RSSVGExporter new
+		canvas: canvas;
+		zoomToShapes;
+		exportToFile: aFileReference
+]
+
 { #category : 'instance creation' }
 MCIVisualization >> in: aRegexString [
 

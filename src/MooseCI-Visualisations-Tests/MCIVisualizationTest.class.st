@@ -56,6 +56,35 @@ MCIVisualizationTest >> testDsmCanShowClasses [
 ]
 
 { #category : 'accessing' }
+MCIVisualizationTest >> testExportArchitecturalMapToSvg [
+
+	| file |
+	file := FileSystem memory / 'out' / 'dsm.svg'.
+	(MCIVisualization new
+		 view: #architecturalMap;
+		 of: #packages;
+		 in: 'example\..+';
+		 yourself) exportOn: self model to: file.
+
+	self assert: (file contents beginsWith: '<?xml').
+	self assert: (file contents includesSubstring: 'domain')
+]
+
+{ #category : 'accessing' }
+MCIVisualizationTest >> testExportDsmToSvg [
+
+	| file |
+	file := FileSystem memory / 'out' / 'dsm.svg'.
+	(MCIVisualization new
+		 view: #dsm;
+		 of: #classes;
+		 yourself) exportOn: self model to: file.
+
+	self assert: (file contents beginsWith: '<?xml').
+	self assert: (file contents includesSubstring: 'Controller')
+]
+
+{ #category : 'accessing' }
 MCIVisualizationTest >> testNewBrowserIsTheViewBrowser [
 
 	self
