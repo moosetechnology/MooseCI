@@ -10,6 +10,17 @@ Class {
 	#package : 'MooseCI-Visualizations'
 }
 
+{ #category : 'instance creation' }
+MCIVisualization class >> fromDictionary: aDictionary [
+	"An entry of #visualizations in moose-ci.ston, already validated by MooseCIConfig"
+
+	^ self new
+		  view: (aDictionary at: #view);
+		  of: (aDictionary at: #of);
+		  in: (aDictionary at: #in ifAbsent: [ nil ]);
+		  yourself
+]
+
 { #category : 'as yet unclassified' }
 MCIVisualization class >> kinds [
 

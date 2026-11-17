@@ -84,6 +84,19 @@ MCIVisualizationTest >> testExportDsmToSvg [
 	self assert: (file contents includesSubstring: 'Controller')
 ]
 
+{ #category : 'tests' }
+MCIVisualizationTest >> testFromDictionary [
+
+	| visualization |
+	visualization := MCIVisualization fromDictionary: {
+			                 (#view -> #dsm).
+			                 (#of -> #classes).
+			                 (#in -> '.*\.ui\..*') } asDictionary.
+
+	self assert: visualization newBrowser class equals: MiDSMBrowser.
+	self assert: ((visualization entitiesIn: self model) collect: #mooseName) asArray equals: #( #'example.ui.Controller' )
+]
+
 { #category : 'accessing' }
 MCIVisualizationTest >> testNewBrowserIsTheViewBrowser [
 

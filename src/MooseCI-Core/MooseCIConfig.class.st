@@ -286,6 +286,39 @@ MooseCIConfig >> checkThresholdsValue: anAssociation into: errors [
 				errors add: 'Thresholds for #' , anAssociation key , ' > #' , key , ' must be a number' ] ]
 ]
 
+{ #category : 'validation' }
+MooseCIConfig >> checkVisualization: aSpec named: aLabel into: errors [
+
+	aSpec isDictionary ifFalse: [ ^ errors add: aLabel , ' must be a dictionary with #view, #of and optional #in' ].
+
+	aSpec
+		at: #view
+		ifPresent: [ :view |
+				(MCIVisualization views includesKey: view) ifFalse: [
+					errors add: 'Unknown view #' , view asString , ' in ' , aLabel , ' (expected: ' , (' ' join: MCIVisualization views keys sorted) , ')' ] ]
+		ifAbsent: [ errors add: aLabel , ' needs #view' ].
+
+	aSpec
+		at: #of
+		ifPresent: [ :kind |
+				(MCIVisualization kinds includesKey: kind) ifFalse: [
+					errors add: 'Unknown kind #' , kind asString , ' in ' , aLabel , ' (expected: ' , (' ' join: MCIVisualization kinds keys sorted) , ')' ] ]
+		ifAbsent: [ errors add: aLabel , ' needs #of' ].
+
+	aSpec at: #in ifPresent: [ :regex | self checkRegex: regex for: '#in of ' , aLabel into: errors ].
+
+	(aSpec keys reject: [ :key | #( view of in ) includes: key ]) do: [ :key | errors add: 'Unknown key #' , key , ' in ' , aLabel ]
+]
+
+{ #category : 'validation' }
+MooseCIConfig >> checkVisualizationsInto: errors [
+
+	visualizations ifNil: [ ^ self ].
+	visualizations isCollection ifFalse: [ ^ errors add: 'visualizations must be a collection' ].
+
+	visualizations withIndexDo: [ :each :index | self checkVisualization: each named: 'visualization ' , index printString into: errors ]
+]
+
 { #category : 'accessing' }
 MooseCIConfig >> gitProjectUrl [
 
@@ -401,6 +434,7 @@ MooseCIConfig >> validationErrors [
 	self checkRulesInto: errors.
 	self checkMetricsInto: errors.
 	self checkProjectLanguageInto: errors.
+	self checkVisualizationsInto: errors.
 	^ errors
 ]
 
