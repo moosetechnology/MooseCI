@@ -1,6 +1,6 @@
 Extension { #name : 'MiDSMBrowser' }
 
-{ #category : '*MooseCI-Visualisations' }
+{ #category : '*MooseCI-Visualizations' }
 MiDSMBrowser >> mciVisualization [
 
 	^ mainPresenter

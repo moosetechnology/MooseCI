@@ -4,8 +4,8 @@ Class {
 	#classInstVars : [
 		'model'
 	],
-	#category : 'MooseCI-Visualisations-Tests',
-	#package : 'MooseCI-Visualisations-Tests'
+	#category : 'MooseCI-Visualizations-Tests',
+	#package : 'MooseCI-Visualizations-Tests'
 }
 
 { #category : 'accessing' }

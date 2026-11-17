@@ -1,6 +1,6 @@
 Extension { #name : 'MiAbstractVisualizationBrowser' }
 
-{ #category : '*MooseCI-Visualisations' }
+{ #category : '*MooseCI-Visualizations' }
 MiAbstractVisualizationBrowser >> mciVisualization [
 
 	^ mainPresenter

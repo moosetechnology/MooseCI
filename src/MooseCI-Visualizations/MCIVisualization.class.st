@@ -6,8 +6,8 @@ Class {
 		'in',
 		'view'
 	],
-	#category : 'MooseCI-Visualisations',
-	#package : 'MooseCI-Visualisations'
+	#category : 'MooseCI-Visualizations',
+	#package : 'MooseCI-Visualizations'
 }
 
 { #category : 'as yet unclassified' }
