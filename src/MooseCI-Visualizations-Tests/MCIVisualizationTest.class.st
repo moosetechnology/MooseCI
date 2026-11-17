@@ -149,3 +149,49 @@ MCIVisualizationTest >> testPackagesWithoutStubs [
 		assert: ((visualization entitiesIn: self model) collect: #mooseName) asSet
 		equals: #( #example #'example.ui' #'example.domain' #'example.infra' ) asSet
 ]
+
+{ #category : 'tests' }
+MCIVisualizationTest >> testRunnerPrintsGenerationStepsThenFiles [
+
+	| folder core output |
+	folder := 'moose-ci-test-output'.
+	core := MooseCICore new
+		        config: (MooseCIConfig java
+				         outputPath: folder;
+				         visualizations: { {
+						         (#view -> #dsm).
+						         (#of -> #classes) } asDictionary };
+				         yourself);
+		        model: self model;
+		        yourself.
+	core runAnalysis.
+
+	[
+		output := String streamContents: [ :stream |
+				          MooseCIRunner new
+					          mooseCICore: core;
+					          writeOutputOn: stream ] ] ensure: [ (FileLocator workingDirectory / folder) ensureDeleteAll ].
+
+	self assert: (output indexOfSubCollection: 'Quality') < (output indexOfSubCollection: 'Generating report...').
+	self assert: (output indexOfSubCollection: 'Generating report...') < (output indexOfSubCollection: 'Generating visualizations...').
+	self assert: (output indexOfSubCollection: 'Generating visualizations...') < (output indexOfSubCollection: 'Files').
+	self assert: (output includesSubstring: folder , '/visualizations/1-dsm-classes.svg')
+]
+
+{ #category : 'tests' }
+MCIVisualizationTest >> testWriteVisualizationsAnswersTheWrittenFiles [
+
+	| directory files |
+	directory := FileSystem memory / 'visualizations'.
+	files := MooseCICore new
+		         config: (MooseCIConfig new
+				          visualizations: { {
+						          (#view -> #dsm).
+						          (#of -> #classes) } asDictionary };
+				          yourself);
+		         model: self model;
+		         writeVisualizationsIn: directory.
+
+	self assert: (files collect: #basename) asArray equals: #( '1-dsm-classes.svg' ).
+	self assert: files first exists
+]

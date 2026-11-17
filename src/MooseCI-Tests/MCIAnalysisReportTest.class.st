@@ -34,3 +34,14 @@ MCIAnalysisReportTest >> testWriteFiles [
 	self assert: outputDirectory files first extension equals: 'json'.
 	self assert: (outputDirectory files first contents includesSubstring: 'violations')
 ]
+
+{ #category : 'tests' }
+MCIAnalysisReportTest >> testWriteFilesAnswersTheWrittenFiles [
+
+	| files |
+	files := report writeFiles.
+
+	self assert: files size equals: 1.
+	self assert: files first exists.
+	self assert: files first extension equals: 'json'
+]
