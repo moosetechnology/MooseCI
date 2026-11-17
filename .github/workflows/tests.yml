@@ -7,7 +7,18 @@ on: [ push, pull_request ]
 
 jobs:
   build:
+    name: Moose ${{ matrix.moose }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - moose: '13'
+            smalltalk: Moose64-13
+          # smalltalkCI has no Moose64-14 image: download Moose 14 and run it on the Pharo 14 VM
+          - moose: '14'
+            smalltalk: Pharo64-14
+            image-url: https://github.com/moosetechnology/Moose/releases/download/continuous/Moose14-development-Pharo64-14.zip
     steps:
       - uses: actions/checkout@v3
         with:
@@ -33,7 +44,13 @@ jobs:
       - uses: hpi-swa/setup-smalltalkCI@v1
         id: smalltalkci
         with:
-          smalltalk-image: Moose64-13
-      - run: smalltalkci -s ${{ steps.smalltalkci.outputs.smalltalk-image }}
+          smalltalk-image: ${{ matrix.smalltalk }}
+      - name: Download Moose image
+        if: matrix.image-url
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/moose.zip" "${{ matrix.image-url }}"
+          unzip -q "$RUNNER_TEMP/moose.zip" -d "$RUNNER_TEMP/moose"
+          echo "MOOSE_IMAGE=$(find "$RUNNER_TEMP/moose" -name '*.image' | head -1)" >> "$GITHUB_ENV"
+      - run: smalltalkci -s ${{ steps.smalltalkci.outputs.smalltalk-image }} ${MOOSE_IMAGE:+--image "$MOOSE_IMAGE"}
         shell: bash
         timeout-minutes: 15
