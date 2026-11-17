@@ -66,5 +66,6 @@ MooseCIRunner >> writeOutput [
 	| reporter |
 	reporter := mooseCICore analysisReport.
 	reporter writeConsole.
-	reporter writeFiles
+	reporter writeFiles.
+	mooseCICore writeVisualizationsIn: reporter outputDirectory / 'visualizations'
 ]

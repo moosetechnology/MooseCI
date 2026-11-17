@@ -77,6 +77,12 @@ MCIVisualization >> exportOn: aMooseModel to: aFileReference [
 		exportToFile: aFileReference
 ]
 
+{ #category : 'accessing' }
+MCIVisualization >> fileName [
+
+	^ view , '-' , of , '.svg'
+]
+
 { #category : 'instance creation' }
 MCIVisualization >> in: aRegexString [
 

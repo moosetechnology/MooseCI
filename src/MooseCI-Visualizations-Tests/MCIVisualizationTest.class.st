@@ -44,6 +44,30 @@ MCIVisualizationTest >> testClassesInRegex [
 	self assert: ((visualization entitiesIn: self model) collect: #mooseName) asSet equals: #( #'example.ui.Controller' ) asSet
 ]
 
+{ #category : 'tests' }
+MCIVisualizationTest >> testCoreWritesOneSvgPerVisualization [
+
+	| directory core |
+	directory := FileSystem memory / 'visualizations'.
+	core := MooseCICore new
+		        config: (MooseCIConfig new
+				         visualizations: {
+						         {
+							         (#view -> #dsm).
+							         (#of -> #classes) } asDictionary.
+						         {
+							         (#view -> #architecturalMap).
+							         (#of -> #packages).
+							         (#in -> 'example\..+') } asDictionary };
+				         yourself);
+		        model: self model;
+		        yourself.
+
+	core writeVisualizationsIn: directory.
+
+	self assert: (directory children collect: #basename) asSet equals: #( '1-dsm-classes.svg' '2-architecturalMap-packages.svg' ) asSet
+]
+
 { #category : 'accessing' }
 MCIVisualizationTest >> testDsmCanShowClasses [
 

@@ -144,3 +144,20 @@ MooseCICore >> violations: anObject [
 
 	violations := anObject
 ]
+
+{ #category : 'writing' }
+MooseCICore >> writeVisualizationsIn: aDirectory [
+
+	(config visualizations ifNil: [ #(  ) ]) withIndexDo: [ :entry :index |
+		
+			| visualization fileName |
+			
+			visualization := MCIVisualization fromDictionary: entry.
+			fileName := index printString , '-' , visualization fileName.
+			
+			(visualization canShowIn: self model)
+				ifTrue: [ visualization exportOn: self model to: aDirectory / fileName ]
+				ifFalse: [ 
+					('Visualization ' , index printString , ' skipped: the view cannot show these entities') traceCr ] 
+				]
+]
