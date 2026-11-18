@@ -28,10 +28,10 @@ Some metrics and analyses that are envisioned:
 - [ ] packages/modules in cyclic dependencies
 - [ ] list of code clones
 
-In the future it would be good to output some visualizations already available in Moose:
+It also exports [visualizations](configuration.md?id=visualizations) already available in Moose, as SVG files:
 
-- [ ] DSM (Dependency Structure Matrix)
-- [ ] Architectural view
+- [x] DSM (Dependency Structure Matrix)
+- [x] Architectural map
 - [ ] System complexity
 - [ ] Distribution map
 
