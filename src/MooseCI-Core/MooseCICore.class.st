@@ -144,3 +144,22 @@ MooseCICore >> violations: anObject [
 
 	violations := anObject
 ]
+
+{ #category : 'writing' }
+MooseCICore >> writeVisualizationsIn: aDirectory [
+	"Answer the written files: a visualization whose view cannot show its entities is skipped"
+
+	| files |
+	files := OrderedCollection new.
+	(config visualizations ifNil: [ #(  ) ]) withIndexDo: [ :entry :index |
+			| visualization file |
+			visualization := MCIVisualization fromDictionary: entry.
+			file := aDirectory / (index printString , '-' , visualization fileName).
+
+			(visualization canShowIn: self model)
+				ifTrue: [
+						visualization exportOn: self model to: file.
+						files add: file ]
+				ifFalse: [ ('Visualization ' , index printString , ' skipped: the view cannot show these entities') traceCr ] ].
+	^ files
+]

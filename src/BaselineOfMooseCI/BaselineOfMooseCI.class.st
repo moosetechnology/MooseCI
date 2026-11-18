@@ -36,7 +36,7 @@ BaselineOfMooseCI >> defineGroups: spec [
 
 	spec
 		group: 'default'
-		with: #( 'MooseCI-Core' 'MooseCI-CLI' 'MooseCI-Tests' 'MooseCI-QualityRules' 'MooseCI-QualityRules-Tests' 'MooseCI-Report' 'MooseCI-Metrics' 'MooseCI-Metrics-Tests' );
+		with: #( 'MooseCI-Core' 'MooseCI-CLI' 'MooseCI-Tests' 'MooseCI-QualityRules' 'MooseCI-QualityRules-Tests' 'MooseCI-Report' 'MooseCI-Metrics' 'MooseCI-Metrics-Tests' 'MooseCI-Visualizations' 'MooseCI-Visualizations-Tests');
 		group: 'python'
 		with: #( 'MooseCI-Python' 'MooseCI-Python-Tests');
 		group: 'corese' 
@@ -58,6 +58,8 @@ BaselineOfMooseCI >> definePackages: spec [
 		package: 'MooseCI-Metrics';
 		package: 'MooseCI-Metrics-Tests';
 		package: 'MooseCI-Report';
+		package: 'MooseCI-Visualizations';
+		package: 'MooseCI-Visualizations-Tests';
 		package: 'MooseCI-Python' with: [ spec requires: #( 'MooseCI-Core' 'MoosePy' 'TreeSitter' ) ];
 		package: 'MooseCI-Python-Tests' with: [ spec requires: #( 'MooseCI-Python' ) ];
 		package: 'MooseCI-Corese' with: [ spec requires: #( 'MooseCI-Core' ) ];
