@@ -264,6 +264,23 @@ MooseCIConfig >> checkRulesInto: errors [
 ]
 
 { #category : 'validation' }
+MooseCIConfig >> checkSettings: someSettings ofView: aView named: aLabel into: errors [
+	"An unknown view is already reported: its settings are not checked"
+
+	| accepted |
+	someSettings isDictionary ifFalse: [ ^ errors add: '#settings of ' , aLabel , ' must be a dictionary' ].
+	accepted := MCIVisualization settings at: aView ifAbsent: [ ^ self ].
+	someSettings keysAndValuesDo: [ :setting :value |
+			accepted
+				at: setting
+				ifPresent: [ :values |
+						(values includesKey: value) ifFalse: [
+								errors add: 'Wrong value ' , value printString , ' for setting #' , setting , ' in ' , aLabel , ' (expected: '
+									, (' ' join: (values keys collect: #asString) sorted) , ')' ] ]
+				ifAbsent: [ errors add: 'Unknown setting #' , setting , ' in ' , aLabel , ' (expected: ' , (' ' join: accepted keys sorted) , ')' ] ]
+]
+
+{ #category : 'validation' }
 MooseCIConfig >> checkThresholdsValue: anAssociation into: errors [
 
 	| thresholds ruleClass |
@@ -289,25 +306,27 @@ MooseCIConfig >> checkThresholdsValue: anAssociation into: errors [
 { #category : 'validation' }
 MooseCIConfig >> checkVisualization: aSpec named: aLabel into: errors [
 
-	aSpec isDictionary ifFalse: [ ^ errors add: aLabel , ' must be a dictionary with #view, #of and optional #in' ].
-
+	aSpec isDictionary ifFalse: [ ^ errors add: aLabel , ' must be a dictionary with #view, #of, and optional #in and #settings' ].
 	aSpec
 		at: #view
 		ifPresent: [ :view |
 				(MCIVisualization views includesKey: view) ifFalse: [
 					errors add: 'Unknown view #' , view asString , ' in ' , aLabel , ' (expected: ' , (' ' join: MCIVisualization views keys sorted) , ')' ] ]
 		ifAbsent: [ errors add: aLabel , ' needs #view' ].
-
 	aSpec
 		at: #of
 		ifPresent: [ :kind |
 				(MCIVisualization kinds includesKey: kind) ifFalse: [
 					errors add: 'Unknown kind #' , kind asString , ' in ' , aLabel , ' (expected: ' , (' ' join: MCIVisualization kinds keys sorted) , ')' ] ]
 		ifAbsent: [ errors add: aLabel , ' needs #of' ].
-
 	aSpec at: #in ifPresent: [ :regex | self checkRegex: regex for: '#in of ' , aLabel into: errors ].
-
-	(aSpec keys reject: [ :key | #( view of in ) includes: key ]) do: [ :key | errors add: 'Unknown key #' , key , ' in ' , aLabel ]
+	aSpec at: #settings ifPresent: [ :settings |
+			self
+				checkSettings: settings
+				ofView: (aSpec at: #view ifAbsent: [ nil ])
+				named: aLabel
+				into: errors ].
+	(aSpec keys reject: [ :key | #( view of in settings ) includes: key ]) do: [ :key | errors add: 'Unknown key #' , key , ' in ' , aLabel ]
 ]
 
 { #category : 'validation' }

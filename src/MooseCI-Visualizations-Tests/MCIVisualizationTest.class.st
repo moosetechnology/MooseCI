@@ -179,6 +179,21 @@ MCIVisualizationTest >> testRunnerPrintsGenerationStepsThenFiles [
 ]
 
 { #category : 'tests' }
+MCIVisualizationTest >> testSettingsAreAppliedToTheBrowser [
+
+	| browser |
+	browser := (MCIVisualization fromDictionary: {
+			            (#view -> #architecturalMap).
+			            (#of -> #packages).
+			            (#settings -> {
+				             (#layout -> #tree).
+				             (#weightedLinks -> true) } asDictionary) } asDictionary) newBrowser.
+
+	self assert: browser specModel layout equals: RSTreeLayout.
+	self assert: browser specModel weightedLinks
+]
+
+{ #category : 'tests' }
 MCIVisualizationTest >> testWriteVisualizationsAnswersTheWrittenFiles [
 
 	| directory files |

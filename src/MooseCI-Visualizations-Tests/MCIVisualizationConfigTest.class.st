@@ -34,6 +34,14 @@ MCIVisualizationConfigTest >> testUnknownKey [
 ]
 
 { #category : 'tests' }
+MCIVisualizationConfigTest >> testUnknownSetting [
+
+	self
+		assert: (self errorsFor: '[ { #view : #dsm, #of : #classes, #settings : { #layout : #tree } } ]') asArray
+		equals: #( 'Unknown setting #layout in visualization 1 (expected: shouldShowSelfDependencies)' )
+]
+
+{ #category : 'tests' }
 MCIVisualizationConfigTest >> testUnknownView [
 
 	self
@@ -42,9 +50,26 @@ MCIVisualizationConfigTest >> testUnknownView [
 ]
 
 { #category : 'tests' }
+MCIVisualizationConfigTest >> testValidSettings [
+
+	self assert: (self errorsFor: '[
+		{ #view : #architecturalMap, #of : #packages, #settings : { #layout : #tree, #weightedLinks : true } },
+		{ #view : #dsm, #of : #classes, #settings : { #shouldShowSelfDependencies : false } } ]') isEmpty
+]
+
+{ #category : 'tests' }
 MCIVisualizationConfigTest >> testValidVisualizations [
 
 	self assert: (self errorsFor: '[
 		{ #view : #dsm, #of : #packages },
 		{ #view : #architecturalMap, #of : #classes, #in : ''.*\\.ui\\..*'' } ]') isEmpty
+]
+
+{ #category : 'tests' }
+MCIVisualizationConfigTest >> testWrongSettingValues [
+
+	self
+		assert: (self errorsFor: '[ { #view : #architecturalMap, #of : #packages, #settings : { #layout : #pie, #weightedLinks : 3 } } ]') asSet
+		equals: #( 'Wrong value #pie for setting #layout in visualization 1 (expected: circle flow force grid tree)'
+			   'Wrong value 3 for setting #weightedLinks in visualization 1 (expected: false true)' ) asSet
 ]
