@@ -37,9 +37,21 @@ MooseCIConfig {
 		#json, #html
 	],
 	#visualizations : [
-		{ #view : #dsm, #of : #packages },
-		{ #view : #dsm, #of : #classes, #in : '.*\\.ui\\..*' },
-		{ #view : #architecturalMap, #of : #packages }
+		{ 
+			#view : #dsm, 
+			#of : #packages,
+			#settings : { #shouldShowSelfDependencies : false }
+		},
+		{ 
+			#view : #dsm, 
+			#of : #classes, 
+			#in : '.*\\.ui\\..*' 
+		},
+		{ 
+			#view : #architecturalMap, 
+			#of : #classes,
+			#settings : {#layout : #tree, #weightedLinks : true}
+		 }
 	],
 	#outputPath : '.moose-ci/report',
 	#isRemote : false
