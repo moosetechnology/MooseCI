@@ -81,13 +81,15 @@ MCIAnalysisReport >> writeConsole [
 
 { #category : 'writing' }
 MCIAnalysisReport >> writeFiles [
+	"Answer the written files"
 
-	self config outputFormats do: [ :formatKey |
-			| writer outputfile filename |
-			writer := (MCIReportWriter writerAt: formatKey) new.
+	^ self config outputFormats collect: [ :formatKey |
+			  | writer outputfile filename |
+			  writer := (MCIReportWriter writerAt: formatKey) new.
 
-			filename := writer filename , '-' , DateAndTime now asFileNameCompatibleString , writer class fileExtension.
-			outputfile := self outputDirectory / filename.
+			  filename := writer filename , '-' , DateAndTime now asFileNameCompatibleString , writer class fileExtension.
+			  outputfile := self outputDirectory / filename.
 
-			writer writeReport: self toFile: outputfile ]
+			  writer writeReport: self toFile: outputfile.
+			  outputfile ]
 ]

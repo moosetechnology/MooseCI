@@ -38,6 +38,12 @@ MooseCIRunner >> loadProject [
 ]
 
 { #category : 'accessing' }
+MooseCIRunner >> mooseCICore: aMooseCICore [
+
+	mooseCICore := aMooseCICore
+]
+
+{ #category : 'accessing' }
 MooseCIRunner >> projectFilePath: anObject [
 
 	projectFilePath := anObject
@@ -60,11 +66,50 @@ MooseCIRunner >> runWithConfig: aMooseCIConfig [
 	self writeOutput
 ]
 
-{ #category : 'running' }
+{ #category : 'writing' }
+MooseCIRunner >> writeFileList: someFiles on: aStream [
+	"Paths relative to the analyzed project folder (the working directory), e.g. .moose-ci/report/report.json"
+
+	| projectFolder |
+	projectFolder := FileLocator workingDirectory asFileReference.
+	aStream
+		nextPutAll: (AnsiColor yellow: 'Files');
+		lf.
+	someFiles do: [ :each |
+			aStream
+				nextPutAll: '    ' , (each relativeTo: projectFolder) pathString;
+				lf ]
+]
+
+{ #category : 'writing' }
 MooseCIRunner >> writeOutput [
 
-	| reporter |
+	self writeOutputOn: Stdio stdout
+]
+
+{ #category : 'writing' }
+MooseCIRunner >> writeOutputOn: aStream [
+
+	| reporter files |
 	reporter := mooseCICore analysisReport.
-	reporter writeConsole.
-	reporter writeFiles
+	MCIConsoleReportWriter new
+		report: reporter;
+		writeOn: aStream.
+
+	self writeStep: 'Generating report...' on: aStream.
+	files := reporter writeFiles asOrderedCollection.
+
+	(mooseCICore config visualizations ifNil: [ #(  ) ]) ifNotEmpty: [
+			self writeStep: 'Generating visualizations...' on: aStream.
+			files addAll: (mooseCICore writeVisualizationsIn: reporter outputDirectory / 'visualizations') ].
+
+	self writeFileList: files on: aStream
+]
+
+{ #category : 'writing' }
+MooseCIRunner >> writeStep: aString on: aStream [
+
+	aStream
+		nextPutAll: aString;
+		lf
 ]

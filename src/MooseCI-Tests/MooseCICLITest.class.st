@@ -134,6 +134,24 @@ MooseCICLITest >> testInitCommandDetectsLanguage [
 	self assert: context exitStatus equals: 0
 ]
 
+{ #category : 'tests' }
+MooseCICLITest >> testWriteFileListOn [
+
+	| tmp1 tmp2 |
+	tmp1 := (FileLocator workingDirectory / '.moose-ci' / 'report') asFileReference.
+	tmp2 := String streamContents: [ :arg1 |
+			        MooseCIRunner new
+				        writeFileList: {
+						        (tmp1 / 'report.json').
+						        (tmp1 / 'visualizations' / '1-dsm-classes.svg') }
+				        on: arg1 ].
+	self
+		assert: (tmp2 includesSubstring: 'Files');
+		assert: (tmp2 includesSubstring: '    .moose-ci/report/report.json');
+		assert: (tmp2 includesSubstring: '    .moose-ci/report/visualizations/1-dsm-classes.svg');
+		deny: (tmp2 includesSubstring: FileLocator workingDirectory fullName)
+]
+
 { #category : 'running' }
 MooseCICLITest >> writeConfig: aMooseCIConfig [
 
