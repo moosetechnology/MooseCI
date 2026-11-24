@@ -5,10 +5,11 @@ Class {
 	#package : 'MooseCI-QualityRules'
 }
 
-{ #category : 'instance creation' }
+{ #category : 'accessing' }
 MCIQualityRules class >> allRules [
+	"All the rule classes, at any depth below MCIAbstractQualityRule"
 
-	^ MCIAbstractQualityRule subclasses
+	^ MCIAbstractQualityRule allSubclasses reject: [ :rule | rule isAbstract ]
 ]
 
 { #category : 'helpers' }
@@ -35,16 +36,15 @@ MCIQualityRules class >> javaRules [
 { #category : 'accessing' }
 MCIQualityRules class >> ruleAt: aSymbol [
 
-	MCIAbstractQualityRule subclasses
-		detect: [ :ruleClass | ruleClass key = aSymbol ]
-		ifFound: [ :ruleClass | ^ ruleClass ]
-		ifNone: [ MCIQualityRuleNotFoundError signal: 'Rule not found: ' , aSymbol asString ]
+	^ self allRules
+		  detect: [ :ruleClass | ruleClass key = aSymbol ]
+		  ifNone: [ MCIQualityRuleNotFoundError signal: 'Rule not found: ' , aSymbol asString ]
 ]
 
 { #category : 'accessing' }
 MCIQualityRules class >> rulesAt: aCollection [
 
-	^ MCIAbstractQualityRule subclasses select: [ :rule | aCollection includes: rule key ]
+	^ self allRules select: [ :rule | aCollection includes: rule key ]
 ]
 
 { #category : 'as yet unclassified' }
