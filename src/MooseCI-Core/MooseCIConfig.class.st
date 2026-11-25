@@ -220,19 +220,16 @@ MooseCIConfig >> checkRegex: aString for: aLabel into: errors [
 { #category : 'validation' }
 MooseCIConfig >> checkRuleSymbol: aSymbol into: errors [
 
-	| ruleSymbols |
 	aSymbol isSymbol ifFalse: [
 			errors add: 'rules entries must be rule keys (Symbols)'.
 			^ self ].
 
-	ruleSymbols := MCIAbstractQualityRule subclasses collect: #key.
-
-	(ruleSymbols includes: aSymbol) ifFalse: [
+	(self ruleClassAt: aSymbol) ifNil: [
 			errors add: 'Unknown rule: ' , aSymbol asString.
 			^ self ].
-		
+
 	projectLanguage ifNil: [ ^ self ].
-	
+
 	((MCIQualityRules ruleAt: aSymbol) applicableFor: projectLanguage) ifFalse: [
 		errors add: 'Rule #' , aSymbol , ' is not applicable to language #' , projectLanguage ]
 ]
@@ -413,9 +410,7 @@ MooseCIConfig >> projectLanguage: aSymbol [
 { #category : 'validation' }
 MooseCIConfig >> ruleClassAt: aSymbol [
 
-	^ MCIAbstractQualityRule subclasses
-		  detect: [ :each | each key = aSymbol ]
-		  ifNone: [ nil ]
+	^ MCIQualityRules allRules detect: [ :each | each key = aSymbol ] ifNone: [ nil ]
 ]
 
 { #category : 'accessing' }

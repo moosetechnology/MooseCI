@@ -41,8 +41,8 @@ MCIQualityRulesTest >> testAllRules [
 	| rules |
 	rules := MCIQualityRules allRules.
 
-	self assert: rules size equals: MCIAbstractQualityRule subclasses size.
-	self assert: (rules allSatisfy: [ :rule | rule superclass = MCIAbstractQualityRule  ]).
+	self assert: rules size equals: MCIAbstractQualityRule allSubclasses size.
+	self assert: (rules allSatisfy: [ :rule | rule inheritsFrom: MCIAbstractQualityRule ])
 ]
 
 { #category : 'tests' }
