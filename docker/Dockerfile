@@ -37,7 +37,7 @@ RUN chmod +x /mooseci-install.sh
 RUN /mooseci-install.sh default
 
 # VerveineJ jar
-ARG VERVEINEJ_VERSION=v5.1.1
+ARG VERVEINEJ_VERSION=v5.0.0
 RUN wget -O /VerveineJ.jar "https://github.com/moosetechnology/VerveineJ/releases/download/${VERVEINEJ_VERSION}/VerveineJ-${VERVEINEJ_VERSION}.jar"
 RUN ./pharo --headless Moose13/Moose13.image eval --save "FamixJavaFoldersImporter verveineJJar: '/VerveineJ.jar' asFileReference"
 
