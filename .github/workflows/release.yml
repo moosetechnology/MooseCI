@@ -44,7 +44,13 @@ jobs:
             ghcr.io/moosetechnology/moose-ci:${{ github.ref_name }}-corese
             ghcr.io/moosetechnology/moose-ci:corese
           build-args: BASE_IMAGE=ghcr.io/moosetechnology/moose-ci:${{ github.ref_name }}
+      # The release may already exist: creating it on the GitHub page also pushes the tag that runs this workflow
       - name: Create release
-        run: gh release create "${{ github.ref_name }}" --generate-notes
+        run: |
+          if gh release view "${{ github.ref_name }}" > /dev/null 2>&1; then
+            echo "Release ${{ github.ref_name }} already exists"
+          else
+            gh release create "${{ github.ref_name }}" --generate-notes
+          fi
         env:
           GH_TOKEN: ${{ github.token }}
